@@ -12,6 +12,10 @@
 
 # testing
 /coverage
+/playwright-report/
+/test-results/
+/blob-report/
+/.vitest/
 
 # next.js
 /.next/
@@ -19,6 +23,10 @@
 
 # production
 /build
+
+# tooling caches
+/.turbo/
+/.eslintcache
 
 # misc
 .DS_Store
@@ -29,6 +37,11 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+playwright-debug.log*
+
+# local temporary files
+*.tmp
+*.temp
 
 # env files (can opt-in for committing if needed)
 .env*

@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PDFForge
 
-## Getting Started
+PDFForge is a free, privacy-first PDF utility suite. Document processing is designed to happen locally in the browser: files, extracted text, metadata, and passwords must not be uploaded or logged.
 
-First, run the development server:
+The linked Figma source currently contains the placeholder brand “PDFLocal.” **PDFForge is the confirmed public product name**, so implementation must retain the design language while replacing PDFLocal labels and logos.
+
+## Project status
+
+Phase 0 (repository audit and architecture) is complete. The repository still contains the default Create Next App interface; no product features have been implemented.
+
+- Architecture and roadmap: [`docs/architecture.md`](docs/architecture.md)
+- Figma prototype: [PDFLocal — Privacy-First PDF Tools](https://www.figma.com/proto/eSdbWCDJ0EqKUPESoR66nx/PDFLocal-%E2%80%94-Privacy-First-PDF-Tools?node-id=0-1)
+
+## Current stack
+
+- Next.js 16 App Router, React 19, and TypeScript
+- Tailwind CSS 4
+- `pdfjs-dist` for PDF parsing and rendering
+- `pdf-lib` for supported document mutations
+- JSZip for multi-file downloads
+- Lucide React for icons
+- `clsx` and `tailwind-merge` for component class composition
+- npm, selected by the committed `package-lock.json`
+
+Vitest, Playwright, CI, Web Worker modules, and the final application structure belong to later phases and are not configured yet.
+
+## Prerequisites
+
+- Node.js 24 is recommended. The installed `pdfjs-dist@6.3.289` requires Node `>=22.13.0` or `>=24` for development tooling.
+- npm compatible with the installed Node release.
+
+The current workstation has Node `v24.14.0`, but its global npm launcher points to a missing `npm-cli.js`. Repair or reinstall npm before Phase 1 so the normal scripts below work.
+
+## Local setup
 
 ```bash
+npm ci
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Quality checks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint
+npx tsc --noEmit
+npm run build
+```
 
-## Learn More
+Unit and end-to-end commands will be added in Phase 1 with Vitest and Playwright.
 
-To learn more about Next.js, take a look at the following resources:
+## Privacy invariants
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- No document bytes or derived document content may be sent to an application server or third party.
+- Never log filenames, document text, metadata, passwords, or raw processing errors that may contain them.
+- Use in-memory buffers and object URLs by default; use IndexedDB only for explicit, temporary recovery needs.
+- Revoke object URLs, terminate workers, release references, and delete temporary browser records after completion or cancellation.
+- Self-host PDF.js workers, fonts, icons, and other runtime assets. No CDN is allowed in the document-processing path.
+- Analytics and error monitoring must use an explicit allowlist of non-document fields.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Phase discipline
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Work on one approved phase at a time. Each phase must finish with lint, type checking, relevant tests, a production build, known limitations, and manual testing instructions before the next phase begins.
