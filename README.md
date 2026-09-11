@@ -6,7 +6,7 @@ The linked Figma source currently contains the placeholder brand “PDFLocal.”
 
 ## Project status
 
-Phase 0 (repository audit and architecture) is complete. The repository still contains the default Create Next App interface; no product features have been implemented.
+Phase 1 (project foundation) is complete. The repository has a tested Next.js foundation and a minimal status page; no PDF features have been implemented.
 
 - Architecture and roadmap: [`docs/architecture.md`](docs/architecture.md)
 - Figma prototype: [PDFLocal — Privacy-First PDF Tools](https://www.figma.com/proto/eSdbWCDJ0EqKUPESoR66nx/PDFLocal-%E2%80%94-Privacy-First-PDF-Tools?node-id=0-1)
@@ -22,14 +22,12 @@ Phase 0 (repository audit and architecture) is complete. The repository still co
 - `clsx` and `tailwind-merge` for component class composition
 - npm, selected by the committed `package-lock.json`
 
-Vitest, Playwright, CI, Web Worker modules, and the final application structure belong to later phases and are not configured yet.
+Vitest, Testing Library, Playwright, Prettier, strict type checking, and GitHub Actions CI are configured. PDF.js and processing Web Workers belong to later phases.
 
 ## Prerequisites
 
 - Node.js 24 is recommended. The installed `pdfjs-dist@6.3.289` requires Node `>=22.13.0` or `>=24` for development tooling.
-- npm compatible with the installed Node release.
-
-The current workstation has Node `v24.14.0`, but its global npm launcher points to a missing `npm-cli.js`. Repair or reinstall npm before Phase 1 so the normal scripts below work.
+- npm 11 or another version compatible with the installed Node release.
 
 ## Local setup
 
@@ -44,11 +42,19 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ```bash
 npm run lint
-npx tsc --noEmit
+npm run typecheck
+npm run test:unit
 npm run build
+npm run test:e2e
 ```
 
-Unit and end-to-end commands will be added in Phase 1 with Vitest and Playwright.
+Install Playwright's browser engines once before the first E2E run:
+
+```bash
+npx playwright install chromium firefox webkit
+```
+
+`npm run test:e2e` runs the built application on localhost port 3100. Run `npm run build` first when the production output is not current.
 
 ## Privacy invariants
 

@@ -14,18 +14,18 @@ Merge PDF remains the first production feature because it exercises validation, 
 
 ## 2. Repository assessment
 
-| Area | Current state | Decision |
-| --- | --- | --- |
-| Repository | Git repository on `main`, one initial commit | Preserve user changes; never reset them |
-| Framework | Next.js 16.3.4 App Router, React 19.2.8 | Keep App Router; static marketing routes and client-side tool islands |
-| Language | TypeScript 5 strict mode; `@/*` maps to repository root | Keep strict mode; move alias to `src/*` in Phase 1 |
-| Styling | Tailwind CSS 4 through PostCSS | Keep; translate Figma values into CSS variables/theme tokens |
-| Package manager | `package-lock.json` | npm is authoritative |
-| PDF libraries | `pdfjs-dist`, `pdf-lib`, JSZip | Suitable for viewing and common edits, but not all security features |
-| UI libraries | Lucide, clsx, tailwind-merge | Small and appropriate |
-| Tests and CI | None | Add Vitest, Playwright, and CI in Phase 1 |
-| Application | Default Create Next App page; external Google font import removed | No product functionality exists; use local/system assets only |
-| Workstation | Node v24.14.0; broken global npm launcher | Repair npm before Phase 1 |
+| Area            | Current state                                                     | Decision                                                              |
+| --------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Repository      | Git repository on `main`, one initial commit                      | Preserve user changes; never reset them                               |
+| Framework       | Next.js 16.3.4 App Router, React 19.2.8                           | Keep App Router; static marketing routes and client-side tool islands |
+| Language        | TypeScript 5 strict mode; `@/*` maps to repository root           | Keep strict mode; move alias to `src/*` in Phase 1                    |
+| Styling         | Tailwind CSS 4 through PostCSS                                    | Keep; translate Figma values into CSS variables/theme tokens          |
+| Package manager | `package-lock.json`                                               | npm is authoritative                                                  |
+| PDF libraries   | `pdfjs-dist`, `pdf-lib`, JSZip                                    | Suitable for viewing and common edits, but not all security features  |
+| UI libraries    | Lucide, clsx, tailwind-merge                                      | Small and appropriate                                                 |
+| Tests and CI    | Vitest, Testing Library, Playwright, Prettier, and GitHub Actions | Foundation checks run locally and in CI                               |
+| Application     | Minimal PDFForge page; external Google font import removed        | No PDF functionality exists; use local/system assets only             |
+| Workstation     | Node v24.14.0 and npm 11.17.0                                     | Supported development environment                                     |
 
 `package.json` and `package-lock.json` were modified before Phase 0 to add the intended runtime packages. This phase does not modify or revert them.
 
@@ -163,18 +163,18 @@ The app may fetch only versioned application assets, navigation documents, updat
 
 ### Present and retained
 
-| Dependency | Purpose | Constraint |
-| --- | --- | --- |
-| Next.js / React | Routing and UI | Keep document logic in lazy client boundaries |
-| TypeScript | Typed contracts and worker messages | Strict mode stays enabled |
-| Tailwind CSS | Figma-derived tokens and responsive layout | Use semantic reusable components |
-| `pdfjs-dist` | Parse, inspect, render, page count, password prompts | Self-host matching worker; no CDN |
-| `pdf-lib` | Merge, split, copy, rotate, metadata, overlays, forms | Does not cover every encryption/redaction need |
-| JSZip | Multi-output ZIP creation | Run large jobs in a worker |
-| Lucide React | Accessible interface icons | Prefer supplied Figma icons when present |
-| clsx + tailwind-merge | Component class composition | Centralize through `cn()` |
+| Dependency            | Purpose                                               | Constraint                                     |
+| --------------------- | ----------------------------------------------------- | ---------------------------------------------- |
+| Next.js / React       | Routing and UI                                        | Keep document logic in lazy client boundaries  |
+| TypeScript            | Typed contracts and worker messages                   | Strict mode stays enabled                      |
+| Tailwind CSS          | Figma-derived tokens and responsive layout            | Use semantic reusable components               |
+| `pdfjs-dist`          | Parse, inspect, render, page count, password prompts  | Self-host matching worker; no CDN              |
+| `pdf-lib`             | Merge, split, copy, rotate, metadata, overlays, forms | Does not cover every encryption/redaction need |
+| JSZip                 | Multi-output ZIP creation                             | Run large jobs in a worker                     |
+| Lucide React          | Accessible interface icons                            | Prefer supplied Figma icons when present       |
+| clsx + tailwind-merge | Component class composition                           | Centralize through `cn()`                      |
 
-### Add in Phase 1
+### Added in Phase 1
 
 - Vitest, jsdom, Testing Library, and user-event for unit/component tests.
 - Playwright for cross-browser end-to-end and privacy network assertions.
@@ -199,31 +199,31 @@ Mobile support means accessible layout and safe processing, not equal memory cap
 
 These are soft recommendations. Compressed PDFs can expand several times in memory, and page complexity matters more than bytes.
 
-| Device | Per file | Batch | Page warning |
-| --- | ---: | ---: | ---: |
-| Desktop/laptop | 250 MB | 500 MB | Above 1,000 pages |
-| Tablet | 125 MB | 250 MB | Above 600 pages |
-| Phone | 75 MB | 150 MB | Above 300 pages |
+| Device         | Per file |  Batch |      Page warning |
+| -------------- | -------: | -----: | ----------------: |
+| Desktop/laptop |   250 MB | 500 MB | Above 1,000 pages |
+| Tablet         |   125 MB | 250 MB |   Above 600 pages |
+| Phone          |    75 MB | 150 MB |   Above 300 pages |
 
 Estimate peak use from input bytes, decoded canvases, output duplication, and ZIP buffers. Warn when an operation may exceed 25% of reported device memory, when that signal exists, but never rely on it. Render only visible pages, cap concurrent renders, and lower preview resolution before rejecting a document.
 
 ## 9. Capability and limitation review
 
-| Feature | Browser-only status | Decision |
-| --- | --- | --- |
-| View, thumbnails, page count | Reliable with PDF.js | MVP |
-| Merge, split, reorder, rotate | Reliable for ordinary PDFs with pdf-lib | MVP |
-| Images to PDF | Reliable with explicit layout rules | MVP |
-| PDF to PNG/JPG | Reliable by rasterizing; memory-heavy at high resolution | MVP with warnings |
-| Text extraction | Works for text-layer PDFs; OCR is excluded | Later with scanned-PDF limitation |
-| Metadata view/removal | Basic fields are feasible; hidden data needs output verification | Later with tests |
-| Watermark, numbering, headers/footers | Feasible as new page content | Later |
-| Password-protect output | Current stack does not provide required assurance | Add an audited local engine or exclude |
-| Unlock and resave encrypted PDFs | Reliable decrypted rewriting is not covered by current stack | Research before commitment |
-| True redaction | An overlay is unsafe; content can remain recoverable | Exclude until recovery tests prove removal/rasterization |
-| Flatten forms/annotations | Basic AcroForms may work; XFA/signatures/appearances vary | Limited only after fixture tests |
-| Strong compression | Needs codecs and heuristics beyond current stack | Excluded initially |
-| Office conversions | High fidelity is not reliable fully in-browser | Excluded |
+| Feature                               | Browser-only status                                              | Decision                                                 |
+| ------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
+| View, thumbnails, page count          | Reliable with PDF.js                                             | MVP                                                      |
+| Merge, split, reorder, rotate         | Reliable for ordinary PDFs with pdf-lib                          | MVP                                                      |
+| Images to PDF                         | Reliable with explicit layout rules                              | MVP                                                      |
+| PDF to PNG/JPG                        | Reliable by rasterizing; memory-heavy at high resolution         | MVP with warnings                                        |
+| Text extraction                       | Works for text-layer PDFs; OCR is excluded                       | Later with scanned-PDF limitation                        |
+| Metadata view/removal                 | Basic fields are feasible; hidden data needs output verification | Later with tests                                         |
+| Watermark, numbering, headers/footers | Feasible as new page content                                     | Later                                                    |
+| Password-protect output               | Current stack does not provide required assurance                | Add an audited local engine or exclude                   |
+| Unlock and resave encrypted PDFs      | Reliable decrypted rewriting is not covered by current stack     | Research before commitment                               |
+| True redaction                        | An overlay is unsafe; content can remain recoverable             | Exclude until recovery tests prove removal/rasterization |
+| Flatten forms/annotations             | Basic AcroForms may work; XFA/signatures/appearances vary        | Limited only after fixture tests                         |
+| Strong compression                    | Needs codecs and heuristics beyond current stack                 | Excluded initially                                       |
+| Office conversions                    | High fidelity is not reliable fully in-browser                   | Excluded                                                 |
 
 Warn that nearly any mutation invalidates digital signatures. Linearization, tagged accessibility structure, complex forms, attachments, JavaScript actions, and uncommon color spaces may not survive every rewrite. Never promise preservation without fixture evidence.
 
@@ -240,19 +240,19 @@ Document bytes, filenames, extracted text, metadata, passwords, thumbnails, rend
 
 ### Threats and controls
 
-| Threat | Control |
-| --- | --- |
-| Accidental upload or telemetry capture | No upload API; network-deny tests; CSP; allowlisted monitoring schema |
-| Filename/text/password leakage | Sanitized error codes; never log file objects or raw document errors |
-| XSS reading in-memory files | Strict CSP, React escaping, no unsafe HTML, dependency review |
-| Stale object URLs or IndexedDB data | Central lifecycle manager, expiry manifest, startup/route cleanup tests |
-| Malicious PDFs causing denial of service | Limits, worker isolation, timeouts, cancellation, bounded rendering |
-| Decompression or ZIP amplification | Entry, page, and expanded-size limits with progressive abort |
-| Unsafe download names | Normalize Unicode; remove paths/control characters; force safe extensions |
-| Password retention | Keep only in local operation scope; never persist/log; release on exit |
-| Service worker caching private data | Explicit app-shell allowlist; deny document/blob/generated-response caching |
-| Supply-chain compromise | Lockfile, minimal packages, audits, pinned PDF.js worker, reproducible CI |
-| Misleading privacy language | E2E network inspection and claims reviewed against actual behavior |
+| Threat                                   | Control                                                                     |
+| ---------------------------------------- | --------------------------------------------------------------------------- |
+| Accidental upload or telemetry capture   | No upload API; network-deny tests; CSP; allowlisted monitoring schema       |
+| Filename/text/password leakage           | Sanitized error codes; never log file objects or raw document errors        |
+| XSS reading in-memory files              | Strict CSP, React escaping, no unsafe HTML, dependency review               |
+| Stale object URLs or IndexedDB data      | Central lifecycle manager, expiry manifest, startup/route cleanup tests     |
+| Malicious PDFs causing denial of service | Limits, worker isolation, timeouts, cancellation, bounded rendering         |
+| Decompression or ZIP amplification       | Entry, page, and expanded-size limits with progressive abort                |
+| Unsafe download names                    | Normalize Unicode; remove paths/control characters; force safe extensions   |
+| Password retention                       | Keep only in local operation scope; never persist/log; release on exit      |
+| Service worker caching private data      | Explicit app-shell allowlist; deny document/blob/generated-response caching |
+| Supply-chain compromise                  | Lockfile, minimal packages, audits, pinned PDF.js worker, reproducible CI   |
+| Misleading privacy language              | E2E network inspection and claims reviewed against actual behavior          |
 
 The browser, OS, installed extensions, and chosen download location are outside PDFForge's control and must be stated honestly in the privacy policy.
 
@@ -277,38 +277,40 @@ Not MVP: advanced editing, passwords, unlock, redaction, form flattening, PWA/of
 5. **Security overclaiming:** current libraries do not justify strong encryption or redaction claims. Require research and destructive recovery tests.
 6. **Safari/mobile variance:** memory and performance APIs vary. Use feature detection and conservative fallbacks.
 7. **Prototype coverage:** several routes/states are absent. Extend the design language only with review.
-8. **Toolchain health:** the global npm launcher is broken. Phase 1 cannot pass until normal scripts work.
+8. **Toolchain health:** npm reports an unapproved optional `unrs-resolver` postinstall. Current lint, tests, and builds pass; review future install-script requests rather than enabling them broadly.
 9. **Future privacy regressions:** service workers, monitoring, and third-party assets require strict allowlists and network tests.
 
 ## 13. Phase-by-phase execution plan
 
-| Phase | Outcome | Exit gate |
-| ---: | --- | --- |
-| 0 | Repository, design, architecture, privacy, scope, risks | Documentation reviewed and approved |
-| 1 | Next/TS/Tailwind foundation, tests, CI, structure | Lint, types, tests, build pass; no auth/database |
-| 2 | PDFForge static UI and design system | Desktop/mobile visual review; keyboard and accessibility checks |
-| 3 | Shared local file pipeline | Validation/naming tests; cleanup; no document network traffic |
-| 4 | PDF.js viewer and thumbnails | Large/mixed fixtures; lazy render and cleanup verified |
-| 5 | Typed processing-worker infrastructure | Responsive UI, progress/error/cancel, worker cleanup |
-| 6 | Merge PDF | Ordering, output, privacy, unit, and E2E tests pass |
-| 7 | Split and Organize | Range/reorder/rotation/delete/ZIP tests pass |
-| 8 | Image conversions | Orientation/transparency/quality/memory fixtures pass |
-| 9 | Supported editing/privacy tools | Preview and output verification per tool |
-| 10 | Researched security tools only | Security claims proven by dedicated recovery tests |
-| 11 | Performance and PWA | Targets met; cache allowlist and offline tests pass |
-| 12 | Privacy/security audit | Network, CSP, storage, logging, dependencies cleared |
-| 13 | SEO for completed tools | Unique metadata, valid structured data, accurate sitemap |
-| 14 | Cross-browser release | Full suite, staging acceptance, production/rollback runbooks |
+| Phase | Outcome                                                 | Exit gate                                                       |
+| ----: | ------------------------------------------------------- | --------------------------------------------------------------- |
+|     0 | Repository, design, architecture, privacy, scope, risks | Documentation reviewed and approved                             |
+|     1 | Next/TS/Tailwind foundation, tests, CI, structure       | Lint, types, tests, build pass; no auth/database                |
+|     2 | PDFForge static UI and design system                    | Desktop/mobile visual review; keyboard and accessibility checks |
+|     3 | Shared local file pipeline                              | Validation/naming tests; cleanup; no document network traffic   |
+|     4 | PDF.js viewer and thumbnails                            | Large/mixed fixtures; lazy render and cleanup verified          |
+|     5 | Typed processing-worker infrastructure                  | Responsive UI, progress/error/cancel, worker cleanup            |
+|     6 | Merge PDF                                               | Ordering, output, privacy, unit, and E2E tests pass             |
+|     7 | Split and Organize                                      | Range/reorder/rotation/delete/ZIP tests pass                    |
+|     8 | Image conversions                                       | Orientation/transparency/quality/memory fixtures pass           |
+|     9 | Supported editing/privacy tools                         | Preview and output verification per tool                        |
+|    10 | Researched security tools only                          | Security claims proven by dedicated recovery tests              |
+|    11 | Performance and PWA                                     | Targets met; cache allowlist and offline tests pass             |
+|    12 | Privacy/security audit                                  | Network, CSP, storage, logging, dependencies cleared            |
+|    13 | SEO for completed tools                                 | Unique metadata, valid structured data, accurate sitemap        |
+|    14 | Cross-browser release                                   | Full suite, staging acceptance, production/rollback runbooks    |
 
 Each phase stops for approval. Unfinished tools remain absent from public navigation, metadata, sitemap, and structured data.
 
-## 14. Phase 1 prerequisites
+## 14. Phase 1 outcome and Phase 2 prerequisites
 
-Before Phase 1:
+Phase 1 delivered the `src` structure, metadata/favicon support, environment validation, `cn()`, privacy-safe error boundaries, formatting, Vitest, Playwright, and GitHub Actions CI. Lint, type checking, unit tests, production build, and Chromium/Firefox/WebKit smoke tests pass.
 
-1. Repair the npm installation and confirm `npm ci` succeeds.
-2. Approve the static-first worker architecture and capacity guidance.
-3. Confirm the existing dependency changes are intentional; they match the plan and were preserved.
-4. Select the eventual deployment target before security headers and CI are finalized; this does not authorize deployment.
+Before Phase 2:
 
-Phase 0 intentionally makes no feature, dependency, or deployment changes. It removes the default template's build-time Google Fonts fetch so the production build is reproducible offline and consistent with the self-hosted-asset privacy rule.
+1. Approve Phase 2 explicitly.
+2. Use PDFForge for every public label while retaining the Figma layout language.
+3. Resolve visual states not represented in the seven-frame prototype during design-system implementation.
+4. Select the eventual deployment target before later security headers are finalized; this does not authorize deployment.
+
+No PDF processing, upload behavior, authentication, database, or deployment was added in Phase 1.
