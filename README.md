@@ -6,7 +6,7 @@ The linked Figma source currently contains the placeholder brand “PDFLocal.”
 
 ## Project status
 
-Phase 1 (project foundation) is complete. The repository has a tested Next.js foundation and a minimal status page; no PDF features have been implemented.
+Phase 2 (design system and static interface) is complete. The repository now includes the responsive PDFForge homepage, reusable UI and PDF workspace components, a searchable tool directory, eight static tool routes, supporting content pages, and representative merge processing states. File selection and PDF processing remain disabled until Phase 3.
 
 - Architecture and roadmap: [`docs/architecture.md`](docs/architecture.md)
 - Figma prototype: [PDFLocal — Privacy-First PDF Tools](https://www.figma.com/proto/eSdbWCDJ0EqKUPESoR66nx/PDFLocal-%E2%80%94-Privacy-First-PDF-Tools?node-id=0-1)
@@ -23,6 +23,14 @@ Phase 1 (project foundation) is complete. The repository has a tested Next.js fo
 - npm, selected by the committed `package-lock.json`
 
 Vitest, Testing Library, Playwright, Prettier, strict type checking, and GitHub Actions CI are configured. PDF.js and processing Web Workers belong to later phases.
+
+## Static routes
+
+- `/` — responsive landing page
+- `/tools` — searchable, category-filtered tool directory
+- `/tools/[tool]` — static workspaces for the eight approved PDF tools
+- `/tools/merge-pdf/states` — processing and completion state reference
+- `/privacy`, `/about`, and `/offline` — supporting product pages
 
 ## Prerequisites
 

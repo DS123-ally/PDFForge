@@ -1,0 +1,97 @@
+export const toolCategories = [
+  "All",
+  "Organize",
+  "Convert",
+  "Edit",
+  "Privacy",
+] as const;
+
+export type ToolCategory = Exclude<(typeof toolCategories)[number], "All">;
+
+export type ToolDefinition = {
+  slug: string;
+  title: string;
+  shortDescription: string;
+  description: string;
+  category: ToolCategory;
+  acceptsMultiple: boolean;
+};
+
+export const tools: ToolDefinition[] = [
+  {
+    slug: "merge-pdf",
+    title: "Merge PDF",
+    shortDescription: "Combine multiple PDF files into one.",
+    description:
+      "Combine PDFs in the order you want. Everything happens locally in your browser.",
+    category: "Organize",
+    acceptsMultiple: true,
+  },
+  {
+    slug: "split-pdf",
+    title: "Split PDF",
+    shortDescription: "Extract pages into separate files.",
+    description:
+      "Choose individual pages or ranges and export them as separate PDF files.",
+    category: "Organize",
+    acceptsMultiple: false,
+  },
+  {
+    slug: "organize-pdf",
+    title: "Organize PDF",
+    shortDescription: "Reorder, rotate, or remove pages.",
+    description:
+      "Arrange PDF pages visually before saving a clean, organized copy.",
+    category: "Organize",
+    acceptsMultiple: false,
+  },
+  {
+    slug: "images-to-pdf",
+    title: "Images to PDF",
+    shortDescription: "Turn JPG and PNG images into a PDF.",
+    description:
+      "Arrange images and choose page size, orientation, margins, and fit.",
+    category: "Convert",
+    acceptsMultiple: true,
+  },
+  {
+    slug: "pdf-to-images",
+    title: "PDF to Images",
+    shortDescription: "Export PDF pages as JPG or PNG.",
+    description:
+      "Choose pages, output format, and resolution, then download images locally.",
+    category: "Convert",
+    acceptsMultiple: false,
+  },
+  {
+    slug: "rotate-pdf",
+    title: "Rotate PDF",
+    shortDescription: "Rotate selected pages precisely.",
+    description:
+      "Preview pages, choose their orientation, and save the corrected PDF.",
+    category: "Edit",
+    acceptsMultiple: false,
+  },
+  {
+    slug: "remove-metadata",
+    title: "Remove Metadata",
+    shortDescription: "Clear common private document properties.",
+    description:
+      "Review and remove supported PDF metadata without uploading the document.",
+    category: "Privacy",
+    acceptsMultiple: false,
+  },
+  {
+    slug: "view-metadata",
+    title: "View Metadata",
+    shortDescription: "Inspect common PDF document properties.",
+    description:
+      "Read supported document metadata privately, directly in your browser.",
+    category: "Privacy",
+    acceptsMultiple: false,
+  },
+];
+
+export function getTool(slug: string) {
+  return tools.find((tool) => tool.slug === slug);
+}
