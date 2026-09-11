@@ -19,19 +19,19 @@ export default function Home() {
   return (
     <PageShell>
       <main id="main-content">
-        <section className="px-5 py-16 text-center sm:px-8 sm:py-24">
-          <div className="mx-auto max-w-4xl">
+        <section className="px-5 py-10 text-center sm:px-8 sm:py-14">
+          <div className="mx-auto max-w-6xl">
             <p className="mx-auto inline-flex rounded-full bg-red-50 px-3 py-1 text-xs font-bold tracking-wide text-red-600 uppercase">
               Private · Local · Free
             </p>
-            <h1 className="mx-auto mt-6 max-w-3xl text-4xl leading-tight font-black tracking-tight text-balance sm:text-6xl">
+            <h1 className="mx-auto mt-4 max-w-5xl text-4xl leading-[1.08] font-black tracking-tight text-balance sm:text-5xl lg:text-[3.25rem]">
               Edit PDFs directly in your browser. No uploads. No signups. No
               nonsense.
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-zinc-600 sm:text-lg">
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-zinc-600 sm:text-lg">
               Simple PDF tools that process documents locally on your device.
             </p>
-            <div className="mx-auto mt-10 max-w-3xl text-left">
+            <div className="mx-auto mt-7 max-w-4xl text-left">
               <FileUploader multiple />
             </div>
           </div>
