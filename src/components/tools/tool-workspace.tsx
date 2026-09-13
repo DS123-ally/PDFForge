@@ -6,7 +6,10 @@ import type { ToolDefinition } from "@/config/tools";
 export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
   return (
     <div className="pb-24 md:pb-0">
-      <FileUploader multiple={tool.acceptsMultiple} />
+      <FileUploader
+        acceptedTypes={tool.acceptedFileTypes}
+        multiple={tool.acceptsMultiple}
+      />
       <div className="mt-7">
         <PrivacyNotice />
       </div>

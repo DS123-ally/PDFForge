@@ -15,6 +15,7 @@ export type ToolDefinition = {
   description: string;
   category: ToolCategory;
   acceptsMultiple: boolean;
+  acceptedFileTypes: Array<"pdf" | "image">;
 };
 
 export const tools: ToolDefinition[] = [
@@ -26,6 +27,7 @@ export const tools: ToolDefinition[] = [
       "Combine PDFs in the order you want. Everything happens locally in your browser.",
     category: "Organize",
     acceptsMultiple: true,
+    acceptedFileTypes: ["pdf"],
   },
   {
     slug: "split-pdf",
@@ -35,6 +37,7 @@ export const tools: ToolDefinition[] = [
       "Choose individual pages or ranges and export them as separate PDF files.",
     category: "Organize",
     acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
   },
   {
     slug: "organize-pdf",
@@ -44,6 +47,7 @@ export const tools: ToolDefinition[] = [
       "Arrange PDF pages visually before saving a clean, organized copy.",
     category: "Organize",
     acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
   },
   {
     slug: "images-to-pdf",
@@ -53,6 +57,7 @@ export const tools: ToolDefinition[] = [
       "Arrange images and choose page size, orientation, margins, and fit.",
     category: "Convert",
     acceptsMultiple: true,
+    acceptedFileTypes: ["image"],
   },
   {
     slug: "pdf-to-images",
@@ -62,6 +67,7 @@ export const tools: ToolDefinition[] = [
       "Choose pages, output format, and resolution, then download images locally.",
     category: "Convert",
     acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
   },
   {
     slug: "rotate-pdf",
@@ -71,6 +77,7 @@ export const tools: ToolDefinition[] = [
       "Preview pages, choose their orientation, and save the corrected PDF.",
     category: "Edit",
     acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
   },
   {
     slug: "remove-metadata",
@@ -80,6 +87,7 @@ export const tools: ToolDefinition[] = [
       "Review and remove supported PDF metadata without uploading the document.",
     category: "Privacy",
     acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
   },
   {
     slug: "view-metadata",
@@ -89,6 +97,7 @@ export const tools: ToolDefinition[] = [
       "Read supported document metadata privately, directly in your browser.",
     category: "Privacy",
     acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
   },
 ];
 
