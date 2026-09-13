@@ -27,9 +27,10 @@ type FileUploaderProps = {
   acceptedTypes?: readonly AcceptedFileType[];
   maxFileSizeBytes?: number;
   multiple?: boolean;
+  onFilesChange?: (files: LocalUploadedFile[]) => void;
 };
 
-type LocalFile = {
+export type LocalUploadedFile = {
   file: File;
   fingerprint: string;
   id: string;
@@ -46,12 +47,13 @@ export function FileUploader({
   acceptedTypes = ["pdf"],
   maxFileSizeBytes = defaultMaxFileSizeBytes,
   multiple = false,
+  onFilesChange,
 }: FileUploaderProps) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const objectUrls = useRef<ObjectUrlManager | null>(null);
   const [dragActive, setDragActive] = useState(false);
-  const [files, setFiles] = useState<LocalFile[]>([]);
+  const [files, setFiles] = useState<LocalUploadedFile[]>([]);
   const [rejectedFiles, setRejectedFiles] = useState<RejectedFile[]>([]);
   const [isChecking, setIsChecking] = useState(false);
 
@@ -72,6 +74,10 @@ export function FileUploader({
       objectUrls.current?.revokeAll();
     };
   }, []);
+
+  useEffect(() => {
+    onFilesChange?.(files);
+  }, [files, onFilesChange]);
 
   async function addFiles(fileList: FileList | File[]) {
     const incomingFiles = Array.from(fileList);
