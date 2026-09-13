@@ -3,10 +3,17 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/page-shell";
 import { DownloadResultCard } from "@/components/tools/download-result-card";
 import { ProcessingCard } from "@/components/tools/processing-card";
+import type { ProcessingState } from "@/lib/workers/processing-state";
 
 export const metadata: Metadata = {
   title: "Merge PDF states",
   robots: { index: false, follow: false },
+};
+
+const processingState: ProcessingState = {
+  message: "Prepared 2 of 3 files",
+  progress: 68,
+  status: "processing",
 };
 
 export default function MergeStatesPage() {
@@ -24,7 +31,7 @@ export default function MergeStatesPage() {
             Processing and complete states
           </h1>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
-            <ProcessingCard />
+            <ProcessingCard state={processingState} />
             <DownloadResultCard />
           </div>
         </div>

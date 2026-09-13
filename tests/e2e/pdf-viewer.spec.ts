@@ -18,4 +18,13 @@ test("renders a selected PDF preview", async ({ page }) => {
   ).toBeVisible();
   await expect(page.getByText("1 page")).toBeVisible();
   await expect(page.getByLabel("Rendered PDF page 1")).toBeVisible();
+
+  await page.getByRole("button", { name: "Prepare PDFs" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Files are ready" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Files are ready for local processing"),
+  ).toBeVisible();
+  await expect(page.getByText("Pages")).toBeVisible();
 });
