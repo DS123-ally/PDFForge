@@ -25,6 +25,8 @@ import { cn } from "@/lib/utils";
 
 type FileUploaderProps = {
   acceptedTypes?: readonly AcceptedFileType[];
+  allowReorder?: boolean;
+  clearSignal?: number;
   maxFileSizeBytes?: number;
   multiple?: boolean;
   onFilesChange?: (files: LocalUploadedFile[]) => void;
@@ -34,6 +36,7 @@ export type LocalUploadedFile = {
   file: File;
   fingerprint: string;
   id: string;
+  pageCount?: number;
   previewUrl: string;
 };
 
@@ -45,6 +48,8 @@ type RejectedFile = {
 
 export function FileUploader({
   acceptedTypes = ["pdf"],
+  allowReorder = false,
+  clearSignal = 0,
   maxFileSizeBytes = defaultMaxFileSizeBytes,
   multiple = false,
   onFilesChange,
@@ -53,6 +58,7 @@ export function FileUploader({
   const inputRef = useRef<HTMLInputElement>(null);
   const objectUrls = useRef<ObjectUrlManager | null>(null);
   const [dragActive, setDragActive] = useState(false);
+  const [draggedFileId, setDraggedFileId] = useState<string | null>(null);
   const [files, setFiles] = useState<LocalUploadedFile[]>([]);
   const [rejectedFiles, setRejectedFiles] = useState<RejectedFile[]>([]);
   const [isChecking, setIsChecking] = useState(false);
@@ -79,6 +85,12 @@ export function FileUploader({
     onFilesChange?.(files);
   }, [files, onFilesChange]);
 
+  useEffect(() => {
+    if (clearSignal > 0) {
+      clearFiles();
+    }
+  }, [clearSignal]);
+
   async function addFiles(fileList: FileList | File[]) {
     const incomingFiles = Array.from(fileList);
 
@@ -97,12 +109,15 @@ export function FileUploader({
     );
 
     const manager = objectUrls.current;
-    const acceptedFiles = validation.valid.map(({ file, fingerprint }) => ({
-      file,
-      fingerprint,
-      id: createLocalFileId(file),
-      previewUrl: manager?.create(file) ?? "",
-    }));
+    const acceptedFiles = validation.valid.map(
+      ({ file, fingerprint, pageCount }) => ({
+        file,
+        fingerprint,
+        id: createLocalFileId(file),
+        pageCount,
+        previewUrl: manager?.create(file) ?? "",
+      }),
+    );
 
     setFiles((currentFiles) => {
       if (multiple) {
@@ -149,6 +164,46 @@ export function FileUploader({
     objectUrls.current?.revokeAll();
     setFiles([]);
     setRejectedFiles([]);
+  }
+
+  function moveFile(fileId: string, direction: "up" | "down") {
+    setFiles((currentFiles) => {
+      const currentIndex = currentFiles.findIndex((file) => file.id === fileId);
+      const nextIndex =
+        direction === "up" ? currentIndex - 1 : currentIndex + 1;
+
+      if (
+        currentIndex < 0 ||
+        nextIndex < 0 ||
+        nextIndex >= currentFiles.length
+      ) {
+        return currentFiles;
+      }
+
+      return reorderFiles(currentFiles, currentIndex, nextIndex);
+    });
+  }
+
+  function dropFile(targetFileId: string) {
+    if (!draggedFileId || draggedFileId === targetFileId) {
+      return;
+    }
+
+    setFiles((currentFiles) => {
+      const fromIndex = currentFiles.findIndex(
+        (file) => file.id === draggedFileId,
+      );
+      const toIndex = currentFiles.findIndex(
+        (file) => file.id === targetFileId,
+      );
+
+      if (fromIndex < 0 || toIndex < 0) {
+        return currentFiles;
+      }
+
+      return reorderFiles(currentFiles, fromIndex, toIndex);
+    });
+    setDraggedFileId(null);
   }
 
   function handleDragOver(event: DragEvent<HTMLElement>) {
@@ -246,8 +301,25 @@ export function FileUploader({
             {files.map((file) => (
               <FileListItem
                 key={file.id}
+                isDragging={draggedFileId === file.id}
                 name={file.file.name}
+                onDragEnd={() => setDraggedFileId(null)}
+                onDragStart={
+                  allowReorder ? () => setDraggedFileId(file.id) : undefined
+                }
+                onDrop={allowReorder ? () => dropFile(file.id) : undefined}
+                onMoveDown={
+                  allowReorder && files.at(-1)?.id !== file.id
+                    ? () => moveFile(file.id, "down")
+                    : undefined
+                }
+                onMoveUp={
+                  allowReorder && files[0]?.id !== file.id
+                    ? () => moveFile(file.id, "up")
+                    : undefined
+                }
                 onRemove={() => removeFile(file.id)}
+                pageCount={file.pageCount}
                 previewUrl={file.previewUrl}
                 size={formatFileSize(file.file.size)}
               />
@@ -273,6 +345,18 @@ export function FileUploader({
       </div>
     </div>
   );
+}
+
+function reorderFiles<T>(files: T[], fromIndex: number, toIndex: number) {
+  const nextFiles = [...files];
+  const [movedFile] = nextFiles.splice(fromIndex, 1);
+
+  if (!movedFile) {
+    return files;
+  }
+
+  nextFiles.splice(toIndex, 0, movedFile);
+  return nextFiles;
 }
 
 function createLocalFileId(file: File) {

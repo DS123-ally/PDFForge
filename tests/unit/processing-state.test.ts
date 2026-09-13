@@ -26,7 +26,9 @@ describe("processingReducer", () => {
   it("stores a worker result on completion", () => {
     const state = processingReducer(initialProcessingState, {
       result: {
+        filename: "merged-pdf.pdf",
         fileCount: 2,
+        outputBytes: new ArrayBuffer(8),
         totalBytes: 1024,
         totalPages: 6,
       },
@@ -36,6 +38,7 @@ describe("processingReducer", () => {
     expect(state).toMatchObject({
       progress: 100,
       result: {
+        filename: "merged-pdf.pdf",
         fileCount: 2,
         totalPages: 6,
       },

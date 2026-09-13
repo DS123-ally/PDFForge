@@ -8,11 +8,14 @@ import {
 } from "@/components/pdf/file-uploader";
 import { PdfViewer } from "@/components/pdf/pdf-viewer";
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
+import { DownloadResultCard } from "@/components/tools/download-result-card";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { ProcessingCard } from "@/components/tools/processing-card";
 import { Button } from "@/components/ui/button";
 import type { ToolDefinition } from "@/config/tools";
 import { usePdfWorkerProcessor } from "@/hooks/use-pdf-worker-processor";
+import { createDownload } from "@/lib/files/create-download";
+import { createOutputName } from "@/lib/files/create-output-name";
 import { formatFileSize } from "@/lib/files/format-file-size";
 
 const largeFileWarningBytes = 75 * 1024 * 1024;
@@ -20,6 +23,7 @@ const lowMemoryWarningBytes = 25 * 1024 * 1024;
 
 export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
   const [files, setFiles] = useState<LocalUploadedFile[]>([]);
+  const [clearSignal, setClearSignal] = useState(0);
   const processor = usePdfWorkerProcessor();
   const handleFilesChange = useCallback((nextFiles: LocalUploadedFile[]) => {
     setFiles(nextFiles);
@@ -42,21 +46,49 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
     () => shouldShowLowMemoryWarning(totalSelectedBytes),
     [totalSelectedBytes],
   );
+  const isMergeTool = tool.slug === "merge-pdf";
   const canPrepare =
-    files.length > 0 && processor.state.status !== "processing";
+    files.length >= (isMergeTool ? 2 : 1) &&
+    processor.state.status !== "processing";
   const actionLabel = getActionLabel(tool);
 
   function startLocalPreparation() {
-    void processor.start(files);
+    void processor.start(files, isMergeTool ? "merge" : "prepare");
+  }
+
+  function downloadMergedPdf() {
+    if (!processor.state.result?.outputBytes) {
+      return;
+    }
+
+    createDownload(processor.state.result.outputBytes, {
+      filename:
+        processor.state.result.filename ??
+        createOutputName(files[0]?.file.name ?? "merged.pdf", {
+          suffix: "merged",
+        }),
+    });
+  }
+
+  function processAnotherGroup() {
+    processor.reset();
+    setClearSignal((currentSignal) => currentSignal + 1);
   }
 
   return (
     <div className="pb-24 md:pb-0">
       <FileUploader
         acceptedTypes={tool.acceptedFileTypes}
+        allowReorder={isMergeTool}
+        clearSignal={clearSignal}
         multiple={tool.acceptsMultiple}
         onFilesChange={handleFilesChange}
       />
+      {isMergeTool && files.length === 1 ? (
+        <p className="mt-4 rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-sm leading-6 text-zinc-700">
+          Add at least one more PDF to merge documents.
+        </p>
+      ) : null}
       {totalSelectedBytes >= largeFileWarningBytes ? (
         <p
           className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900"
@@ -84,12 +116,25 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
           {actionLabel}
         </Button>
       </div>
-      {processor.state.status !== "idle" ? (
+      {processor.state.status !== "idle" &&
+      processor.state.status !== "success" ? (
         <div className="mt-8">
           <ProcessingCard
             onCancel={processor.cancel}
             onReset={processor.reset}
             state={processor.state}
+          />
+        </div>
+      ) : null}
+      {processor.state.status === "success" &&
+      processor.state.result?.outputBytes ? (
+        <div className="mt-8">
+          <DownloadResultCard
+            description={`${processor.state.result.fileCount} files merged into ${processor.state.result.totalPages} pages.`}
+            downloadLabel="Download merged PDF"
+            onDownload={downloadMergedPdf}
+            onProcessAnother={processAnotherGroup}
+            title="Your merged PDF is ready"
           />
         </div>
       ) : null}
@@ -114,7 +159,7 @@ function isPdfFile(file: File) {
 
 function getActionLabel(tool: ToolDefinition) {
   if (tool.slug === "merge-pdf") {
-    return "Prepare PDFs";
+    return "Merge PDFs";
   }
 
   return `Prepare ${tool.title}`;

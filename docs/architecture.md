@@ -314,3 +314,11 @@ Before Phase 2:
 4. Select the eventual deployment target before later security headers are finalized; this does not authorize deployment.
 
 No PDF processing, upload behavior, authentication, database, or deployment was added in Phase 1.
+
+## 15. Phase 6 outcome
+
+Merge PDF is the first complete production tool. Users can add multiple local PDFs, see name/size/page count, reorder with drag-and-drop and keyboard controls, merge in a Web Worker, download the result, and clear temporary data with Process another.
+
+Exit checks for this phase: unit tests for merge order, mixed page sizes, and encrypted input; Playwright coverage for merge, reorder, password rejection, session reset, and no document POST/body traffic.
+
+Known limitations that remain in later phases: other public tool routes are still upload/preview shells, pdf-lib rewrites can drop signatures and some annotations, cancellation is cooperative between files/pages, and encrypted PDFs are rejected rather than unlocked.

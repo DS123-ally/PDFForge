@@ -24,10 +24,11 @@ export class PdfWorkerClient {
     };
   }
 
-  prepare(id: string, files: PdfWorkerFile[]) {
+  prepare(id: string, files: PdfWorkerFile[], operation: "prepare" | "merge") {
     const request: PdfWorkerRequest = {
       files,
       id,
+      operation,
       type: "prepare",
     };
     const transfers = files.map((file) => file.bytes);

@@ -6,7 +6,7 @@ The linked Figma source currently contains the placeholder brand “PDFLocal.”
 
 ## Project status
 
-Phase 2 (design system and static interface) is complete. The repository now includes the responsive PDFForge homepage, reusable UI and PDF workspace components, a searchable tool directory, eight static tool routes, supporting content pages, and representative merge processing states. File selection and PDF processing remain disabled until Phase 3.
+Phase 6 (Merge PDF) is complete pending approval. Local file intake, the PDF.js preview, and the processing worker are in place. Merge PDF can add, reorder, merge, download, and clear documents entirely in the browser. Split, Organize, conversion, editing, and security tools remain later phases.
 
 - Architecture and roadmap: [`docs/architecture.md`](docs/architecture.md)
 - Figma prototype: [PDFLocal — Privacy-First PDF Tools](https://www.figma.com/proto/eSdbWCDJ0EqKUPESoR66nx/PDFLocal-%E2%80%94-Privacy-First-PDF-Tools?node-id=0-1)
@@ -22,7 +22,7 @@ Phase 2 (design system and static interface) is complete. The repository now inc
 - `clsx` and `tailwind-merge` for component class composition
 - npm, selected by the committed `package-lock.json`
 
-Vitest, Testing Library, Playwright, Prettier, strict type checking, and GitHub Actions CI are configured. PDF.js and processing Web Workers belong to later phases.
+Vitest, Testing Library, Playwright, Prettier, strict type checking, and GitHub Actions CI are configured. Merge PDF runs in a dedicated module Web Worker.
 
 ## Static routes
 

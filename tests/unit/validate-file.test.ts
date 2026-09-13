@@ -7,6 +7,7 @@ import {
   validateFile,
   validateFiles,
 } from "@/lib/files/validate-file";
+import { createEncryptedPdfBytes, toArrayBuffer } from "../fixtures/pdf";
 
 describe("validateFile", () => {
   it("accepts a readable PDF file", async () => {
@@ -20,6 +21,7 @@ describe("validateFile", () => {
     await expect(validateFile(file)).resolves.toMatchObject({
       file,
       fingerprint: createFileFingerprint(file),
+      pageCount: 1,
     });
   });
 
@@ -42,6 +44,18 @@ describe("validateFile", () => {
       code: "invalid_pdf",
     });
   });
+
+  it("rejects a password-protected PDF with a clear error code", async () => {
+    const file = new File(
+      [toArrayBuffer(await createEncryptedPdfBytes())],
+      "locked.pdf",
+      { type: "application/pdf" },
+    );
+
+    await expect(validateFile(file)).rejects.toMatchObject({
+      code: "password_protected_pdf",
+    });
+  });
 });
 
 describe("validateFiles", () => {
@@ -60,10 +74,3 @@ describe("validateFiles", () => {
     expect(result.errors[0]?.error.code).toBe("duplicate_file");
   });
 });
-
-function toArrayBuffer(bytes: Uint8Array) {
-  return bytes.buffer.slice(
-    bytes.byteOffset,
-    bytes.byteOffset + bytes.byteLength,
-  ) as ArrayBuffer;
-}

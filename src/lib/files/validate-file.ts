@@ -16,6 +16,7 @@ export type FileValidationOptions = {
 export type ValidatedFile = {
   file: File;
   fingerprint: string;
+  pageCount?: number;
 };
 
 export const defaultMaxFileSizeBytes = 100 * 1024 * 1024;
@@ -70,11 +71,9 @@ export async function validateFile(
     throw new FilePipelineError("unsupported_type");
   }
 
-  if (isPdfFile(file)) {
-    await validatePdfFile(file);
-  }
+  const pageCount = isPdfFile(file) ? await validatePdfFile(file) : undefined;
 
-  return { file, fingerprint };
+  return { file, fingerprint, pageCount };
 }
 
 export async function validateFiles(
@@ -145,7 +144,8 @@ async function validatePdfFile(file: File) {
   }
 
   try {
-    await loadPdf(file);
+    const pdf = await loadPdf(file);
+    return pdf.getPageCount();
   } catch (error) {
     if (error instanceof PdfPasswordProtectedError) {
       throw new FilePipelineError("password_protected_pdf");

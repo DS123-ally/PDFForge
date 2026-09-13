@@ -9,6 +9,7 @@ export type PdfWorkerRequest =
   | {
       id: string;
       files: PdfWorkerFile[];
+      operation: "prepare" | "merge";
       type: "prepare";
     }
   | {
@@ -42,6 +43,8 @@ export type PdfWorkerResponse =
 
 export type PdfWorkerResult = {
   fileCount: number;
+  filename?: string;
+  outputBytes?: ArrayBuffer;
   totalBytes: number;
   totalPages: number;
 };

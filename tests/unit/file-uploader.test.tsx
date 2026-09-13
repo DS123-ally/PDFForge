@@ -44,4 +44,27 @@ describe("FileUploader", () => {
     });
     expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:local-preview");
   });
+
+  it("reorders selected files with keyboard controls", async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <FileUploader acceptedTypes={["image"]} allowReorder multiple />,
+    );
+    const input =
+      container.querySelector<HTMLInputElement>("input[type='file']");
+    const first = new File(["one"], "alpha.png", { type: "image/png" });
+    const second = new File(["two"], "beta.png", { type: "image/png" });
+
+    fireEvent.change(input!, { target: { files: [first, second] } });
+
+    expect(await screen.findByText("2 files ready")).toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("button", { name: /move alpha.png down/i }),
+    );
+
+    const items = screen.getAllByRole("listitem");
+    expect(items[0]).toHaveTextContent("beta.png");
+    expect(items[1]).toHaveTextContent("alpha.png");
+  });
 });

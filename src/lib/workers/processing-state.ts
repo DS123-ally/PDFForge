@@ -49,7 +49,9 @@ export function processingReducer(
       };
     case "complete":
       return {
-        message: "Files are ready for local processing",
+        message: action.result.outputBytes
+          ? "Merged PDF is ready"
+          : "Files are ready for local processing",
         progress: 100,
         result: action.result,
         status: "success",
