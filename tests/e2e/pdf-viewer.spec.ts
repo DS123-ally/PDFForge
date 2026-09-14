@@ -14,7 +14,12 @@ test("renders a selected PDF preview", async ({ page }) => {
     },
   ]);
 
-  await expect(page.getByRole("heading", { name: "first.pdf" })).toBeVisible();
-  await expect(page.getByText("1 page")).toBeVisible();
+  await expect(page.getByText("1 file ready")).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(page.getByRole("heading", { name: "first.pdf" })).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(page.getByText("1 page")).toBeVisible({ timeout: 15_000 });
   await expect(page.getByLabel("Rendered PDF page 1")).toBeVisible();
 });

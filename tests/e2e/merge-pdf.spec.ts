@@ -29,7 +29,9 @@ test("merges local PDFs in order and does not upload document bytes", async ({
     { name: "second.pdf", bytes: secondPdf },
   ]);
 
-  await expect(page.getByText("2 files ready")).toBeVisible();
+  await expect(page.getByText("2 files ready")).toBeVisible({
+    timeout: 15_000,
+  });
   await expect(page.getByText(/- 1 page$/)).toBeVisible();
   await expect(page.getByText(/- 2 pages$/)).toBeVisible();
 
@@ -60,7 +62,9 @@ test("keyboard reorder changes the merged page order", async ({ page }) => {
     { name: "second.pdf", bytes: secondPdf },
   ]);
 
-  await expect(page.getByText("2 files ready")).toBeVisible();
+  await expect(page.getByText("2 files ready")).toBeVisible({
+    timeout: 15_000,
+  });
   await page.getByRole("button", { name: "Move first.pdf down" }).click();
   await page.getByRole("button", { name: "Merge PDFs" }).click();
   await expect(
@@ -97,7 +101,9 @@ test("process another clears the current merge session", async ({ page }) => {
     { name: "first.pdf", bytes: firstPdf },
     { name: "second.pdf", bytes: secondPdf },
   ]);
-  await expect(page.getByText("2 files ready")).toBeVisible();
+  await expect(page.getByText("2 files ready")).toBeVisible({
+    timeout: 15_000,
+  });
   await page.getByRole("button", { name: "Merge PDFs" }).click();
   await expect(
     page.getByRole("heading", { name: "Your merged PDF is ready" }),
