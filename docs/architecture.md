@@ -346,3 +346,15 @@ PDF to Images accepts one PDF, supports all pages or validated custom page range
 Exit checks for this phase: unit tests for image placement and image-to-PDF output, plus Playwright coverage for image-to-PDF PDF downloads and PDF-to-images ZIP downloads across Chromium, Firefox, and WebKit.
 
 Known limitations that remain in later phases: PDF-to-images raster export can consume significant memory at high resolution, browser canvas encoders determine exact JPG quality output, image color profile handling depends on browser decoding and pdf-lib embedding, and conversion output is raster/image based rather than editable document reconstruction.
+
+## 18. Phase 9 outcome
+
+Editing and privacy tools now complete the non-security editing phase without adding accounts, a backend, document storage, or telemetry.
+
+Rotate PDF supports all pages or validated custom ranges and saves page rotations through the shared worker. Add Watermark supports text, opacity, position, and rotation. Add Page Numbers supports position, starting number, and page-only or page-of-total formats. Add Headers and Footers applies repeated text to every page.
+
+Remove Metadata clears common pdf-lib metadata fields and sets neutral PDFForge creator/producer fields. View Metadata reads common fields locally without producing an output file. Extract Text reads selectable text-layer content through PDF.js and provides copy/download actions; scanned PDF OCR remains out of scope.
+
+Exit checks for this phase: unit tests for rotation, metadata cleaning, and text-overlay output; Playwright coverage for Rotate PDF, Remove Metadata, View Metadata, and Extract Text across supported browser projects.
+
+Known limitations that remain in later phases: metadata cleaning does not remove visible content or guarantee removal of every hidden/custom PDF structure, text extraction does not OCR scanned pages, visual overlays can invalidate digital signatures, and watermarks/page text are added as ordinary PDF content rather than security controls.

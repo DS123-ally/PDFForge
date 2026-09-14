@@ -1,4 +1,5 @@
 import { createOutputName } from "@/lib/files/create-output-name";
+import { editPdfBuffer } from "@/lib/pdf/edit-pdf";
 import { imagesToPdf } from "@/lib/pdf/images-to-pdf";
 import { loadPdf } from "@/lib/pdf/load-pdf";
 import { mergePdfBuffers, PdfMergeCancelledError } from "@/lib/pdf/merge-pdf";
@@ -77,6 +78,8 @@ async function runOperation(
       return organizeJob(request);
     case "images-to-pdf":
       return imagesToPdfJob(request);
+    case "edit-pdf":
+      return editPdfJob(request);
     case "prepare":
       return inspectJob(request);
   }
@@ -167,6 +170,29 @@ async function imagesToPdfJob(
     filename: result.filename,
     outputBytes: result.outputBytes,
     totalBytes: request.files.reduce((total, file) => total + file.size, 0),
+    totalPages: result.totalPages,
+  };
+}
+
+async function editPdfJob(
+  request: Extract<PdfWorkerRequest, { type: "prepare" }>,
+): Promise<PdfWorkerResult> {
+  const file = request.files[0];
+  const options = request.options?.editPdf;
+
+  if (!file || !options) {
+    throw new Error("A PDF and edit options are required.");
+  }
+
+  postProgress(request.id, 10, "Editing PDF locally");
+  const result = await editPdfBuffer(file.bytes, options, file.name);
+  postProgress(request.id, 100, "Edited PDF is ready");
+
+  return {
+    fileCount: result.fileCount,
+    filename: result.filename,
+    outputBytes: result.outputBytes,
+    totalBytes: file.size,
     totalPages: result.totalPages,
   };
 }

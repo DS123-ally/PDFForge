@@ -1,4 +1,4 @@
-import { PDFDocument } from "pdf-lib";
+import { PDFDocument, StandardFonts } from "pdf-lib";
 
 export async function createPdfBytes({
   pageCount = 1,
@@ -32,6 +32,18 @@ export async function createEncryptedPdfBytes() {
     V: 1,
   });
   pdf.context.trailerInfo.Encrypt = pdf.context.register(encryptDict);
+
+  return pdf.save();
+}
+
+export async function createTextPdfBytes(text = "PDFForge sample text") {
+  const pdf = await PDFDocument.create();
+  const font = await pdf.embedFont(StandardFonts.Helvetica);
+  const page = pdf.addPage([320, 420]);
+
+  page.drawText(text, { font, size: 16, x: 32, y: 360 });
+  pdf.setTitle("Sample title");
+  pdf.setAuthor("PDFForge tester");
 
   return pdf.save();
 }

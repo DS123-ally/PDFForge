@@ -80,6 +80,36 @@ export const tools: ToolDefinition[] = [
     acceptedFileTypes: ["pdf"],
   },
   {
+    slug: "add-watermark",
+    title: "Add Watermark",
+    shortDescription: "Place custom text across PDF pages.",
+    description:
+      "Add a text watermark with opacity, position, and rotation controls.",
+    category: "Edit",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "add-page-numbers",
+    title: "Add Page Numbers",
+    shortDescription: "Number PDF pages with flexible placement.",
+    description:
+      "Add page numbers locally with position, starting number, and format controls.",
+    category: "Edit",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "add-headers-footers",
+    title: "Add Headers and Footers",
+    shortDescription: "Add repeated header and footer text.",
+    description:
+      "Apply simple header and footer text to every page without uploading the PDF.",
+    category: "Edit",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
     slug: "remove-metadata",
     title: "Remove Metadata",
     shortDescription: "Clear common private document properties.",
@@ -95,6 +125,16 @@ export const tools: ToolDefinition[] = [
     shortDescription: "Inspect common PDF document properties.",
     description:
       "Read supported document metadata privately, directly in your browser.",
+    category: "Privacy",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "extract-text",
+    title: "Extract Text",
+    shortDescription: "Copy selectable text from PDF pages.",
+    description:
+      "Extract available text-layer content locally. Scanned PDFs require OCR later.",
     category: "Privacy",
     acceptsMultiple: false,
     acceptedFileTypes: ["pdf"],

@@ -1,3 +1,10 @@
+import type { PdfEditOptions } from "@/lib/pdf/edit-pdf";
+import type {
+  ImageFitMode,
+  ImageOrientation,
+  ImagePageSize,
+} from "@/lib/pdf/image-layout";
+
 export type PdfWorkerFile = {
   id: string;
   name: string;
@@ -5,14 +12,8 @@ export type PdfWorkerFile = {
   bytes: ArrayBuffer;
 };
 
-import type {
-  ImageFitMode,
-  ImageOrientation,
-  ImagePageSize,
-} from "@/lib/pdf/image-layout";
-
 export type PdfWorkerOperation =
-  "prepare" | "merge" | "split" | "organize" | "images-to-pdf";
+  "prepare" | "merge" | "split" | "organize" | "images-to-pdf" | "edit-pdf";
 
 export type PdfWorkerSplitOptions = {
   mode: "extract" | "ranges" | "every-page";
@@ -26,6 +27,7 @@ export type PdfWorkerOrganizePage = {
 };
 
 export type PdfWorkerOptions = {
+  editPdf?: PdfEditOptions;
   imagesToPdf?: {
     fit: ImageFitMode;
     images: Array<{

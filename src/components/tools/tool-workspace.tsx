@@ -9,6 +9,7 @@ import {
 import { PdfViewer } from "@/components/pdf/pdf-viewer";
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { DownloadResultCard } from "@/components/tools/download-result-card";
+import { EditPrivacyWorkspace } from "@/components/tools/edit-privacy-workspace";
 import { ImagesToPdfWorkspace } from "@/components/tools/images-to-pdf-workspace";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
@@ -42,7 +43,23 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
     return <PdfToImagesWorkspace />;
   }
 
+  if (isPhaseNineTool(tool.slug)) {
+    return <EditPrivacyWorkspace tool={tool} />;
+  }
+
   return <GenericToolWorkspace tool={tool} />;
+}
+
+function isPhaseNineTool(slug: string) {
+  return [
+    "rotate-pdf",
+    "add-watermark",
+    "add-page-numbers",
+    "add-headers-footers",
+    "remove-metadata",
+    "view-metadata",
+    "extract-text",
+  ].includes(slug);
 }
 
 function GenericToolWorkspace({ tool }: { tool: ToolDefinition }) {
