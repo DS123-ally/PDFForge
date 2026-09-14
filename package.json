@@ -12,7 +12,8 @@
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "icons:pwa": "node scripts/write-pwa-icons.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

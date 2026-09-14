@@ -20,7 +20,9 @@ test("registers a service worker that does not cache PDF responses", async ({
   const allowsPdfCache = await page.evaluate(async () => {
     const cacheNames = await caches.keys();
     const keys = (
-      await Promise.all(cacheNames.map(async (name) => (await caches.open(name)).keys()))
+      await Promise.all(
+        cacheNames.map(async (name) => (await caches.open(name)).keys()),
+      )
     ).flat();
     return keys.some((request) => request.url.toLowerCase().includes(".pdf"));
   });
@@ -28,17 +30,24 @@ test("registers a service worker that does not cache PDF responses", async ({
   expect(allowsPdfCache).toBe(false);
 });
 
-test("keeps the offline application shell available", async ({ context, page }) => {
+test("keeps the offline application shell available", async ({
+  context,
+  page,
+}) => {
   await page.goto("/offline");
   await expect(
-    page.getByRole("heading", { name: /you can keep using the pdfforge shell/i }),
+    page.getByRole("heading", {
+      name: /you can keep using the pdfforge shell/i,
+    }),
   ).toBeVisible();
   await page.evaluate(async () => navigator.serviceWorker.ready);
 
   await context.setOffline(true);
   await page.reload({ waitUntil: "domcontentloaded" });
   await expect(
-    page.getByRole("heading", { name: /you can keep using the pdfforge shell/i }),
+    page.getByRole("heading", {
+      name: /you can keep using the pdfforge shell/i,
+    }),
   ).toBeVisible();
   await expect(page.getByText("Uploaded PDFs or images")).toBeVisible();
 });

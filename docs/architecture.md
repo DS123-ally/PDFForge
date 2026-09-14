@@ -384,4 +384,3 @@ A production service worker precaches the application shell (`/`, `/tools`, `/of
 Exit checks: unit tests for cache policy, large-file memory warnings, and worker reuse; Playwright coverage for service-worker registration and offline shell reload.
 
 Known limitations that remain in later phases: Lighthouse scores vary by host and throttling; first-visit tool pages still need a network fetch before they can run offline; password tools terminate the worker instead of reusing it; service workers are registered in production only.
-

@@ -57,10 +57,7 @@ export function shouldCacheResponse(input: CacheDecisionInput) {
     return false;
   }
 
-  if (
-    parsed.searchParams.has("token") ||
-    parsed.searchParams.has("password")
-  ) {
+  if (parsed.searchParams.has("token") || parsed.searchParams.has("password")) {
     return false;
   }
 

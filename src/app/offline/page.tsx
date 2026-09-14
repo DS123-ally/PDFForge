@@ -5,7 +5,8 @@ import { StatusBadge } from "@/components/ui/status-badge";
 
 export const metadata: Metadata = {
   title: "Offline",
-  description: "Use PDFForge’s application shell when your network is unavailable.",
+  description:
+    "Use PDFForge’s application shell when your network is unavailable.",
 };
 
 export default function OfflinePage() {
@@ -27,7 +28,9 @@ export default function OfflinePage() {
         </p>
       </section>
       <section>
-        <h2 className="text-2xl font-bold text-zinc-950">What is never cached</h2>
+        <h2 className="text-2xl font-bold text-zinc-950">
+          What is never cached
+        </h2>
         <ul className="mt-4 list-disc space-y-2 pl-6">
           <li>Uploaded PDFs or images</li>
           <li>Generated downloads</li>
