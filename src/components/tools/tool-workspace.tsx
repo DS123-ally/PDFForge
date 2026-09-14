@@ -1,6 +1,5 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { useCallback, useMemo, useState } from "react";
 
 import {
@@ -10,72 +9,20 @@ import {
 import { PdfViewer } from "@/components/pdf/pdf-viewer";
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { DownloadResultCard } from "@/components/tools/download-result-card";
+import { EditPrivacyWorkspace } from "@/components/tools/edit-privacy-workspace";
+import { ImagesToPdfWorkspace } from "@/components/tools/images-to-pdf-workspace";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
+import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
+import { PdfToImagesWorkspace } from "@/components/tools/pdf-to-images-workspace";
 import { ProcessingCard } from "@/components/tools/processing-card";
+import { RedactPdfWorkspace } from "@/components/tools/redact-pdf-workspace";
+import { SecurityWorkspace } from "@/components/tools/security-workspace";
+import { SplitPdfWorkspace } from "@/components/tools/split-pdf-workspace";
 import { Button } from "@/components/ui/button";
 import type { ToolDefinition } from "@/config/tools";
 import { usePdfWorkerProcessor } from "@/hooks/use-pdf-worker-processor";
 import { createDownload } from "@/lib/files/create-download";
 import { createOutputName } from "@/lib/files/create-output-name";
-
-const toolLoading = () => (
-  <p
-    className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 text-sm font-semibold text-zinc-600"
-    role="status"
-  >
-    Loading this local tool
-  </p>
-);
-
-const SplitPdfWorkspace = dynamic(
-  () =>
-    import("@/components/tools/split-pdf-workspace").then((mod) => ({
-      default: mod.SplitPdfWorkspace,
-    })),
-  { loading: toolLoading },
-);
-const OrganizePdfWorkspace = dynamic(
-  () =>
-    import("@/components/tools/organize-pdf-workspace").then((mod) => ({
-      default: mod.OrganizePdfWorkspace,
-    })),
-  { loading: toolLoading },
-);
-const ImagesToPdfWorkspace = dynamic(
-  () =>
-    import("@/components/tools/images-to-pdf-workspace").then((mod) => ({
-      default: mod.ImagesToPdfWorkspace,
-    })),
-  { loading: toolLoading },
-);
-const PdfToImagesWorkspace = dynamic(
-  () =>
-    import("@/components/tools/pdf-to-images-workspace").then((mod) => ({
-      default: mod.PdfToImagesWorkspace,
-    })),
-  { loading: toolLoading },
-);
-const EditPrivacyWorkspace = dynamic(
-  () =>
-    import("@/components/tools/edit-privacy-workspace").then((mod) => ({
-      default: mod.EditPrivacyWorkspace,
-    })),
-  { loading: toolLoading },
-);
-const SecurityWorkspace = dynamic(
-  () =>
-    import("@/components/tools/security-workspace").then((mod) => ({
-      default: mod.SecurityWorkspace,
-    })),
-  { loading: toolLoading },
-);
-const RedactPdfWorkspace = dynamic(
-  () =>
-    import("@/components/tools/redact-pdf-workspace").then((mod) => ({
-      default: mod.RedactPdfWorkspace,
-    })),
-  { loading: toolLoading },
-);
 
 export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
   if (tool.slug === "split-pdf") {
