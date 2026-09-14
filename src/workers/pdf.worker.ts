@@ -1,4 +1,5 @@
 import { createOutputName } from "@/lib/files/create-output-name";
+import { imagesToPdf } from "@/lib/pdf/images-to-pdf";
 import { loadPdf } from "@/lib/pdf/load-pdf";
 import { mergePdfBuffers, PdfMergeCancelledError } from "@/lib/pdf/merge-pdf";
 import { organizePdfBuffer } from "@/lib/pdf/organize-pdf";
@@ -74,6 +75,8 @@ async function runOperation(
       return splitJob(request);
     case "organize":
       return organizeJob(request);
+    case "images-to-pdf":
+      return imagesToPdfJob(request);
     case "prepare":
       return inspectJob(request);
   }
@@ -127,6 +130,43 @@ async function splitJob(
     outputBytes: result.outputBytes,
     outputMimeType: result.outputMimeType,
     totalBytes: file.size,
+    totalPages: result.totalPages,
+  };
+}
+
+async function imagesToPdfJob(
+  request: Extract<PdfWorkerRequest, { type: "prepare" }>,
+): Promise<PdfWorkerResult> {
+  const options = request.options?.imagesToPdf;
+
+  if (!options) {
+    throw new Error("Image conversion options are required.");
+  }
+
+  postProgress(request.id, 10, "Converting images to PDF locally");
+  const imageInputs = request.files.map((file) => {
+    const dimensions = options.images.find((image) => image.id === file.id);
+
+    if (!dimensions) {
+      throw new Error("Image dimensions are required.");
+    }
+
+    return {
+      bytes: file.bytes,
+      height: dimensions.height,
+      mimeType: dimensions.mimeType,
+      name: file.name,
+      width: dimensions.width,
+    };
+  });
+  const result = await imagesToPdf(imageInputs, options);
+  postProgress(request.id, 100, "Images PDF is ready");
+
+  return {
+    fileCount: result.fileCount,
+    filename: result.filename,
+    outputBytes: result.outputBytes,
+    totalBytes: request.files.reduce((total, file) => total + file.size, 0),
     totalPages: result.totalPages,
   };
 }

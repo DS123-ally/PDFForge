@@ -9,8 +9,10 @@ import {
 import { PdfViewer } from "@/components/pdf/pdf-viewer";
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { DownloadResultCard } from "@/components/tools/download-result-card";
+import { ImagesToPdfWorkspace } from "@/components/tools/images-to-pdf-workspace";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
+import { PdfToImagesWorkspace } from "@/components/tools/pdf-to-images-workspace";
 import { ProcessingCard } from "@/components/tools/processing-card";
 import { SplitPdfWorkspace } from "@/components/tools/split-pdf-workspace";
 import { Button } from "@/components/ui/button";
@@ -30,6 +32,14 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
 
   if (tool.slug === "organize-pdf") {
     return <OrganizePdfWorkspace />;
+  }
+
+  if (tool.slug === "images-to-pdf") {
+    return <ImagesToPdfWorkspace />;
+  }
+
+  if (tool.slug === "pdf-to-images") {
+    return <PdfToImagesWorkspace />;
   }
 
   return <GenericToolWorkspace tool={tool} />;

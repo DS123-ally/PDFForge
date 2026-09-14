@@ -334,3 +334,15 @@ Organize PDF supports a thumbnail grid, page selection and multi-selection, drag
 Exit checks for this phase: unit tests for page-range parsing, Split PDF ZIP/PDF outputs, Organize PDF reorder/delete/rotation, and Playwright coverage for Split PDF and Organize PDF downloads with local network inspection.
 
 Known limitations that remain in later phases: very large split ZIPs may still be memory-heavy, undo is session-local and not persisted, thumbnails render in the current tab while document mutations run in the worker, and pdf-lib output may not preserve all advanced PDF structures such as signatures, tags, complex forms, and uncommon annotations.
+
+## 17. Phase 8 outcome
+
+Images to PDF and PDF to Images now complete the initial conversion phase without adding a backend or storage layer.
+
+Images to PDF accepts JPG, JPEG, and PNG files through the shared uploader, preserves user-selected file order, supports A4, Letter, and original image-sized pages, portrait and landscape orientation, margin controls, and fit/fill/original placement. Image embedding runs in the existing module Web Worker through pdf-lib.
+
+PDF to Images accepts one PDF, supports all pages or validated custom page ranges, PNG and JPG output, resolution and JPG quality controls, individual downloads, ZIP download, and warnings for high-resolution multi-page exports. PDF parsing uses PDF.js and image export uses same-origin browser canvas APIs in the current tab because canvas serialization is browser-managed.
+
+Exit checks for this phase: unit tests for image placement and image-to-PDF output, plus Playwright coverage for image-to-PDF PDF downloads and PDF-to-images ZIP downloads across Chromium, Firefox, and WebKit.
+
+Known limitations that remain in later phases: PDF-to-images raster export can consume significant memory at high resolution, browser canvas encoders determine exact JPG quality output, image color profile handling depends on browser decoding and pdf-lib embedding, and conversion output is raster/image based rather than editable document reconstruction.

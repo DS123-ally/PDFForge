@@ -6,7 +6,7 @@ The linked Figma source currently contains the placeholder brand “PDFLocal.”
 
 ## Project status
 
-Phase 7 (Split and Organize PDF) is complete pending approval. Merge PDF, Split PDF, and Organize PDF run locally in the browser with the shared file pipeline, PDF.js previews, and processing worker. Conversion, editing, privacy metadata, security, PWA, audit, SEO, and release work remain later phases.
+Phase 8 (Image conversion tools) is complete pending approval. Merge PDF, Split PDF, Organize PDF, Images to PDF, and PDF to Images run locally in the browser with the shared file pipeline and PDF.js previews. Editing, privacy metadata, security, PWA, audit, SEO, and release work remain later phases.
 
 - Architecture and roadmap: [`docs/architecture.md`](docs/architecture.md)
 - Figma prototype: [PDFLocal — Privacy-First PDF Tools](https://www.figma.com/proto/eSdbWCDJ0EqKUPESoR66nx/PDFLocal-%E2%80%94-Privacy-First-PDF-Tools?node-id=0-1)
@@ -22,7 +22,7 @@ Phase 7 (Split and Organize PDF) is complete pending approval. Merge PDF, Split 
 - `clsx` and `tailwind-merge` for component class composition
 - npm, selected by the committed `package-lock.json`
 
-Vitest, Testing Library, Playwright, Prettier, strict type checking, and GitHub Actions CI are configured. Merge, Split, and Organize processing runs in a dedicated module Web Worker.
+Vitest, Testing Library, Playwright, Prettier, strict type checking, and GitHub Actions CI are configured. Merge, Split, Organize, and Images to PDF processing runs in a dedicated module Web Worker; PDF to Images renders locally with PDF.js and canvas export.
 
 ## Static routes
 

@@ -42,3 +42,10 @@ export function toArrayBuffer(bytes: Uint8Array) {
     bytes.byteOffset + bytes.byteLength,
   ) as ArrayBuffer;
 }
+
+export function createPngBytes() {
+  return Buffer.from(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAMCAIAAADkharWAAAAFElEQVR4nGP8z0A+YKJA76jmUc2jAQB3iQEYJdkFzAAAAABJRU5ErkJggg==",
+    "base64",
+  );
+}

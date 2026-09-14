@@ -5,7 +5,14 @@ export type PdfWorkerFile = {
   bytes: ArrayBuffer;
 };
 
-export type PdfWorkerOperation = "prepare" | "merge" | "split" | "organize";
+import type {
+  ImageFitMode,
+  ImageOrientation,
+  ImagePageSize,
+} from "@/lib/pdf/image-layout";
+
+export type PdfWorkerOperation =
+  "prepare" | "merge" | "split" | "organize" | "images-to-pdf";
 
 export type PdfWorkerSplitOptions = {
   mode: "extract" | "ranges" | "every-page";
@@ -19,6 +26,18 @@ export type PdfWorkerOrganizePage = {
 };
 
 export type PdfWorkerOptions = {
+  imagesToPdf?: {
+    fit: ImageFitMode;
+    images: Array<{
+      height: number;
+      id: string;
+      mimeType: string;
+      width: number;
+    }>;
+    margin: number;
+    orientation: ImageOrientation;
+    pageSize: ImagePageSize;
+  };
   organize?: {
     pages: PdfWorkerOrganizePage[];
   };
