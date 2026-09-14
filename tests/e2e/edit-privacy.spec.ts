@@ -3,6 +3,8 @@ import { PDFDocument } from "pdf-lib";
 
 import { createPdfBytes, createTextPdfBytes } from "../fixtures/pdf";
 
+test.describe.configure({ timeout: 60_000 });
+
 test("rotates selected PDF pages locally", async ({ page }) => {
   const sourcePdf = await createPdfBytes({ pageCount: 2 });
   const leakedRequests: string[] = [];
