@@ -322,3 +322,15 @@ Merge PDF is the first complete production tool. Users can add multiple local PD
 Exit checks for this phase: unit tests for merge order, mixed page sizes, and encrypted input; Playwright coverage for merge, reorder, password rejection, session reset, and no document POST/body traffic.
 
 Known limitations that remain in later phases: other public tool routes are still upload/preview shells, pdf-lib rewrites can drop signatures and some annotations, cancellation is cooperative between files/pages, and encrypted PDFs are rejected rather than unlocked.
+
+## 16. Phase 7 outcome
+
+Split PDF and Organize PDF now use the same local intake, preview, worker, and download boundaries as Merge PDF.
+
+Split PDF supports extracting selected pages into one PDF, splitting explicit non-overlapping ranges into a ZIP, and splitting every page into separate ZIP entries. Page-range parsing rejects empty, malformed, out-of-bounds, and overlapping input before output is created.
+
+Organize PDF supports a thumbnail grid, page selection and multi-selection, drag-and-drop and keyboard reordering, individual and bulk rotation, deletion, undo for destructive/reordering changes, and saving the resulting PDF locally.
+
+Exit checks for this phase: unit tests for page-range parsing, Split PDF ZIP/PDF outputs, Organize PDF reorder/delete/rotation, and Playwright coverage for Split PDF and Organize PDF downloads with local network inspection.
+
+Known limitations that remain in later phases: very large split ZIPs may still be memory-heavy, undo is session-local and not persisted, thumbnails render in the current tab while document mutations run in the worker, and pdf-lib output may not preserve all advanced PDF structures such as signatures, tags, complex forms, and uncommon annotations.

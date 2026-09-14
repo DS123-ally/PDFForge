@@ -10,7 +10,9 @@ import { PdfViewer } from "@/components/pdf/pdf-viewer";
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { DownloadResultCard } from "@/components/tools/download-result-card";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
+import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
 import { ProcessingCard } from "@/components/tools/processing-card";
+import { SplitPdfWorkspace } from "@/components/tools/split-pdf-workspace";
 import { Button } from "@/components/ui/button";
 import type { ToolDefinition } from "@/config/tools";
 import { usePdfWorkerProcessor } from "@/hooks/use-pdf-worker-processor";
@@ -22,6 +24,18 @@ const largeFileWarningBytes = 75 * 1024 * 1024;
 const lowMemoryWarningBytes = 25 * 1024 * 1024;
 
 export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
+  if (tool.slug === "split-pdf") {
+    return <SplitPdfWorkspace />;
+  }
+
+  if (tool.slug === "organize-pdf") {
+    return <OrganizePdfWorkspace />;
+  }
+
+  return <GenericToolWorkspace tool={tool} />;
+}
+
+function GenericToolWorkspace({ tool }: { tool: ToolDefinition }) {
   const [files, setFiles] = useState<LocalUploadedFile[]>([]);
   const [clearSignal, setClearSignal] = useState(0);
   const processor = usePdfWorkerProcessor();

@@ -1,10 +1,13 @@
 import { createOutputName } from "@/lib/files/create-output-name";
 import { loadPdf } from "@/lib/pdf/load-pdf";
 import { mergePdfBuffers, PdfMergeCancelledError } from "@/lib/pdf/merge-pdf";
+import { organizePdfBuffer } from "@/lib/pdf/organize-pdf";
+import { PageRangeError } from "@/lib/pdf/page-ranges";
 import {
   PdfCorruptError,
   PdfPasswordProtectedError,
 } from "@/lib/pdf/pdf-errors";
+import { splitPdfBuffer } from "@/lib/pdf/split-pdf";
 import type {
   PdfWorkerRequest,
   PdfWorkerResponse,
@@ -35,10 +38,7 @@ workerSelf.onmessage = (event: MessageEvent<PdfWorkerRequest>) => {
 
 async function runJob(request: Extract<PdfWorkerRequest, { type: "prepare" }>) {
   try {
-    const result =
-      request.operation === "merge"
-        ? await mergeJob(request)
-        : await inspectJob(request);
+    const result = await runOperation(request);
     const response = {
       id: request.id,
       result,
@@ -64,6 +64,21 @@ async function runJob(request: Extract<PdfWorkerRequest, { type: "prepare" }>) {
   }
 }
 
+async function runOperation(
+  request: Extract<PdfWorkerRequest, { type: "prepare" }>,
+) {
+  switch (request.operation) {
+    case "merge":
+      return mergeJob(request);
+    case "split":
+      return splitJob(request);
+    case "organize":
+      return organizeJob(request);
+    case "prepare":
+      return inspectJob(request);
+  }
+}
+
 async function mergeJob(
   request: Extract<PdfWorkerRequest, { type: "prepare" }>,
 ): Promise<PdfWorkerResult> {
@@ -85,6 +100,59 @@ async function mergeJob(
     outputBytes: merged.outputBytes,
     totalBytes: request.files.reduce((total, file) => total + file.size, 0),
     totalPages: merged.totalPages,
+  };
+}
+
+async function splitJob(
+  request: Extract<PdfWorkerRequest, { type: "prepare" }>,
+): Promise<PdfWorkerResult> {
+  const file = request.files[0];
+
+  if (!file) {
+    throw new Error("A PDF is required.");
+  }
+
+  postProgress(request.id, 10, "Splitting PDF locally");
+  const splitOptions = request.options?.split;
+  const result = await splitPdfBuffer(file.bytes, {
+    mode: splitOptions?.mode ?? "extract",
+    ranges: splitOptions?.ranges,
+    sourceName: file.name,
+  });
+  postProgress(request.id, 100, "Split output is ready");
+
+  return {
+    fileCount: result.fileCount,
+    filename: result.filename,
+    outputBytes: result.outputBytes,
+    outputMimeType: result.outputMimeType,
+    totalBytes: file.size,
+    totalPages: result.totalPages,
+  };
+}
+
+async function organizeJob(
+  request: Extract<PdfWorkerRequest, { type: "prepare" }>,
+): Promise<PdfWorkerResult> {
+  const file = request.files[0];
+
+  if (!file) {
+    throw new Error("A PDF is required.");
+  }
+
+  postProgress(request.id, 10, "Organizing PDF pages locally");
+  const result = await organizePdfBuffer(file.bytes, {
+    pages: request.options?.organize?.pages ?? [],
+    sourceName: file.name,
+  });
+  postProgress(request.id, 100, "Organized PDF is ready");
+
+  return {
+    fileCount: result.fileCount,
+    filename: result.filename,
+    outputBytes: result.outputBytes,
+    totalBytes: file.size,
+    totalPages: result.totalPages,
   };
 }
 
@@ -164,6 +232,15 @@ function toWorkerError(id: string, error: unknown): PdfWorkerResponse {
       code: "invalid_pdf",
       id,
       message: error.userMessage,
+      type: "error",
+    };
+  }
+
+  if (error instanceof PageRangeError) {
+    return {
+      code: "invalid_page_range",
+      id,
+      message: error.message,
       type: "error",
     };
   }

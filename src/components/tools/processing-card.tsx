@@ -44,7 +44,7 @@ export function ProcessingCard({
       <h2 className="mt-6 text-2xl font-bold">
         {isSuccess
           ? state.result?.outputBytes
-            ? "Merged PDF is ready"
+            ? "Output is ready"
             : "Files are ready"
           : isError
             ? "Processing stopped"

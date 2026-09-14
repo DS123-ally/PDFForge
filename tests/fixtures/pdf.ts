@@ -3,14 +3,17 @@ import { PDFDocument } from "pdf-lib";
 export async function createPdfBytes({
   pageCount = 1,
   size = [320, 420],
+  sizes,
 }: {
   pageCount?: number;
   size?: [number, number];
+  sizes?: Array<[number, number]>;
 } = {}) {
   const pdf = await PDFDocument.create();
+  const pageSizes = sizes ?? Array.from({ length: pageCount }, () => size);
 
-  for (let index = 0; index < pageCount; index += 1) {
-    pdf.addPage(size);
+  for (const pageSize of pageSizes) {
+    pdf.addPage(pageSize);
   }
 
   return pdf.save();

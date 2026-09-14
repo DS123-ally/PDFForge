@@ -1,5 +1,7 @@
 import type {
   PdfWorkerFile,
+  PdfWorkerOperation,
+  PdfWorkerOptions,
   PdfWorkerRequest,
   PdfWorkerResponse,
 } from "@/lib/workers/pdf-worker-types";
@@ -24,11 +26,17 @@ export class PdfWorkerClient {
     };
   }
 
-  prepare(id: string, files: PdfWorkerFile[], operation: "prepare" | "merge") {
+  prepare(
+    id: string,
+    files: PdfWorkerFile[],
+    operation: PdfWorkerOperation,
+    options?: PdfWorkerOptions,
+  ) {
     const request: PdfWorkerRequest = {
       files,
       id,
       operation,
+      options,
       type: "prepare",
     };
     const transfers = files.map((file) => file.bytes);

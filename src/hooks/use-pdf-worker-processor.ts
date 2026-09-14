@@ -8,9 +8,11 @@ import {
   initialProcessingState,
   processingReducer,
 } from "@/lib/workers/processing-state";
-import type { PdfWorkerFile } from "@/lib/workers/pdf-worker-types";
-
-type WorkerOperation = "prepare" | "merge";
+import type {
+  PdfWorkerFile,
+  PdfWorkerOperation,
+  PdfWorkerOptions,
+} from "@/lib/workers/pdf-worker-types";
 
 export function usePdfWorkerProcessor() {
   const [state, dispatch] = useReducer(
@@ -48,7 +50,8 @@ export function usePdfWorkerProcessor() {
   const start = useCallback(
     async (
       selectedFiles: readonly LocalUploadedFile[],
-      operation: WorkerOperation = "prepare",
+      operation: PdfWorkerOperation = "prepare",
+      options?: PdfWorkerOptions,
     ) => {
       if (selectedFiles.length === 0) {
         return;
@@ -106,7 +109,7 @@ export function usePdfWorkerProcessor() {
         });
 
         clientRef.current = client;
-        client.prepare(jobId, files, operation);
+        client.prepare(jobId, files, operation, options);
       } catch {
         dispatch({
           code: "worker_unavailable",

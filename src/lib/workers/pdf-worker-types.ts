@@ -5,11 +5,32 @@ export type PdfWorkerFile = {
   bytes: ArrayBuffer;
 };
 
+export type PdfWorkerOperation = "prepare" | "merge" | "split" | "organize";
+
+export type PdfWorkerSplitOptions = {
+  mode: "extract" | "ranges" | "every-page";
+  ranges?: string;
+};
+
+export type PdfWorkerOrganizePage = {
+  id: string;
+  pageNumber: number;
+  rotation: number;
+};
+
+export type PdfWorkerOptions = {
+  organize?: {
+    pages: PdfWorkerOrganizePage[];
+  };
+  split?: PdfWorkerSplitOptions;
+};
+
 export type PdfWorkerRequest =
   | {
       id: string;
       files: PdfWorkerFile[];
-      operation: "prepare" | "merge";
+      operation: PdfWorkerOperation;
+      options?: PdfWorkerOptions;
       type: "prepare";
     }
   | {
@@ -44,6 +65,7 @@ export type PdfWorkerResponse =
 export type PdfWorkerResult = {
   fileCount: number;
   filename?: string;
+  outputMimeType?: string;
   outputBytes?: ArrayBuffer;
   totalBytes: number;
   totalPages: number;
@@ -54,4 +76,5 @@ export type PdfWorkerErrorCode =
   | "invalid_pdf"
   | "password_protected_pdf"
   | "processing_failed"
+  | "invalid_page_range"
   | "cancelled";
