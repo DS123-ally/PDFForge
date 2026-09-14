@@ -15,6 +15,8 @@ import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
 import { PdfToImagesWorkspace } from "@/components/tools/pdf-to-images-workspace";
 import { ProcessingCard } from "@/components/tools/processing-card";
+import { RedactPdfWorkspace } from "@/components/tools/redact-pdf-workspace";
+import { SecurityWorkspace } from "@/components/tools/security-workspace";
 import { SplitPdfWorkspace } from "@/components/tools/split-pdf-workspace";
 import { Button } from "@/components/ui/button";
 import type { ToolDefinition } from "@/config/tools";
@@ -47,6 +49,14 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
     return <EditPrivacyWorkspace tool={tool} />;
   }
 
+  if (isPhaseTenSecurityTool(tool.slug)) {
+    return <SecurityWorkspace tool={tool} />;
+  }
+
+  if (tool.slug === "redact-pdf") {
+    return <RedactPdfWorkspace />;
+  }
+
   return <GenericToolWorkspace tool={tool} />;
 }
 
@@ -60,6 +70,10 @@ function isPhaseNineTool(slug: string) {
     "view-metadata",
     "extract-text",
   ].includes(slug);
+}
+
+function isPhaseTenSecurityTool(slug: string) {
+  return ["password-protect-pdf", "unlock-pdf", "flatten-pdf"].includes(slug);
 }
 
 function GenericToolWorkspace({ tool }: { tool: ToolDefinition }) {

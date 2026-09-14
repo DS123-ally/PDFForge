@@ -358,3 +358,17 @@ Remove Metadata clears common pdf-lib metadata fields and sets neutral PDFForge 
 Exit checks for this phase: unit tests for rotation, metadata cleaning, and text-overlay output; Playwright coverage for Rotate PDF, Remove Metadata, View Metadata, and Extract Text across supported browser projects.
 
 Known limitations that remain in later phases: metadata cleaning does not remove visible content or guarantee removal of every hidden/custom PDF structure, text extraction does not OCR scanned pages, visual overlays can invalidate digital signatures, and watermarks/page text are added as ordinary PDF content rather than security controls.
+
+## 19. Phase 10 outcome
+
+Security tools are implemented only where library behaviour can be verified locally.
+
+Password Protect PDF encrypts saved PDFs with `pdf-lib-encrypt` using AES-256 (`/V5 /R6 /AESV3`). Unlock PDF accepts encrypted uploads, validates the supplied password, and writes an unlocked copy. AES-128 and some object-stream-protected files cannot be unlocked as vector documents; the UI offers an image-based rebuild instead. Passwords are kept in operation scope, sent only to the local worker, and are not logged.
+
+Redact PDF rasterizes pages that contain selected regions and fills those regions black. Unit tests cover coordinate conversion; end-to-end tests confirm redacted tokens are absent from the output text layer. Drawing a rectangle without rasterizing is not used.
+
+Flatten PDF burns AcroForm fields through pdf-lib `form.flatten()`. Remaining markup annotations are not claimed as fully flattened.
+
+Exit checks: unit tests for AES-256 protect/unlock, wrong-password rejection, form flattening, and redaction coordinates; Playwright coverage for protect/unlock, redaction recovery, and flatten.
+
+Known limitations: AES-128/object-stream unlock may require rasterization; raster unlock and redaction discard selectable text on rebuilt pages; flatten does not guarantee every annotation appearance; encryption is not redaction.

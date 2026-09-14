@@ -9,11 +9,16 @@ export type ExtractTextOptions = {
 };
 
 export async function extractTextFromPdf(
-  file: File,
+  source: Blob | ArrayBuffer | Uint8Array,
   options: ExtractTextOptions = {},
 ) {
   const pdfjs = await getPdfJs();
-  const buffer = await file.arrayBuffer();
+  const buffer =
+    source instanceof Blob
+      ? await source.arrayBuffer()
+      : source instanceof Uint8Array
+        ? toArrayBuffer(source)
+        : source;
   const loadingTask = pdfjs.getDocument({
     data: new Uint8Array(buffer),
     disableAutoFetch: true,
@@ -47,4 +52,11 @@ export async function extractTextFromPdf(
   } finally {
     await loadingTask.destroy();
   }
+}
+
+function toArrayBuffer(bytes: Uint8Array) {
+  return bytes.buffer.slice(
+    bytes.byteOffset,
+    bytes.byteOffset + bytes.byteLength,
+  ) as ArrayBuffer;
 }

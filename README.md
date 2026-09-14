@@ -6,7 +6,7 @@ The linked Figma source currently contains the placeholder brand “PDFLocal.”
 
 ## Project status
 
-Phase 9 (Editing and privacy tools) is complete pending approval. Merge PDF, Split PDF, Organize PDF, Images to PDF, PDF to Images, Rotate PDF, Add Watermark, Add Page Numbers, Add Headers and Footers, Remove Metadata, View Metadata, and Extract Text run locally in the browser. Security, PWA, audit, SEO, and release work remain later phases.
+Phase 10 (Security tools) is complete pending approval. Password Protect PDF uses AES-256, Unlock PDF accepts a user-supplied password, Redact PDF rasterizes selected regions, and Flatten PDF burns AcroForm fields. PWA, audit, SEO, and release work remain later phases.
 
 - Architecture and roadmap: [`docs/architecture.md`](docs/architecture.md)
 - Figma prototype: [PDFLocal — Privacy-First PDF Tools](https://www.figma.com/proto/eSdbWCDJ0EqKUPESoR66nx/PDFLocal-%E2%80%94-Privacy-First-PDF-Tools?node-id=0-1)
@@ -17,6 +17,7 @@ Phase 9 (Editing and privacy tools) is complete pending approval. Merge PDF, Spl
 - Tailwind CSS 4
 - `pdfjs-dist` for PDF parsing and rendering
 - `pdf-lib` for supported document mutations
+- `pdf-lib-encrypt` for AES-256 password protection and supported unlocks
 - JSZip for multi-file downloads
 - Lucide React for icons
 - `clsx` and `tailwind-merge` for component class composition

@@ -9,6 +9,7 @@ export type AcceptedFileType = "pdf" | "image";
 
 export type FileValidationOptions = {
   acceptedTypes?: readonly AcceptedFileType[];
+  allowPasswordProtected?: boolean;
   existingFingerprints?: ReadonlySet<string>;
   maxFileSizeBytes?: number;
 };
@@ -16,6 +17,7 @@ export type FileValidationOptions = {
 export type ValidatedFile = {
   file: File;
   fingerprint: string;
+  isPasswordProtected?: boolean;
   pageCount?: number;
 };
 
@@ -71,9 +73,16 @@ export async function validateFile(
     throw new FilePipelineError("unsupported_type");
   }
 
-  const pageCount = isPdfFile(file) ? await validatePdfFile(file) : undefined;
+  const pdfDetails = isPdfFile(file)
+    ? await validatePdfFile(file, options.allowPasswordProtected)
+    : undefined;
 
-  return { file, fingerprint, pageCount };
+  return {
+    file,
+    fingerprint,
+    isPasswordProtected: pdfDetails?.isPasswordProtected,
+    pageCount: pdfDetails?.pageCount,
+  };
 }
 
 export async function validateFiles(
@@ -136,7 +145,7 @@ function isImageFile(file: File) {
   );
 }
 
-async function validatePdfFile(file: File) {
+async function validatePdfFile(file: File, allowPasswordProtected = false) {
   const header = await file.slice(0, 5).text();
 
   if (header !== "%PDF-") {
@@ -145,9 +154,16 @@ async function validatePdfFile(file: File) {
 
   try {
     const pdf = await loadPdf(file);
-    return pdf.getPageCount();
+    return {
+      isPasswordProtected: false,
+      pageCount: pdf.getPageCount(),
+    };
   } catch (error) {
     if (error instanceof PdfPasswordProtectedError) {
+      if (allowPasswordProtected) {
+        return { isPasswordProtected: true };
+      }
+
       throw new FilePipelineError("password_protected_pdf");
     }
 

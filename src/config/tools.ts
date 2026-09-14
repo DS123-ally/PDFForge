@@ -4,6 +4,7 @@ export const toolCategories = [
   "Convert",
   "Edit",
   "Privacy",
+  "Security",
 ] as const;
 
 export type ToolCategory = Exclude<(typeof toolCategories)[number], "All">;
@@ -136,6 +137,46 @@ export const tools: ToolDefinition[] = [
     description:
       "Extract available text-layer content locally. Scanned PDFs require OCR later.",
     category: "Privacy",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "password-protect-pdf",
+    title: "Password Protect PDF",
+    shortDescription: "Lock a PDF with AES-256 encryption.",
+    description:
+      "Apply ISO 32000 AES-256 password protection locally. PDFForge never stores the password.",
+    category: "Security",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "unlock-pdf",
+    title: "Unlock PDF",
+    shortDescription: "Remove a password you already know.",
+    description:
+      "Open a protected PDF with the password you supply, then save an unlocked local copy.",
+    category: "Security",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "redact-pdf",
+    title: "Redact PDF",
+    shortDescription: "Permanently remove selected page regions.",
+    description:
+      "Rasterize selected areas so the original text cannot be recovered from the output.",
+    category: "Security",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "flatten-pdf",
+    title: "Flatten PDF",
+    shortDescription: "Burn form fields into the page.",
+    description:
+      "Flatten AcroForm fields locally so values become ordinary page content.",
+    category: "Security",
     acceptsMultiple: false,
     acceptedFileTypes: ["pdf"],
   },

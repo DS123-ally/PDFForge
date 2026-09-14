@@ -13,7 +13,15 @@ export type PdfWorkerFile = {
 };
 
 export type PdfWorkerOperation =
-  "prepare" | "merge" | "split" | "organize" | "images-to-pdf" | "edit-pdf";
+  | "prepare"
+  | "merge"
+  | "split"
+  | "organize"
+  | "images-to-pdf"
+  | "edit-pdf"
+  | "protect-pdf"
+  | "unlock-pdf"
+  | "flatten-pdf";
 
 export type PdfWorkerSplitOptions = {
   mode: "extract" | "ranges" | "every-page";
@@ -28,6 +36,10 @@ export type PdfWorkerOrganizePage = {
 
 export type PdfWorkerOptions = {
   editPdf?: PdfEditOptions;
+  flattenPdf?: Record<string, never>;
+  passwordPdf?: {
+    password: string;
+  };
   imagesToPdf?: {
     fit: ImageFitMode;
     images: Array<{
@@ -98,4 +110,6 @@ export type PdfWorkerErrorCode =
   | "password_protected_pdf"
   | "processing_failed"
   | "invalid_page_range"
+  | "wrong_password"
+  | "unsupported_encryption"
   | "cancelled";

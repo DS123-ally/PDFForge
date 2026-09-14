@@ -5,9 +5,13 @@ import { loadPdf } from "@/lib/pdf/load-pdf";
 import { mergePdfBuffers, PdfMergeCancelledError } from "@/lib/pdf/merge-pdf";
 import { organizePdfBuffer } from "@/lib/pdf/organize-pdf";
 import { PageRangeError } from "@/lib/pdf/page-ranges";
+import { flattenPdfBuffer } from "@/lib/pdf/flatten-pdf";
+import { protectPdfBuffer, unlockPdfBuffer } from "@/lib/pdf/password-pdf";
 import {
   PdfCorruptError,
   PdfPasswordProtectedError,
+  PdfUnsupportedEncryptionError,
+  PdfWrongPasswordError,
 } from "@/lib/pdf/pdf-errors";
 import { splitPdfBuffer } from "@/lib/pdf/split-pdf";
 import type {
@@ -80,6 +84,12 @@ async function runOperation(
       return imagesToPdfJob(request);
     case "edit-pdf":
       return editPdfJob(request);
+    case "protect-pdf":
+      return protectPdfJob(request);
+    case "unlock-pdf":
+      return unlockPdfJob(request);
+    case "flatten-pdf":
+      return flattenPdfJob(request);
     case "prepare":
       return inspectJob(request);
   }
@@ -197,6 +207,74 @@ async function editPdfJob(
   };
 }
 
+async function protectPdfJob(
+  request: Extract<PdfWorkerRequest, { type: "prepare" }>,
+): Promise<PdfWorkerResult> {
+  const file = request.files[0];
+  const password = request.options?.passwordPdf?.password;
+
+  if (!file || !password) {
+    throw new Error("A PDF and password are required.");
+  }
+
+  postProgress(request.id, 10, "Encrypting PDF locally");
+  const result = await protectPdfBuffer(file.bytes, password, file.name);
+  postProgress(request.id, 100, "Protected PDF is ready");
+
+  return {
+    fileCount: result.fileCount,
+    filename: result.filename,
+    outputBytes: result.outputBytes,
+    totalBytes: file.size,
+    totalPages: result.totalPages,
+  };
+}
+
+async function unlockPdfJob(
+  request: Extract<PdfWorkerRequest, { type: "prepare" }>,
+): Promise<PdfWorkerResult> {
+  const file = request.files[0];
+  const password = request.options?.passwordPdf?.password;
+
+  if (!file || !password) {
+    throw new Error("A PDF and password are required.");
+  }
+
+  postProgress(request.id, 10, "Unlocking PDF locally");
+  const result = await unlockPdfBuffer(file.bytes, password, file.name);
+  postProgress(request.id, 100, "Unlocked PDF is ready");
+
+  return {
+    fileCount: result.fileCount,
+    filename: result.filename,
+    outputBytes: result.outputBytes,
+    totalBytes: file.size,
+    totalPages: result.totalPages,
+  };
+}
+
+async function flattenPdfJob(
+  request: Extract<PdfWorkerRequest, { type: "prepare" }>,
+): Promise<PdfWorkerResult> {
+  const file = request.files[0];
+
+  if (!file) {
+    throw new Error("A PDF is required.");
+  }
+
+  postProgress(request.id, 10, "Flattening form fields locally");
+  const result = await flattenPdfBuffer(file.bytes, file.name);
+  postProgress(request.id, 100, "Flattened PDF is ready");
+
+  return {
+    fileCount: result.fileCount,
+    filename: result.filename,
+    outputBytes: result.outputBytes,
+    totalBytes: file.size,
+    totalPages: result.totalPages,
+  };
+}
+
 async function organizeJob(
   request: Extract<PdfWorkerRequest, { type: "prepare" }>,
 ): Promise<PdfWorkerResult> {
@@ -287,6 +365,24 @@ function toWorkerError(id: string, error: unknown): PdfWorkerResponse {
   if (error instanceof PdfPasswordProtectedError) {
     return {
       code: "password_protected_pdf",
+      id,
+      message: error.userMessage,
+      type: "error",
+    };
+  }
+
+  if (error instanceof PdfWrongPasswordError) {
+    return {
+      code: "wrong_password",
+      id,
+      message: error.userMessage,
+      type: "error",
+    };
+  }
+
+  if (error instanceof PdfUnsupportedEncryptionError) {
+    return {
+      code: "unsupported_encryption",
       id,
       message: error.userMessage,
       type: "error",

@@ -12,6 +12,7 @@ const navItems = [
   { href: "/tools?category=Convert", label: "Convert PDF" },
   { href: "/tools?category=Edit", label: "Edit PDF" },
   { href: "/tools?category=Privacy", label: "Privacy tools" },
+  { href: "/tools?category=Security", label: "Security tools" },
 ];
 
 export function Brand() {

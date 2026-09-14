@@ -9,6 +9,7 @@ type FileListItemProps = {
   size: string;
   error?: string;
   isDragging?: boolean;
+  note?: string;
   onDragEnd?: () => void;
   onDragStart?: () => void;
   onDrop?: () => void;
@@ -25,6 +26,7 @@ export function FileListItem({
   size,
   error,
   isDragging = false,
+  note,
   onDragEnd,
   onDragStart,
   onDrop,
@@ -86,6 +88,7 @@ export function FileListItem({
           {pageCount
             ? ` - ${pageCount} ${pageCount === 1 ? "page" : "pages"}`
             : ""}
+          {note ? ` - ${note}` : ""}
         </p>
         {error ? (
           <p className="mt-1 text-xs font-medium text-red-700">{error}</p>

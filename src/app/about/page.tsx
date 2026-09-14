@@ -37,9 +37,10 @@ export default function AboutPage() {
       <section>
         <h2 className="text-2xl font-bold text-zinc-950">Honest limitations</h2>
         <p className="mt-4">
-          Complex encryption, permanent redaction, OCR, and high-fidelity Office
-          conversion will not be advertised until an entirely local
-          implementation can be verified.
+          Complex encryption beyond AES-256 password protection, OCR, and
+          high-fidelity Office conversion remain limited or excluded. Redaction
+          rasterizes selected pages rather than editing hidden PDF operators one
+          by one.
         </p>
       </section>
     </ContentPage>

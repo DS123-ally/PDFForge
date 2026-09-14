@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 
 type FileUploaderProps = {
   acceptedTypes?: readonly AcceptedFileType[];
+  allowPasswordProtected?: boolean;
   allowReorder?: boolean;
   clearSignal?: number;
   maxFileSizeBytes?: number;
@@ -36,6 +37,7 @@ export type LocalUploadedFile = {
   file: File;
   fingerprint: string;
   id: string;
+  isPasswordProtected?: boolean;
   pageCount?: number;
   previewUrl: string;
 };
@@ -48,6 +50,7 @@ type RejectedFile = {
 
 export function FileUploader({
   acceptedTypes = ["pdf"],
+  allowPasswordProtected = false,
   allowReorder = false,
   clearSignal = 0,
   maxFileSizeBytes = defaultMaxFileSizeBytes,
@@ -103,6 +106,7 @@ export function FileUploader({
       multiple ? incomingFiles : incomingFiles.slice(0, 1),
       {
         acceptedTypes,
+        allowPasswordProtected,
         existingFingerprints: selectedFingerprints,
         maxFileSizeBytes,
       },
@@ -110,10 +114,11 @@ export function FileUploader({
 
     const manager = objectUrls.current;
     const acceptedFiles = validation.valid.map(
-      ({ file, fingerprint, pageCount }) => ({
+      ({ file, fingerprint, isPasswordProtected, pageCount }) => ({
         file,
         fingerprint,
         id: createLocalFileId(file),
+        isPasswordProtected,
         pageCount,
         previewUrl: manager?.create(file) ?? "",
       }),
@@ -321,6 +326,9 @@ export function FileUploader({
                 onRemove={() => removeFile(file.id)}
                 pageCount={file.pageCount}
                 previewUrl={file.previewUrl}
+                note={
+                  file.isPasswordProtected ? "Password protected" : undefined
+                }
                 size={formatFileSize(file.file.size)}
               />
             ))}

@@ -56,6 +56,21 @@ describe("validateFile", () => {
       code: "password_protected_pdf",
     });
   });
+
+  it("accepts a password-protected PDF when the unlock tool allows it", async () => {
+    const file = new File(
+      [toArrayBuffer(await createEncryptedPdfBytes())],
+      "locked.pdf",
+      { type: "application/pdf" },
+    );
+
+    await expect(
+      validateFile(file, { allowPasswordProtected: true }),
+    ).resolves.toMatchObject({
+      file,
+      isPasswordProtected: true,
+    });
+  });
 });
 
 describe("validateFiles", () => {
