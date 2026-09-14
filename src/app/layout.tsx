@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 
 import { PwaProvider } from "@/components/pwa/pwa-provider";
+import { PrivacyCleanupProvider } from "@/components/privacy/privacy-cleanup-provider";
 
 import "./globals.css";
 
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
   description:
     "Free, privacy-first PDF tools that process your files locally in the browser.",
   applicationName: "PDFForge",
+  referrer: "no-referrer",
   manifest: "/manifest.webmanifest",
   icons: {
     apple: "/icons/apple-touch-icon.png",
@@ -38,6 +40,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full">
         {children}
+        <PrivacyCleanupProvider />
         <PwaProvider />
       </body>
     </html>

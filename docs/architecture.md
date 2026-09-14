@@ -384,3 +384,13 @@ A production service worker precaches the application shell (`/`, `/tools`, `/of
 Exit checks: unit tests for cache policy, large-file memory warnings, and worker reuse; Playwright coverage for service-worker registration and offline shell reload.
 
 Known limitations that remain in later phases: Lighthouse scores vary by host and throttling; first-visit tool pages still need a network fetch before they can run offline; password tools terminate the worker instead of reusing it; service workers are registered in production only.
+
+## 21. Phase 12 outcome
+
+The privacy audit matches product behaviour to the threat model.
+
+Security headers and a same-origin Content-Security-Policy are applied to every route. Temporary object URLs and PDF workers are registered for cleanup on page hide and before unload. The privacy policy states that documents, extracted text, metadata, passwords, analytics, IndexedDB, and document cookies are not collected. The service worker cache version `pdfforge-shell-v3` stores only the public shell and hashed static assets.
+
+Exit checks: unit tests for CSP/header construction, cache deny rules, and cleanup registration; Playwright coverage for privacy copy, response headers, same-origin network use during merge, and absence of document IndexedDB/localStorage keys; `npm audit --audit-level=high` in CI.
+
+Known limitations: Next.js still requires `'unsafe-inline'` for hydration scripts; hosting access logs can record page URLs; browser extensions remain outside the trust boundary. The full findings are in `docs/privacy-audit.md`.

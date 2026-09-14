@@ -65,7 +65,7 @@ export function shouldCacheResponse(input: CacheDecisionInput) {
     return false;
   }
 
-  if (input.destination === "document" || shellPaths.has(parsed.pathname)) {
+  if (shellPaths.has(parsed.pathname)) {
     return true;
   }
 

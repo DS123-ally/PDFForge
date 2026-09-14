@@ -47,6 +47,13 @@ describe("PWA cache policy", () => {
         url: "http://127.0.0.1/_next/static/chunks/app.js",
       }),
     ).toBe(true);
+    expect(
+      shouldCacheResponse({
+        destination: "document",
+        method: "GET",
+        url: "http://127.0.0.1/tools/merge-pdf",
+      }),
+    ).toBe(false);
   });
 });
 

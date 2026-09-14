@@ -6,9 +6,10 @@ The linked Figma source currently contains the placeholder brand “PDFLocal.”
 
 ## Project status
 
-Phase 11 (Performance and PWA) is complete pending approval. The app shell is installable, tool code is split per route, PDF workers are reused except after password jobs, and documents are never service-worker cached. Privacy audit, SEO, and release work remain later phases.
+Phase 12 (Privacy and security audit) is complete pending approval. Security headers and CSP are enabled, temporary object URLs and workers are cleared on page hide, and the privacy policy matches actual local-only behaviour. SEO and release work remain later phases.
 
 - Architecture and roadmap: [`docs/architecture.md`](docs/architecture.md)
+- Privacy audit: [`docs/privacy-audit.md`](docs/privacy-audit.md)
 - Figma prototype: [PDFLocal — Privacy-First PDF Tools](https://www.figma.com/proto/eSdbWCDJ0EqKUPESoR66nx/PDFLocal-%E2%80%94-Privacy-First-PDF-Tools?node-id=0-1)
 
 ## Current stack
@@ -54,6 +55,7 @@ Open [http://localhost:3000](http://localhost:3000).
 npm run lint
 npm run typecheck
 npm run test:unit
+npm run audit
 npm run build
 npm run test:e2e
 ```

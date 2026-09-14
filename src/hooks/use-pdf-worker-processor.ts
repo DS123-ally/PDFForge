@@ -15,6 +15,7 @@ import type {
   PdfWorkerResponse,
 } from "@/lib/workers/pdf-worker-types";
 import { shouldReusePdfWorker } from "@/lib/workers/worker-lifecycle";
+import { registerTemporaryCleanup } from "@/lib/privacy/temporary-data";
 
 export function usePdfWorkerProcessor() {
   const [state, dispatch] = useReducer(
@@ -30,7 +31,13 @@ export function usePdfWorkerProcessor() {
     jobIdRef.current = null;
   }, []);
 
-  useEffect(() => cleanupWorker, [cleanupWorker]);
+  useEffect(() => {
+    const unregister = registerTemporaryCleanup(cleanupWorker);
+    return () => {
+      unregister();
+      cleanupWorker();
+    };
+  }, [cleanupWorker]);
 
   const reset = useCallback(() => {
     cleanupWorker();

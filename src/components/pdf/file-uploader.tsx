@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { FileListItem } from "@/components/pdf/file-list-item";
 import { formatFileSize } from "@/lib/files/format-file-size";
 import { ObjectUrlManager } from "@/lib/files/object-url-manager";
+import { registerTemporaryCleanup } from "@/lib/privacy/temporary-data";
 import {
   type AcceptedFileType,
   createFileFingerprint,
@@ -86,8 +87,12 @@ export function FileUploader({
 
   useEffect(() => {
     objectUrls.current = new ObjectUrlManager();
+    const unregister = registerTemporaryCleanup(() => {
+      objectUrls.current?.revokeAll();
+    });
 
     return () => {
+      unregister();
       objectUrls.current?.revokeAll();
     };
   }, []);

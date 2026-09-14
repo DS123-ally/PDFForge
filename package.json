@@ -13,7 +13,8 @@
     "test:e2e": "playwright test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "icons:pwa": "node scripts/write-pwa-icons.mjs"
+    "icons:pwa": "node scripts/write-pwa-icons.mjs",
+    "audit": "npm audit --audit-level=high"
   },
   "dependencies": {
     "clsx": "^2.1.1",
