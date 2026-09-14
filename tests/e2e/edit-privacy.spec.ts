@@ -48,7 +48,9 @@ test("views metadata without creating an output file", async ({ page }) => {
   });
   await page.getByRole("button", { name: "View metadata" }).click();
 
-  await expect(page.getByRole("heading", { name: "Metadata" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { exact: true, name: "Metadata" }),
+  ).toBeVisible();
   await expect(page.getByText("Sample title")).toBeVisible();
   await expect(page.getByText("PDFForge tester")).toBeVisible();
 });
@@ -61,7 +63,9 @@ test("removes common metadata from the downloaded PDF", async ({ page }) => {
   await expect(page.getByText("1 file ready")).toBeVisible({
     timeout: 15_000,
   });
-  await page.getByRole("button", { name: "Remove metadata" }).click();
+  await page
+    .getByRole("button", { exact: true, name: "Remove metadata" })
+    .click();
   await expect(
     page.getByRole("heading", { name: "Your PDF is ready" }),
   ).toBeVisible();
