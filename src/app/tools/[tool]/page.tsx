@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { PreferHashUrl } from "@/components/privacy/prefer-hash-url";
 import { PageShell } from "@/components/layout/page-shell";
-import { ToolWorkspace } from "@/components/tools/tool-workspace";
 import { getTool, tools } from "@/config/tools";
 
 type ToolPageProps = {
@@ -62,11 +62,10 @@ export default async function ToolPage({ params }: ToolPageProps) {
             {tool.title}
           </h1>
           <p className="mt-3 max-w-3xl text-base leading-7 text-zinc-600 sm:text-lg">
-            {tool.description}
+            Opening the local workspace. The tool name stays in the URL hash so
+            it is not sent to the host.
           </p>
-          <div className="mt-8">
-            <ToolWorkspace tool={tool} />
-          </div>
+          <PreferHashUrl slug={tool.slug} />
         </div>
       </main>
     </PageShell>

@@ -2,8 +2,10 @@ import { afterEach, describe, expect, it } from "vitest";
 
 import {
   buildContentSecurityPolicy,
+  getScriptSrcDirective,
   getSecurityHeaders,
 } from "@/config/security-headers";
+import { findExtensionInjectedNodes } from "@/lib/privacy/extension-guard";
 import { persistencePolicy } from "@/lib/privacy/persistence";
 import {
   getTemporaryCleanupCount,
@@ -11,15 +13,25 @@ import {
   resetTemporaryCleanupForTests,
   runTemporaryCleanup,
 } from "@/lib/privacy/temporary-data";
+import {
+  getWorkspaceHref,
+  requestLeaksToolChoice,
+} from "@/lib/privacy/tool-location";
 
 describe("security headers", () => {
-  it("builds a same-origin CSP without third-party connect", () => {
-    const productionCsp = buildContentSecurityPolicy(false);
+  it("uses a nonce instead of unsafe-inline scripts in production", () => {
+    const productionCsp = buildContentSecurityPolicy({
+      isDevelopment: false,
+      nonce: "test-nonce",
+    });
+    const scriptSrc = getScriptSrcDirective(productionCsp);
 
     expect(productionCsp).toContain("default-src 'self'");
     expect(productionCsp).toContain("connect-src 'self'");
-    expect(productionCsp).toContain("frame-ancestors 'none'");
-    expect(productionCsp).not.toContain("'unsafe-eval'");
+    expect(scriptSrc).toContain("'nonce-test-nonce'");
+    expect(scriptSrc).toContain("'strict-dynamic'");
+    expect(scriptSrc).not.toContain("'unsafe-inline'");
+    expect(scriptSrc).not.toContain("'unsafe-eval'");
     expect(productionCsp).not.toContain("https://");
   });
 
@@ -40,6 +52,24 @@ describe("privacy persistence policy", () => {
     expect(persistencePolicy.localStorage).toBe(false);
     expect(persistencePolicy.analytics).toBe(false);
     expect(persistencePolicy.cookies).toBe(false);
+  });
+});
+
+describe("tool location privacy", () => {
+  it("keeps tool choice in the hash, not the request path", () => {
+    expect(getWorkspaceHref("merge-pdf")).toBe("/workspace#merge-pdf");
+    expect(requestLeaksToolChoice("http://127.0.0.1/workspace")).toBe(false);
+    expect(requestLeaksToolChoice("http://127.0.0.1/tools/merge-pdf")).toBe(
+      true,
+    );
+  });
+});
+
+describe("extension guard", () => {
+  it("detects extension-scheme resources", () => {
+    const root = document.createElement("div");
+    root.innerHTML = `<script src="chrome-extension://abc/content.js"></script>`;
+    expect(findExtensionInjectedNodes(root)).toHaveLength(1);
   });
 });
 

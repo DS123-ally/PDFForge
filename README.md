@@ -30,8 +30,9 @@ Vitest, Testing Library, Playwright, Prettier, strict type checking, and GitHub 
 ## Static routes
 
 - `/` — responsive landing page
-- `/tools` — searchable, category-filtered tool directory
-- `/tools/[tool]` — static workspaces for the eight approved PDF tools
+- `/tools` — searchable, category-filtered tool directory (category in the URL hash)
+- `/workspace` — local tool workspace (selected tool in the URL hash)
+- `/tools/[tool]` — redirects into the hash workspace
 - `/tools/merge-pdf/states` — processing and completion state reference
 - `/privacy`, `/about`, and `/offline` — supporting product pages
 

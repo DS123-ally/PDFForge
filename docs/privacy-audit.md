@@ -33,7 +33,7 @@ Every route receives:
 - Permissions-Policy disabling camera, microphone, geolocation, payment, USB, and topics
 - Cross-Origin-Resource-Policy: `same-origin`
 
-`unsafe-inline` remains for Next.js hydration scripts. `unsafe-eval` is development-only. `upgrade-insecure-requests` is omitted so local HTTP and Safari/WebKit Playwright keep loading scripts; production HTTPS should set HSTS at the host.
+`unsafe-eval` is development-only. Production script-src uses a per-request nonce and `'strict-dynamic'` instead of `'unsafe-inline'`. `upgrade-insecure-requests` is omitted so local HTTP and Safari/WebKit Playwright keep loading scripts; production HTTPS should set HSTS at the host.
 
 ## 4. Third-party packages
 
@@ -60,23 +60,24 @@ No analytics, ads, auth, ORM, or error-monitoring packages are present. `npm aud
 
 - IndexedDB is not opened by application code.
 - Object URLs are tracked and revoked on file removal, unmount, page hide (except back-forward cache), and before unload.
-- Service worker cache `pdfforge-shell-v3` stores the public shell and hashed static assets. PDF, ZIP, blob, POST, and password query requests are excluded.
+- Service worker cache `pdfforge-shell-v4` stores the public shell and hashed static assets. PDF, ZIP, blob, POST, and password query requests are excluded.
 
 ## 7. Threat-model follow-up
 
-| Threat                              | Status                                                       |
-| ----------------------------------- | ------------------------------------------------------------ |
-| Accidental upload or telemetry      | Mitigated: no upload API, CSP, e2e network assertions        |
-| Filename/text/password leakage      | Mitigated: no content logging; sanitized download names      |
-| XSS reading in-memory files         | Mitigated: React escaping, CSP, no `dangerouslySetInnerHTML` |
-| Stale object URLs                   | Mitigated: registry plus pagehide cleanup                    |
-| Service worker caching private data | Mitigated: allowlist and sensitive-type deny                 |
-| Supply-chain compromise             | Mitigated: lockfile, audit job, no extra runtime CDNs        |
-| Host access logs                    | Accepted residual: hosts see page URLs, not documents        |
+| Threat                              | Status                                                                  |
+| ----------------------------------- | ----------------------------------------------------------------------- |
+| Accidental upload or telemetry      | Mitigated: no upload API, CSP, e2e network assertions                   |
+| Filename/text/password leakage      | Mitigated: no content logging; sanitized download names                 |
+| XSS reading in-memory files         | Mitigated: React escaping, CSP, no `dangerouslySetInnerHTML`            |
+| Stale object URLs                   | Mitigated: registry plus pagehide cleanup                               |
+| Service worker caching private data | Mitigated: allowlist and sensitive-type deny                            |
+| Supply-chain compromise             | Mitigated: lockfile, audit job, no extra runtime CDNs                   |
+| Host access logs                    | Mitigated: tools run at `/workspace` with the tool name in the URL hash |
+| Browser extensions                  | Mitigated: nonce CSP plus warning for extension-scheme resources        |
 
-## 8. Honest limitations
+## 8. Residual risk
 
-- CSP still allows `'unsafe-inline'` scripts because Next.js injects inline bootstrapping.
-- First-party hosting access logs can record that `/tools/merge-pdf` was requested, not the PDF contents.
-- Browser extensions can read page memory.
+- `style-src` still allows `'unsafe-inline'` for Tailwind and React `style` attributes. Script hydration uses a nonce, not `'unsafe-inline'`.
+- Opening a legacy `/tools/merge-pdf` bookmark still appears once in host logs before the app switches to `/workspace#merge-pdf`.
+- Chrome/Firefox isolated-world content scripts can run without injecting `chrome-extension:` URLs. The on-page warning covers extension-scheme nodes; a clean profile is still the strongest control.
 - WebKit Playwright cannot reliably emulate offline service-worker reloads on Windows; Chromium and Firefox cover that path.

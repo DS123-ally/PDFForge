@@ -23,7 +23,7 @@ test("merges local PDFs in order and does not upload document bytes", async ({
     }
   });
 
-  await page.goto("/tools/merge-pdf");
+  await page.goto("/workspace#merge-pdf");
   await addPdfFiles(page, [
     { name: "first.pdf", bytes: firstPdf },
     { name: "second.pdf", bytes: secondPdf },
@@ -56,7 +56,7 @@ test("keyboard reorder changes the merged page order", async ({ page }) => {
   const firstPdf = await createPdfBytes({ pageCount: 1, size: [200, 300] });
   const secondPdf = await createPdfBytes({ pageCount: 1, size: [400, 500] });
 
-  await page.goto("/tools/merge-pdf");
+  await page.goto("/workspace#merge-pdf");
   await addPdfFiles(page, [
     { name: "first.pdf", bytes: firstPdf },
     { name: "second.pdf", bytes: secondPdf },
@@ -80,7 +80,7 @@ test("keyboard reorder changes the merged page order", async ({ page }) => {
 });
 
 test("shows a clear error for password-protected PDFs", async ({ page }) => {
-  await page.goto("/tools/merge-pdf");
+  await page.goto("/workspace#merge-pdf");
   await addPdfFiles(page, [
     { name: "locked.pdf", bytes: await createEncryptedPdfBytes() },
   ]);
@@ -96,7 +96,7 @@ test("process another clears the current merge session", async ({ page }) => {
   const firstPdf = await createPdfBytes({ pageCount: 1 });
   const secondPdf = await createPdfBytes({ pageCount: 1 });
 
-  await page.goto("/tools/merge-pdf");
+  await page.goto("/workspace#merge-pdf");
   await addPdfFiles(page, [
     { name: "first.pdf", bytes: firstPdf },
     { name: "second.pdf", bytes: secondPdf },

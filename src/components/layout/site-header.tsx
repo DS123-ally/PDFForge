@@ -8,11 +8,11 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/tools?category=Organize", label: "Organize PDF" },
-  { href: "/tools?category=Convert", label: "Convert PDF" },
-  { href: "/tools?category=Edit", label: "Edit PDF" },
-  { href: "/tools?category=Privacy", label: "Privacy tools" },
-  { href: "/tools?category=Security", label: "Security tools" },
+  { href: "/tools#Organize", label: "Organize PDF" },
+  { href: "/tools#Convert", label: "Convert PDF" },
+  { href: "/tools#Edit", label: "Edit PDF" },
+  { href: "/tools#Privacy", label: "Privacy tools" },
+  { href: "/tools#Security", label: "Security tools" },
 ];
 
 export function Brand() {

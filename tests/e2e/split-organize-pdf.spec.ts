@@ -16,7 +16,7 @@ test("splits selected ranges into a local ZIP download", async ({ page }) => {
     }
   });
 
-  await page.goto("/tools/split-pdf");
+  await page.goto("/workspace#split-pdf");
   await addPdfFile(page, "source.pdf", sourcePdf);
   await expect(page.getByText("1 file ready")).toBeVisible();
 
@@ -49,7 +49,7 @@ test("organizes pages with keyboard controls and saves a local PDF", async ({
     ],
   });
 
-  await page.goto("/tools/organize-pdf");
+  await page.goto("/workspace#organize-pdf");
   await addPdfFile(page, "source.pdf", sourcePdf);
   await expect(page.getByText(/3 pages will be saved/)).toBeVisible();
 

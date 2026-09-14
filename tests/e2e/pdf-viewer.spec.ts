@@ -5,7 +5,7 @@ import { createPdfBytes } from "../fixtures/pdf";
 test("renders a selected PDF preview", async ({ page }) => {
   const pdf = await createPdfBytes({ pageCount: 1 });
 
-  await page.goto("/tools/merge-pdf");
+  await page.goto("/workspace#merge-pdf");
   await page.locator("input[type='file']").setInputFiles([
     {
       buffer: Buffer.from(pdf),

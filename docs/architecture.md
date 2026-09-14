@@ -389,8 +389,8 @@ Known limitations that remain in later phases: Lighthouse scores vary by host an
 
 The privacy audit matches product behaviour to the threat model.
 
-Security headers and a same-origin Content-Security-Policy are applied to every route. Temporary object URLs and PDF workers are registered for cleanup on page hide and before unload. The privacy policy states that documents, extracted text, metadata, passwords, analytics, IndexedDB, and document cookies are not collected. The service worker cache version `pdfforge-shell-v3` stores only the public shell and hashed static assets.
+Security headers and a nonce-based Content-Security-Policy are applied on every HTML request. Tool workspaces load at `/workspace` with the tool slug in the URL hash so hosts do not receive the selected tool name. Temporary object URLs and PDF workers are registered for cleanup on page hide and before unload. An extension guard warns if `chrome-extension:` or similar resources appear in the page. The privacy policy matches this behaviour.
 
-Exit checks: unit tests for CSP/header construction, cache deny rules, and cleanup registration; Playwright coverage for privacy copy, response headers, same-origin network use during merge, and absence of document IndexedDB/localStorage keys; `npm audit --audit-level=high` in CI.
+Exit checks: unit tests for nonce CSP, hash tool URLs, extension-scheme detection, cache deny rules, and cleanup registration; Playwright coverage for privacy copy, nonce headers, same-origin network use during merge, and absence of document IndexedDB/localStorage keys; `npm audit --audit-level=high` in CI.
 
-Known limitations: Next.js still requires `'unsafe-inline'` for hydration scripts; hosting access logs can record page URLs; browser extensions remain outside the trust boundary. The full findings are in `docs/privacy-audit.md`.
+Residual risk: `style-src` still allows `'unsafe-inline'`; isolated-world extension scripts can run without extension URLs in the DOM; a direct visit to `/tools/[slug]` is logged once before the hash redirect. The full findings are in `docs/privacy-audit.md`.

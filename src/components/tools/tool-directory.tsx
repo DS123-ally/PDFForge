@@ -1,12 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { CategoryFilters } from "@/components/tools/category-filters";
 import { SearchInput } from "@/components/tools/search-input";
 import { ToolCard } from "@/components/tools/tool-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { toolCategories, tools, type ToolCategory } from "@/config/tools";
+import {
+  getToolsCategoryHref,
+  readToolsCategory,
+} from "@/lib/privacy/tool-location";
 
 type Category = "All" | ToolCategory;
 
@@ -20,6 +24,19 @@ export function ToolDirectory({
     : "All";
   const [category, setCategory] = useState<Category>(safeCategory);
   const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    function syncHash() {
+      const fromHash = readToolsCategory(window.location.hash);
+      if (toolCategories.includes(fromHash as Category)) {
+        setCategory(fromHash as Category);
+      }
+    }
+
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    return () => window.removeEventListener("hashchange", syncHash);
+  }, []);
 
   const filteredTools = useMemo(() => {
     const normalized = query.trim().toLocaleLowerCase();
@@ -43,7 +60,17 @@ export function ToolDirectory({
           onChange={(event) => setQuery(event.target.value)}
           value={query}
         />
-        <CategoryFilters active={category} onChange={setCategory} />
+        <CategoryFilters
+          active={category}
+          onChange={(nextCategory) => {
+            setCategory(nextCategory);
+            window.history.replaceState(
+              null,
+              "",
+              getToolsCategoryHref(nextCategory),
+            );
+          }}
+        />
       </div>
       {filteredTools.length ? (
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

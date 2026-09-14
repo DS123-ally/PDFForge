@@ -17,7 +17,7 @@ test("rotates selected PDF pages locally", async ({ page }) => {
     }
   });
 
-  await page.goto("/tools/rotate-pdf");
+  await page.goto("/workspace#rotate-pdf");
   await addPdfFile(page, "source.pdf", sourcePdf);
   await expect(page.getByText("1 file ready")).toBeVisible({
     timeout: 15_000,
@@ -43,7 +43,7 @@ test("rotates selected PDF pages locally", async ({ page }) => {
 test("views metadata without creating an output file", async ({ page }) => {
   const sourcePdf = await createTextPdfBytes();
 
-  await page.goto("/tools/view-metadata");
+  await page.goto("/workspace#view-metadata");
   await addPdfFile(page, "metadata.pdf", sourcePdf);
   await expect(page.getByText("1 file ready")).toBeVisible({
     timeout: 15_000,
@@ -60,7 +60,7 @@ test("views metadata without creating an output file", async ({ page }) => {
 test("removes common metadata from the downloaded PDF", async ({ page }) => {
   const sourcePdf = await createTextPdfBytes();
 
-  await page.goto("/tools/remove-metadata");
+  await page.goto("/workspace#remove-metadata");
   await addPdfFile(page, "metadata.pdf", sourcePdf);
   await expect(page.getByText("1 file ready")).toBeVisible({
     timeout: 15_000,
@@ -83,7 +83,7 @@ test("removes common metadata from the downloaded PDF", async ({ page }) => {
 test("extracts selectable text locally", async ({ page }) => {
   const sourcePdf = await createTextPdfBytes("Invoice number ABC-123");
 
-  await page.goto("/tools/extract-text");
+  await page.goto("/workspace#extract-text");
   await addPdfFile(page, "invoice.pdf", sourcePdf);
   await expect(page.getByText("1 file ready")).toBeVisible({
     timeout: 15_000,

@@ -10,6 +10,7 @@ const shellPaths = new Set([
   "/",
   "/offline",
   "/tools",
+  "/workspace",
   "/privacy",
   "/about",
   "/manifest.webmanifest",

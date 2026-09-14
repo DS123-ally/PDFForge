@@ -3,12 +3,19 @@ export type SecurityHeader = {
   value: string;
 };
 
-export function buildContentSecurityPolicy(
+export type CspOptions = {
+  isDevelopment?: boolean;
+  nonce: string;
+};
+
+export function buildContentSecurityPolicy({
   isDevelopment = process.env.NODE_ENV !== "production",
-) {
+  nonce,
+}: CspOptions) {
   const scriptSrc = [
     "'self'",
-    "'unsafe-inline'",
+    `'nonce-${nonce}'`,
+    "'strict-dynamic'",
     "'wasm-unsafe-eval'",
     isDevelopment ? "'unsafe-eval'" : null,
   ].filter(Boolean);
@@ -41,10 +48,6 @@ export function buildContentSecurityPolicy(
 export function getSecurityHeaders(): SecurityHeader[] {
   return [
     {
-      key: "Content-Security-Policy",
-      value: buildContentSecurityPolicy(),
-    },
-    {
       key: "Referrer-Policy",
       value: "no-referrer",
     },
@@ -74,4 +77,9 @@ export function getSecurityHeaders(): SecurityHeader[] {
       value: "none",
     },
   ];
+}
+
+export function getScriptSrcDirective(csp: string) {
+  const match = csp.match(/script-src ([^;]+)/i);
+  return match?.[1] ?? "";
 }

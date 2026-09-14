@@ -1,9 +1,15 @@
 import type { NextConfig } from "next";
 
+import { getSecurityHeaders } from "./src/config/security-headers";
+
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.0.100"],
   poweredByHeader: false,
   headers: async () => [
+    {
+      source: "/:path*",
+      headers: getSecurityHeaders(),
+    },
     {
       source: "/sw.js",
       headers: [

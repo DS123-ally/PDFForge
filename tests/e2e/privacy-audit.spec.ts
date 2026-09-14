@@ -22,12 +22,17 @@ test("sends security headers and no document bytes on the network", async ({
   page,
 }) => {
   const leaked = listenForDocumentLeak(page, baseURL ?? page.url());
-  const response = await page.goto("/tools/merge-pdf");
+  const response = await page.goto("/workspace#merge-pdf");
 
   expect(response).not.toBeNull();
   const headers = response?.headers() ?? {};
-  expect(headers["content-security-policy"]).toContain("default-src 'self'");
-  expect(headers["content-security-policy"]).toContain("connect-src 'self'");
+  const csp = headers["content-security-policy"] ?? "";
+  const scriptSrc = csp.match(/script-src ([^;]+)/i)?.[1] ?? "";
+  expect(csp).toContain("default-src 'self'");
+  expect(csp).toContain("connect-src 'self'");
+  expect(scriptSrc).toContain("'nonce-");
+  expect(scriptSrc).toContain("'strict-dynamic'");
+  expect(scriptSrc).not.toContain("'unsafe-inline'");
   expect(headers["x-frame-options"]?.toLowerCase()).toBe("deny");
   expect(headers["referrer-policy"]).toBe("no-referrer");
   expect(headers["x-content-type-options"]).toBe("nosniff");
@@ -90,6 +95,10 @@ function listenForDocumentLeak(page: Page, baseURL: string) {
 
     if (!isDocumentProtocol && url.origin !== origin && url.origin !== "null") {
       leaked.push(`third-party ${request.url()}`);
+    }
+
+    if (/\/tools\/[a-z0-9-]+/i.test(url.pathname)) {
+      leaked.push(`tool-path ${url.pathname}`);
     }
   });
 

@@ -16,7 +16,7 @@ test("creates a local PDF from selected images", async ({ page }) => {
     }
   });
 
-  await page.goto("/tools/images-to-pdf");
+  await page.goto("/workspace#images-to-pdf");
   await page.locator("input[type='file']").setInputFiles([
     {
       buffer: image,
@@ -63,7 +63,7 @@ test("exports selected PDF pages to images and downloads a ZIP", async ({
     }
   });
 
-  await page.goto("/tools/pdf-to-images");
+  await page.goto("/workspace#pdf-to-images");
   await page.locator("input[type='file']").setInputFiles({
     buffer: Buffer.from(sourcePdf),
     mimeType: "application/pdf",

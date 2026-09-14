@@ -70,20 +70,20 @@ export default function PrivacyPage() {
       <section>
         <h2 className="text-2xl font-bold text-zinc-950">Hosting and logs</h2>
         <p className="mt-4">
-          The website host may see ordinary page requests such as HTML, CSS, and
-          JavaScript. Those requests do not include your documents. PDFForge
-          application code does not log filenames, document text, metadata, or
-          passwords.
+          Tool choice is kept in the URL hash (`/workspace#merge-pdf`). Browsers
+          do not send that hash to the host, so access logs see `/workspace` or
+          `/tools`, not which tool you opened. Those requests still never
+          include your documents. PDFForge application code does not log
+          filenames, document text, metadata, or passwords.
         </p>
       </section>
       <section>
-        <h2 className="text-2xl font-bold text-zinc-950">
-          What remains outside our control
-        </h2>
+        <h2 className="text-2xl font-bold text-zinc-950">Browser extensions</h2>
         <p className="mt-4">
-          Your browser, operating system, extensions, screen-capture tools, and
-          chosen download folder can still access files you open or save. Use a
-          trusted device for sensitive documents.
+          A per-request Content-Security-Policy nonce blocks page scripts that
+          are not issued by PDFForge. If an extension still injects
+          extension-scheme resources, PDFForge shows a warning. Use a clean
+          browser profile without extensions for sensitive files.
         </p>
       </section>
     </ContentPage>

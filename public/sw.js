@@ -1,8 +1,9 @@
-const CACHE_VERSION = "pdfforge-shell-v1";
+const CACHE_VERSION = "pdfforge-shell-v4";
 const SHELL_PATHS = [
   "/",
   "/offline",
   "/tools",
+  "/workspace",
   "/privacy",
   "/about",
   "/manifest.webmanifest",
@@ -48,7 +49,7 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (request.mode === "navigate") {
-    event.respondWith(networkFirstNavigation(request));
+    event.respondWith(networkOnlyWithShellFallback(request));
     return;
   }
 
@@ -78,16 +79,11 @@ function shouldHandleRequest(request) {
   );
 }
 
-async function networkFirstNavigation(request) {
+async function networkOnlyWithShellFallback(request) {
   try {
-    const response = await fetch(request);
-    if (response.ok) {
-      const cache = await caches.open(CACHE_VERSION);
-      await cache.put(request, response.clone());
-    }
-    return response;
+    return await fetch(request);
   } catch {
-    const cached = await caches.match(request);
+    const cached = await caches.match(request, { ignoreSearch: true });
     return cached ?? (await caches.match("/offline")) ?? Response.error();
   }
 }

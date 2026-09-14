@@ -17,7 +17,7 @@ test("protects a PDF with AES-256 and unlocks it locally", async ({ page }) => {
     }
   });
 
-  await page.goto("/tools/password-protect-pdf");
+  await page.goto("/workspace#password-protect-pdf");
   await addPdfFile(page, "invoice.pdf", sourcePdf);
   await expect(page.getByText("1 file ready")).toBeVisible({ timeout: 15_000 });
   await page.getByLabel("Open password").fill("test-pass-123");
@@ -33,7 +33,7 @@ test("protects a PDF with AES-256 and unlocks it locally", async ({ page }) => {
   );
   expect(protectedDownload.filename).toBe("invoice-protected.pdf");
 
-  await page.goto("/tools/unlock-pdf");
+  await page.goto("/workspace#unlock-pdf");
   await addPdfFile(page, "invoice-protected.pdf", protectedDownload.bytes);
   await expect(page.getByText("Password protected")).toBeVisible({
     timeout: 15_000,
@@ -56,7 +56,7 @@ test("redacts selected content so it cannot be recovered from the text layer", a
 }) => {
   const sourcePdf = await createTextPdfBytes("SECRET-TOKEN visible text");
 
-  await page.goto("/tools/redact-pdf");
+  await page.goto("/workspace#redact-pdf");
   await addPdfFile(page, "secret.pdf", sourcePdf);
   await expect(page.getByText("1 file ready")).toBeVisible({ timeout: 15_000 });
   await page.getByLabel("Left %").fill("0");
@@ -82,7 +82,7 @@ test("redacts selected content so it cannot be recovered from the text layer", a
 test("flattens form fields in a local PDF", async ({ page }) => {
   const sourcePdf = await createFormPdfBytes();
 
-  await page.goto("/tools/flatten-pdf");
+  await page.goto("/workspace#flatten-pdf");
   await addPdfFile(page, "form.pdf", sourcePdf);
   await expect(page.getByText("1 file ready")).toBeVisible({ timeout: 15_000 });
   await page.getByRole("button", { exact: true, name: "Flatten PDF" }).click();

@@ -8,16 +8,7 @@ export const metadata: Metadata = {
   description: "Browse private PDF tools that run locally in your browser.",
 };
 
-type ToolsPageProps = {
-  searchParams: Promise<{ category?: string | string[] }>;
-};
-
-export default async function ToolsPage({ searchParams }: ToolsPageProps) {
-  const params = await searchParams;
-  const category = Array.isArray(params.category)
-    ? params.category[0]
-    : params.category;
-
+export default function ToolsPage() {
   return (
     <PageShell>
       <main className="px-5 py-14 sm:px-8 sm:py-20" id="main-content">
@@ -30,10 +21,10 @@ export default async function ToolsPage({ searchParams }: ToolsPageProps) {
           </h1>
           <p className="mt-4 max-w-2xl text-lg leading-8 text-zinc-600">
             Find the right tool without uploading your documents or creating an
-            account.
+            account. Tool names stay in the page hash, not in the host request.
           </p>
           <div className="mt-10">
-            <ToolDirectory initialCategory={category} />
+            <ToolDirectory />
           </div>
         </div>
       </main>
