@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useMemo, useState } from "react";
 
 import {
@@ -9,24 +10,72 @@ import {
 import { PdfViewer } from "@/components/pdf/pdf-viewer";
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { DownloadResultCard } from "@/components/tools/download-result-card";
-import { EditPrivacyWorkspace } from "@/components/tools/edit-privacy-workspace";
-import { ImagesToPdfWorkspace } from "@/components/tools/images-to-pdf-workspace";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
-import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
-import { PdfToImagesWorkspace } from "@/components/tools/pdf-to-images-workspace";
 import { ProcessingCard } from "@/components/tools/processing-card";
-import { RedactPdfWorkspace } from "@/components/tools/redact-pdf-workspace";
-import { SecurityWorkspace } from "@/components/tools/security-workspace";
-import { SplitPdfWorkspace } from "@/components/tools/split-pdf-workspace";
 import { Button } from "@/components/ui/button";
 import type { ToolDefinition } from "@/config/tools";
 import { usePdfWorkerProcessor } from "@/hooks/use-pdf-worker-processor";
 import { createDownload } from "@/lib/files/create-download";
 import { createOutputName } from "@/lib/files/create-output-name";
-import { formatFileSize } from "@/lib/files/format-file-size";
 
-const largeFileWarningBytes = 75 * 1024 * 1024;
-const lowMemoryWarningBytes = 25 * 1024 * 1024;
+const toolLoading = () => (
+  <p
+    className="rounded-2xl border border-zinc-200 bg-zinc-50 p-6 text-sm font-semibold text-zinc-600"
+    role="status"
+  >
+    Loading this local tool
+  </p>
+);
+
+const SplitPdfWorkspace = dynamic(
+  () =>
+    import("@/components/tools/split-pdf-workspace").then((mod) => ({
+      default: mod.SplitPdfWorkspace,
+    })),
+  { loading: toolLoading },
+);
+const OrganizePdfWorkspace = dynamic(
+  () =>
+    import("@/components/tools/organize-pdf-workspace").then((mod) => ({
+      default: mod.OrganizePdfWorkspace,
+    })),
+  { loading: toolLoading },
+);
+const ImagesToPdfWorkspace = dynamic(
+  () =>
+    import("@/components/tools/images-to-pdf-workspace").then((mod) => ({
+      default: mod.ImagesToPdfWorkspace,
+    })),
+  { loading: toolLoading },
+);
+const PdfToImagesWorkspace = dynamic(
+  () =>
+    import("@/components/tools/pdf-to-images-workspace").then((mod) => ({
+      default: mod.PdfToImagesWorkspace,
+    })),
+  { loading: toolLoading },
+);
+const EditPrivacyWorkspace = dynamic(
+  () =>
+    import("@/components/tools/edit-privacy-workspace").then((mod) => ({
+      default: mod.EditPrivacyWorkspace,
+    })),
+  { loading: toolLoading },
+);
+const SecurityWorkspace = dynamic(
+  () =>
+    import("@/components/tools/security-workspace").then((mod) => ({
+      default: mod.SecurityWorkspace,
+    })),
+  { loading: toolLoading },
+);
+const RedactPdfWorkspace = dynamic(
+  () =>
+    import("@/components/tools/redact-pdf-workspace").then((mod) => ({
+      default: mod.RedactPdfWorkspace,
+    })),
+  { loading: toolLoading },
+);
 
 export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
   if (tool.slug === "split-pdf") {
@@ -92,15 +141,6 @@ function GenericToolWorkspace({ tool }: { tool: ToolDefinition }) {
       files.find((selectedFile) => isPdfFile(selectedFile.file))?.file ?? null
     );
   }, [files, tool.acceptedFileTypes]);
-  const totalSelectedBytes = useMemo(
-    () =>
-      files.reduce((total, selectedFile) => total + selectedFile.file.size, 0),
-    [files],
-  );
-  const hasLowMemoryWarning = useMemo(
-    () => shouldShowLowMemoryWarning(totalSelectedBytes),
-    [totalSelectedBytes],
-  );
   const isMergeTool = tool.slug === "merge-pdf";
   const canPrepare =
     files.length >= (isMergeTool ? 2 : 1) &&
@@ -142,24 +182,6 @@ function GenericToolWorkspace({ tool }: { tool: ToolDefinition }) {
       {isMergeTool && files.length === 1 ? (
         <p className="mt-4 rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-sm leading-6 text-zinc-700">
           Add at least one more PDF to merge documents.
-        </p>
-      ) : null}
-      {totalSelectedBytes >= largeFileWarningBytes ? (
-        <p
-          className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900"
-          role="status"
-        >
-          Large selection: {formatFileSize(totalSelectedBytes)}. Keep this tab
-          open while PDFForge prepares files locally.
-        </p>
-      ) : null}
-      {hasLowMemoryWarning ? (
-        <p
-          className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900"
-          role="status"
-        >
-          This device may have limited memory. Close other heavy tabs before
-          preparing {formatFileSize(totalSelectedBytes)} of PDF files.
         </p>
       ) : null}
       <div className="mt-5 hidden justify-end md:flex">
@@ -218,19 +240,4 @@ function getActionLabel(tool: ToolDefinition) {
   }
 
   return `Prepare ${tool.title}`;
-}
-
-function shouldShowLowMemoryWarning(totalSelectedBytes: number) {
-  if (totalSelectedBytes < lowMemoryWarningBytes) {
-    return false;
-  }
-
-  if (typeof navigator === "undefined" || !("deviceMemory" in navigator)) {
-    return false;
-  }
-
-  return (
-    Number((navigator as Navigator & { deviceMemory?: number }).deviceMemory) <=
-    4
-  );
 }

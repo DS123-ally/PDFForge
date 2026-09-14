@@ -1,12 +1,29 @@
 import { CheckCircle2 } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 
 import { PageShell } from "@/components/layout/page-shell";
-import { FileUploader } from "@/components/pdf/file-uploader";
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { ToolCard } from "@/components/tools/tool-card";
 import { buttonStyles } from "@/components/ui/button";
 import { tools } from "@/config/tools";
+
+const FileUploader = dynamic(
+  () =>
+    import("@/components/pdf/file-uploader").then((mod) => ({
+      default: mod.FileUploader,
+    })),
+  {
+    loading: () => (
+      <div
+        className="min-h-52 rounded-2xl border border-dashed border-zinc-300 bg-zinc-50 p-8 text-center text-sm font-semibold text-zinc-600"
+        role="status"
+      >
+        Loading local file picker
+      </div>
+    ),
+  },
+);
 
 const trustPoints = [
   "100% local processing",

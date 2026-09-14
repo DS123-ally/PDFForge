@@ -21,6 +21,7 @@ import {
   getAcceptAttribute,
   validateFiles,
 } from "@/lib/files/validate-file";
+import { getMemoryWarningMessage } from "@/lib/performance/memory";
 import { cn } from "@/lib/utils";
 
 type FileUploaderProps = {
@@ -75,6 +76,13 @@ export function FileUploader({
     [files],
   );
   const selectedCount = files.length;
+  const memoryWarning = useMemo(
+    () =>
+      getMemoryWarningMessage(
+        files.reduce((total, file) => total + file.file.size, 0),
+      ),
+    [files],
+  );
 
   useEffect(() => {
     objectUrls.current = new ObjectUrlManager();
@@ -333,6 +341,15 @@ export function FileUploader({
               />
             ))}
           </ul>
+        ) : null}
+
+        {memoryWarning ? (
+          <p
+            className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900"
+            role="status"
+          >
+            {memoryWarning}
+          </p>
         ) : null}
 
         {rejectedFiles.length > 0 ? (

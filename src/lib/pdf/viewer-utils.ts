@@ -1,3 +1,8 @@
+import {
+  getCanvasPixelCap,
+  getPreviewScaleFactor,
+} from "@/lib/performance/memory";
+
 export const minZoom = 0.5;
 export const maxZoom = 2;
 export const zoomStep = 0.25;
@@ -22,7 +27,7 @@ export function getThumbnailScale(pageWidth: number, targetWidth = 112) {
     return 1;
   }
 
-  return targetWidth / pageWidth;
+  return (targetWidth / pageWidth) * getPreviewScaleFactor();
 }
 
 export function getCanvasPixelSize(
@@ -30,7 +35,10 @@ export function getCanvasPixelSize(
   height: number,
   devicePixelRatio = 1,
 ) {
-  const outputScale = Math.min(Math.max(devicePixelRatio, 1), 2);
+  const outputScale = Math.min(
+    Math.max(devicePixelRatio, 1),
+    getCanvasPixelCap(),
+  );
 
   return {
     height: Math.floor(height * outputScale),

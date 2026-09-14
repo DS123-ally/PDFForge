@@ -21,6 +21,10 @@ export class PdfWorkerClient {
         type: "module",
       },
     );
+    this.setHandler(onMessage);
+  }
+
+  setHandler(onMessage: WorkerHandlers["onMessage"]) {
     this.worker.onmessage = (event: MessageEvent<PdfWorkerResponse>) => {
       onMessage(event.data);
     };

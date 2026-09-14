@@ -6,7 +6,7 @@ The linked Figma source currently contains the placeholder brand “PDFLocal.”
 
 ## Project status
 
-Phase 10 (Security tools) is complete pending approval. Password Protect PDF uses AES-256, Unlock PDF accepts a user-supplied password, Redact PDF rasterizes selected regions, and Flatten PDF burns AcroForm fields. PWA, audit, SEO, and release work remain later phases.
+Phase 11 (Performance and PWA) is complete pending approval. The app shell is installable, tool code is split per route, PDF workers are reused except after password jobs, and documents are never service-worker cached. Privacy audit, SEO, and release work remain later phases.
 
 - Architecture and roadmap: [`docs/architecture.md`](docs/architecture.md)
 - Figma prototype: [PDFLocal — Privacy-First PDF Tools](https://www.figma.com/proto/eSdbWCDJ0EqKUPESoR66nx/PDFLocal-%E2%80%94-Privacy-First-PDF-Tools?node-id=0-1)
@@ -22,6 +22,7 @@ Phase 10 (Security tools) is complete pending approval. Password Protect PDF use
 - Lucide React for icons
 - `clsx` and `tailwind-merge` for component class composition
 - npm, selected by the committed `package-lock.json`
+- Production service worker and web app manifest for the offline application shell
 
 Vitest, Testing Library, Playwright, Prettier, strict type checking, and GitHub Actions CI are configured. PDF mutations run in a dedicated module Web Worker; PDF rendering, text extraction, and image export use PDF.js and same-origin browser APIs.
 

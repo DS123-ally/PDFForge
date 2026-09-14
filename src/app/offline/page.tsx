@@ -4,29 +4,37 @@ import { ContentPage } from "@/components/layout/content-page";
 import { StatusBadge } from "@/components/ui/status-badge";
 
 export const metadata: Metadata = {
-  title: "Offline support",
-  description: "Current and planned offline behavior in PDFForge.",
-  robots: { index: false, follow: false },
+  title: "Offline",
+  description: "Use PDFForge’s application shell when your network is unavailable.",
 };
 
 export default function OfflinePage() {
   return (
     <ContentPage
-      eyebrow="Planned capability"
-      intro="PDFForge does not claim complete offline support yet. Installable PWA and offline application-shell support are scheduled for a later approved phase."
-      title="Offline support is coming later"
+      eyebrow="Offline"
+      intro="PDFForge can keep the app shell available without a network. Document bytes, generated files, extracted text, passwords, and metadata are never stored in the service-worker cache."
+      title="You can keep using the PDFForge shell"
     >
       <section className="rounded-2xl border border-zinc-200 p-6">
-        <StatusBadge status="pending">Not available yet</StatusBadge>
+        <StatusBadge status="ready">App shell ready</StatusBadge>
         <h2 className="mt-5 text-2xl font-bold text-zinc-950">
-          What will work offline
+          What works offline
         </h2>
         <p className="mt-3">
-          Compatible local PDF tools and the application interface will be
-          cached. Uploaded documents, generated files, extracted text,
-          passwords, and metadata will never be stored in the service-worker
-          cache.
+          After a first visit, Home, All Tools, Privacy, About, and previously
+          opened tool pages can load from the local app shell. Compatible tools
+          still process files in this browser tab.
         </p>
+      </section>
+      <section>
+        <h2 className="text-2xl font-bold text-zinc-950">What is never cached</h2>
+        <ul className="mt-4 list-disc space-y-2 pl-6">
+          <li>Uploaded PDFs or images</li>
+          <li>Generated downloads</li>
+          <li>Extracted document text</li>
+          <li>Passwords</li>
+          <li>Sensitive document metadata</li>
+        </ul>
       </section>
     </ContentPage>
   );

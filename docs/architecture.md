@@ -372,3 +372,16 @@ Flatten PDF burns AcroForm fields through pdf-lib `form.flatten()`. Remaining ma
 Exit checks: unit tests for AES-256 protect/unlock, wrong-password rejection, form flattening, and redaction coordinates; Playwright coverage for protect/unlock, redaction recovery, and flatten.
 
 Known limitations: AES-128/object-stream unlock may require rasterization; raster unlock and redaction discard selectable text on rebuilt pages; flatten does not guarantee every annotation appearance; encryption is not redaction.
+
+## 20. Phase 11 outcome
+
+Performance and PWA work keep processing in the browser while reducing startup cost and adding an installable app shell.
+
+Tool workspaces load through `next/dynamic`, the homepage file picker is code-split, PDF.js remains lazily imported, and visible thumbnails render through an IntersectionObserver plus a concurrency queue. The PDF worker is reused between non-password jobs and terminated after protect/unlock, cancel, error, or leaving the tool.
+
+A production service worker precaches the application shell (`/`, `/tools`, `/offline`, `/privacy`, `/about`, icons, and static Next assets). It uses network-first navigation with an `/offline` fallback. Uploaded documents, generated PDFs/ZIPs, blob URLs, extracted text, passwords, and `application/pdf` responses are excluded from cache. An update banner asks the user to reload when a new worker is waiting.
+
+Exit checks: unit tests for cache policy, large-file memory warnings, and worker reuse; Playwright coverage for service-worker registration and offline shell reload.
+
+Known limitations that remain in later phases: Lighthouse scores vary by host and throttling; first-visit tool pages still need a network fetch before they can run offline; password tools terminate the worker instead of reusing it; service workers are registered in production only.
+

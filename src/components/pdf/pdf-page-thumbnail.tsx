@@ -4,6 +4,7 @@ import type { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
 import { useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/utils";
+import { runThumbnailTask } from "@/lib/pdf/thumbnail-queue";
 import { getCanvasPixelSize, getThumbnailScale } from "@/lib/pdf/viewer-utils";
 
 type PdfPageThumbnailProps = {
@@ -66,46 +67,52 @@ export function PdfPageThumbnail({
 
     async function renderThumbnail(renderCanvas: HTMLCanvasElement) {
       try {
-        const page = await document.getPage(pageNumber);
-        const baseViewport = page.getViewport({ scale: 1 });
-        const scale = getThumbnailScale(baseViewport.width);
-        const viewport = page.getViewport({ scale });
-        const context = renderCanvas.getContext("2d", { alpha: false });
+        await runThumbnailTask(async () => {
+          if (cancelled) {
+            return;
+          }
 
-        if (!context || cancelled) {
+          const page = await document.getPage(pageNumber);
+          const baseViewport = page.getViewport({ scale: 1 });
+          const scale = getThumbnailScale(baseViewport.width);
+          const viewport = page.getViewport({ scale });
+          const context = renderCanvas.getContext("2d", { alpha: false });
+
+          if (!context || cancelled) {
+            page.cleanup();
+            return;
+          }
+
+          const pixelSize = getCanvasPixelSize(
+            viewport.width,
+            viewport.height,
+            window.devicePixelRatio,
+          );
+
+          renderCanvas.width = pixelSize.width;
+          renderCanvas.height = pixelSize.height;
+          renderCanvas.style.width = `${viewport.width}px`;
+          renderCanvas.style.height = `${viewport.height}px`;
+          context.setTransform(
+            pixelSize.outputScale,
+            0,
+            0,
+            pixelSize.outputScale,
+            0,
+            0,
+          );
+          context.fillStyle = "white";
+          context.fillRect(0, 0, viewport.width, viewport.height);
+
+          const renderTask = page.render({
+            canvas: renderCanvas,
+            canvasContext: context,
+            viewport,
+          });
+          renderTaskRef.current = renderTask;
+          await renderTask.promise;
           page.cleanup();
-          return;
-        }
-
-        const pixelSize = getCanvasPixelSize(
-          viewport.width,
-          viewport.height,
-          window.devicePixelRatio,
-        );
-
-        renderCanvas.width = pixelSize.width;
-        renderCanvas.height = pixelSize.height;
-        renderCanvas.style.width = `${viewport.width}px`;
-        renderCanvas.style.height = `${viewport.height}px`;
-        context.setTransform(
-          pixelSize.outputScale,
-          0,
-          0,
-          pixelSize.outputScale,
-          0,
-          0,
-        );
-        context.fillStyle = "white";
-        context.fillRect(0, 0, viewport.width, viewport.height);
-
-        const renderTask = page.render({
-          canvas: renderCanvas,
-          canvasContext: context,
-          viewport,
         });
-        renderTaskRef.current = renderTask;
-        await renderTask.promise;
-        page.cleanup();
       } catch (error) {
         if (!cancelled && !isRenderCancelled(error)) {
           setHasError(true);

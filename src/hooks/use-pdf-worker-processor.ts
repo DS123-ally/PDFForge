@@ -12,7 +12,9 @@ import type {
   PdfWorkerFile,
   PdfWorkerOperation,
   PdfWorkerOptions,
+  PdfWorkerResponse,
 } from "@/lib/workers/pdf-worker-types";
+import { shouldReusePdfWorker } from "@/lib/workers/worker-lifecycle";
 
 export function usePdfWorkerProcessor() {
   const [state, dispatch] = useReducer(
@@ -57,7 +59,10 @@ export function usePdfWorkerProcessor() {
         return;
       }
 
-      cleanupWorker();
+      if (jobIdRef.current) {
+        clientRef.current?.cancel(jobIdRef.current);
+      }
+
       dispatch({ type: "start" });
 
       const jobId = createJobId();
@@ -72,44 +77,52 @@ export function usePdfWorkerProcessor() {
             size: selectedFile.file.size,
           })),
         );
-        const client = new PdfWorkerClient({
-          onMessage: (message) => {
-            if (message.id !== jobIdRef.current) {
-              return;
-            }
+        const onMessage = (message: PdfWorkerResponse) => {
+          if (message.id !== jobIdRef.current) {
+            return;
+          }
 
-            if (message.type === "progress") {
-              dispatch({
-                message: message.message,
-                progress: message.progress,
-                type: "progress",
-              });
-              return;
-            }
-
-            if (message.type === "complete") {
-              dispatch({ result: message.result, type: "complete" });
-              cleanupWorker();
-              return;
-            }
-
-            if (message.type === "cancelled") {
-              dispatch({ message: message.reason, type: "cancelled" });
-              cleanupWorker();
-              return;
-            }
-
+          if (message.type === "progress") {
             dispatch({
-              code: message.code,
               message: message.message,
-              type: "error",
+              progress: message.progress,
+              type: "progress",
             });
-            cleanupWorker();
-          },
-        });
+            return;
+          }
 
-        clientRef.current = client;
-        client.prepare(jobId, files, operation, options);
+          if (message.type === "complete") {
+            dispatch({ result: message.result, type: "complete" });
+            jobIdRef.current = null;
+
+            if (!shouldReusePdfWorker(operation)) {
+              cleanupWorker();
+            }
+
+            return;
+          }
+
+          if (message.type === "cancelled") {
+            dispatch({ message: message.reason, type: "cancelled" });
+            cleanupWorker();
+            return;
+          }
+
+          dispatch({
+            code: message.code,
+            message: message.message,
+            type: "error",
+          });
+          cleanupWorker();
+        };
+
+        if (clientRef.current) {
+          clientRef.current.setHandler(onMessage);
+        } else {
+          clientRef.current = new PdfWorkerClient({ onMessage });
+        }
+
+        clientRef.current.prepare(jobId, files, operation, options);
       } catch {
         dispatch({
           code: "worker_unavailable",
