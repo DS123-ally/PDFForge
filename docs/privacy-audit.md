@@ -64,16 +64,16 @@ No analytics, ads, auth, ORM, or error-monitoring packages are present. `npm aud
 
 ## 7. Threat-model follow-up
 
-| Threat                              | Status                                                                  |
-| ----------------------------------- | ----------------------------------------------------------------------- |
-| Accidental upload or telemetry      | Mitigated: no upload API, CSP, e2e network assertions                   |
-| Filename/text/password leakage      | Mitigated: no content logging; sanitized download names                 |
-| XSS reading in-memory files         | Mitigated: React escaping, CSP, JSON-LD serialized with escaped `<`     |
-| Stale object URLs                   | Mitigated: registry plus pagehide cleanup                               |
-| Service worker caching private data | Mitigated: allowlist and sensitive-type deny                            |
-| Supply-chain compromise             | Mitigated: lockfile, audit job, no extra runtime CDNs                   |
+| Threat                              | Status                                                                                        |
+| ----------------------------------- | --------------------------------------------------------------------------------------------- |
+| Accidental upload or telemetry      | Mitigated: no upload API, CSP, e2e network assertions                                         |
+| Filename/text/password leakage      | Mitigated: no content logging; sanitized download names                                       |
+| XSS reading in-memory files         | Mitigated: React escaping, CSP, JSON-LD serialized with escaped `<`                           |
+| Stale object URLs                   | Mitigated: registry plus pagehide cleanup                                                     |
+| Service worker caching private data | Mitigated: allowlist and sensitive-type deny                                                  |
+| Supply-chain compromise             | Mitigated: lockfile, audit job, no extra runtime CDNs                                         |
 | Host access logs                    | Partial: public `/tools/[slug]` pages are indexed; `/workspace#slug` is a noindex alternative |
-| Browser extensions                  | Mitigated: nonce CSP plus warning for extension-scheme resources        |
+| Browser extensions                  | Mitigated: nonce CSP plus warning for extension-scheme resources                              |
 
 ## 8. Residual risk
 

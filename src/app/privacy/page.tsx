@@ -71,12 +71,12 @@ export default function PrivacyPage() {
       <section>
         <h2 className="text-2xl font-bold text-zinc-950">Hosting and logs</h2>
         <p className="mt-4">
-          Indexed tool pages use paths such as `/tools/merge-pdf`, so a host
-          can log which public tool you opened. Document bytes are still never
+          Indexed tool pages use paths such as `/tools/merge-pdf`, so a host can
+          log which public tool you opened. Document bytes are still never
           uploaded. Use `/workspace#merge-pdf` when you want the tool name to
-          stay in the URL hash, which browsers do not send to the host.
-          PDFForge application code does not log filenames, document text,
-          metadata, or passwords.
+          stay in the URL hash, which browsers do not send to the host. PDFForge
+          application code does not log filenames, document text, metadata, or
+          passwords.
         </p>
       </section>
       <section>

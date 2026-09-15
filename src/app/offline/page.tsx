@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 
 import { ContentPage } from "@/components/layout/content-page";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { noIndex } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Offline",
   description:
     "Use PDFForge’s application shell when your network is unavailable.",
-  robots: { index: false, follow: false },
+  robots: noIndex,
 };
 
 export default function OfflinePage() {

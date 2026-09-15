@@ -3,12 +3,13 @@ import Link from "next/link";
 
 import { PageShell } from "@/components/layout/page-shell";
 import { WorkspaceApp } from "@/components/tools/workspace-app";
+import { noIndex } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Local workspace",
   description:
     "Run PDFForge tools locally. The selected tool stays in the URL hash and is not sent to the host.",
-  robots: { index: false, follow: false },
+  robots: noIndex,
 };
 
 export default function WorkspacePage() {

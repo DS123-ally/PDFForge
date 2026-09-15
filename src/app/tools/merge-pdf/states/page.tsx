@@ -3,11 +3,12 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/page-shell";
 import { DownloadResultCard } from "@/components/tools/download-result-card";
 import { ProcessingCard } from "@/components/tools/processing-card";
+import { noIndex } from "@/config/site";
 import type { ProcessingState } from "@/lib/workers/processing-state";
 
 export const metadata: Metadata = {
   title: "Merge PDF states",
-  robots: { index: false, follow: false },
+  robots: noIndex,
 };
 
 const processingState: ProcessingState = {

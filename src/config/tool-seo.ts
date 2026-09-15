@@ -197,8 +197,7 @@ export const toolSeo: ToolSeoContent[] = [
       },
       {
         question: "Can I rotate only page 2?",
-        answer:
-          "Yes. Use custom pages and enter 2, or a range such as 2-4.",
+        answer: "Yes. Use custom pages and enter 2, or a range such as 2-4.",
       },
       {
         question: "Is this the same as Organize PDF?",
@@ -234,8 +233,7 @@ export const toolSeo: ToolSeoContent[] = [
       },
       {
         question: "Does PDFForge add its own watermark?",
-        answer:
-          "No. Output contains only the text you enter.",
+        answer: "No. Output contains only the text you enter.",
       },
     ],
     relatedSlugs: ["add-headers-footers", "add-page-numbers", "rotate-pdf"],
@@ -544,10 +542,6 @@ export function getRelatedTools(slug: string): ToolDefinition[] {
   return seo.relatedSlugs
     .map((relatedSlug) => tools.find((tool) => tool.slug === relatedSlug))
     .filter((tool): tool is ToolDefinition => Boolean(tool));
-}
-
-export function listToolSeo() {
-  return toolSeo;
 }
 
 export function assertToolSeoCoverage() {

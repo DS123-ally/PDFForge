@@ -1,31 +1,28 @@
-import { headers } from "next/headers";
 import Link from "next/link";
 
 import { JsonLd } from "@/components/seo/json-ld";
 import { ToolCard } from "@/components/tools/tool-card";
-import { env } from "@/config/env";
+import { absoluteUrl } from "@/config/site";
 import type { ToolDefinition } from "@/config/tools";
 import type { ToolSeoContent } from "@/config/tool-seo";
 import { getRelatedTools } from "@/config/tool-seo";
 import { buildToolJsonLd } from "@/lib/seo/json-ld";
 
-export async function ToolSeoSections({
-  tool,
+export function ToolSeoSections({
+  nonce,
   seo,
+  tool,
 }: {
-  tool: ToolDefinition;
+  nonce?: string;
   seo: ToolSeoContent;
+  tool: ToolDefinition;
 }) {
   const related = getRelatedTools(tool.slug);
-  const nonce = (await headers()).get("x-nonce") ?? undefined;
-  const canonical = `${env.siteUrl.origin}/tools/${tool.slug}`;
+  const canonical = absoluteUrl(`/tools/${tool.slug}`);
 
   return (
     <div className="mt-16 space-y-12 border-t border-zinc-200 pt-12 text-base leading-7 text-zinc-700">
-      <JsonLd
-        data={buildToolJsonLd({ canonical, seo, tool })}
-        nonce={nonce}
-      />
+      <JsonLd data={buildToolJsonLd({ canonical, seo, tool })} nonce={nonce} />
       <section>
         <h2 className="text-2xl font-bold text-zinc-950">
           How {tool.title} works
@@ -43,9 +40,7 @@ export async function ToolSeoSections({
         </ol>
       </section>
       <section>
-        <h2 className="text-2xl font-bold text-zinc-950">
-          {tool.title} FAQs
-        </h2>
+        <h2 className="text-2xl font-bold text-zinc-950">{tool.title} FAQs</h2>
         <div className="mt-4 space-y-3">
           {seo.faqs.map((faq) => (
             <details

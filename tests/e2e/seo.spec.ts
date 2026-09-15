@@ -20,10 +20,7 @@ test("publishes unique SEO for a completed tool page", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Merge PDFs" })).toBeVisible();
 
   const canonical = page.locator('link[rel="canonical"]');
-  await expect(canonical).toHaveAttribute(
-    "href",
-    /\/tools\/merge-pdf\/?$/,
-  );
+  await expect(canonical).toHaveAttribute("href", /\/tools\/merge-pdf\/?$/);
 
   const jsonLd = await page
     .locator('script[type="application/ld+json"]')
