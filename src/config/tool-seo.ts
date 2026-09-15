@@ -332,7 +332,39 @@ export const toolSeo: ToolSeoContent[] = [
           "This tool targets metadata, not embedded files. Attachments may remain.",
       },
     ],
-    relatedSlugs: ["view-metadata", "extract-text", "redact-pdf"],
+    relatedSlugs: ["privacy-inspector", "extract-text", "redact-pdf"],
+  },
+  {
+    slug: "privacy-inspector",
+    pageTitle: "Inspect and sanitize PDF privacy leaks locally",
+    metaDescription:
+      "Audit a PDF on this device for metadata, attachments, JavaScript, form values, leftovers, hidden text, and image EXIF, then optionally save a cleaned copy.",
+    intro:
+      "Privacy Inspector is a local leak scan. Review the report first. Sanitize writes a new file from an explicit checklist. It reduces what casual sharing exposes; it does not prove every hidden object is gone.",
+    steps: [
+      "Select a PDF from your device.",
+      "Run Scan PDF and read the report.",
+      "Choose which cleanup steps to apply.",
+      "Sanitize locally and download the new file. Re-scan if you want a second look.",
+    ],
+    faqs: [
+      {
+        question: "Does the scan upload my PDF?",
+        answer:
+          "No. Inspection and sanitizing run in this tab and a same-origin worker.",
+      },
+      {
+        question: "Is a clean report a guarantee?",
+        answer:
+          "No. The scanner covers common leak paths. Unknown encodings, custom objects, and some image metadata can remain.",
+      },
+      {
+        question: "Does sanitize remove hidden sentences on the page?",
+        answer:
+          "Not by default. Use Redact PDF for selected visible regions. Sanitize focuses on metadata, attachments, JavaScript, form values, rewrite leftovers, and best-effort EXIF.",
+      },
+    ],
+    relatedSlugs: ["remove-metadata", "view-metadata", "redact-pdf"],
   },
   {
     slug: "view-metadata",
@@ -364,7 +396,7 @@ export const toolSeo: ToolSeoContent[] = [
           "Viewing is read-only. Remove Metadata clears supported fields; it does not offer arbitrary tag editing.",
       },
     ],
-    relatedSlugs: ["remove-metadata", "extract-text", "password-protect-pdf"],
+    relatedSlugs: ["privacy-inspector", "extract-text", "password-protect-pdf"],
   },
   {
     slug: "extract-text",

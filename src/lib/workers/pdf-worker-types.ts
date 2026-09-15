@@ -21,7 +21,8 @@ export type PdfWorkerOperation =
   | "edit-pdf"
   | "protect-pdf"
   | "unlock-pdf"
-  | "flatten-pdf";
+  | "flatten-pdf"
+  | "sanitize-pdf";
 
 export type PdfWorkerSplitOptions = {
   mode: "extract" | "ranges" | "every-page";
@@ -39,6 +40,14 @@ export type PdfWorkerOptions = {
   flattenPdf?: Record<string, never>;
   passwordPdf?: {
     password: string;
+  };
+  sanitizePdf?: {
+    dropAttachments: boolean;
+    dropJavascript: boolean;
+    flattenForms: boolean;
+    stripFormValues: boolean;
+    stripImageExif: boolean;
+    stripMetadata: boolean;
   };
   imagesToPdf?: {
     fit: ImageFitMode;

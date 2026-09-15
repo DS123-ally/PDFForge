@@ -2,6 +2,9 @@
   "name": "pdfforge",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,7 +17,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "icons:pwa": "node scripts/write-pwa-icons.mjs",
-    "audit": "npm audit --audit-level=high"
+    "audit": "npm audit --audit-level=high",
+    "release:check": "node scripts/release-check.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",

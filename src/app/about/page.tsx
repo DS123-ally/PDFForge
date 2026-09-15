@@ -44,6 +44,15 @@ export default function AboutPage() {
           by one.
         </p>
       </section>
+      <section>
+        <h2 className="text-2xl font-bold text-zinc-950">Supported browsers</h2>
+        <p className="mt-4">
+          PDFForge is tested in current Chromium, Firefox, and WebKit engines on
+          desktop, with a phone-width layout check. Use a current Chrome, Edge,
+          Firefox, or Safari release. Processing still depends on the memory and
+          PDF support of the device in use.
+        </p>
+      </section>
     </ContentPage>
   );
 }

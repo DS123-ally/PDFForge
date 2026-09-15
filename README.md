@@ -6,10 +6,12 @@ The linked Figma source currently contains the placeholder brand “PDFLocal.”
 
 ## Project status
 
-Phase 13 (SEO and content) is complete pending approval. Every finished tool has a unique public page, sitemap entry, and structured data. The working tool stays above the SEO copy. `/workspace#slug` remains a noindex privacy route. Release packaging remains a later phase.
+Phase 14 (cross-browser release) is complete pending approval. Privacy Inspector is available as a local scan-then-sanitize tool. Production uses Node 24, `NEXT_PUBLIC_SITE_URL`, and `next start`. Staging acceptance and rollback steps are in `docs/acceptance.md` and `docs/release.md`.
 
 - Architecture and roadmap: [`docs/architecture.md`](docs/architecture.md)
 - Privacy audit: [`docs/privacy-audit.md`](docs/privacy-audit.md)
+- Production and rollback: [`docs/release.md`](docs/release.md)
+- Staging acceptance: [`docs/acceptance.md`](docs/acceptance.md)
 - Figma prototype: [PDFLocal — Privacy-First PDF Tools](https://www.figma.com/proto/eSdbWCDJ0EqKUPESoR66nx/PDFLocal-%E2%80%94-Privacy-First-PDF-Tools?node-id=0-1)
 
 ## Current stack
@@ -57,6 +59,7 @@ npm run lint
 npm run typecheck
 npm run test:unit
 npm run audit
+npm run release:check
 npm run build
 npm run test:e2e
 ```
@@ -68,6 +71,8 @@ npx playwright install chromium firefox webkit
 ```
 
 `npm run test:e2e` runs the built application on localhost port 3100. Run `npm run build` first when the production output is not current.
+
+`npm run release:check` verifies Node engines, `.nvmrc`, and the release runbooks.
 
 ## Privacy invariants
 

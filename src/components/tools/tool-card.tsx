@@ -5,6 +5,7 @@ import {
   Images,
   ListRestart,
   RotateCw,
+  ScanSearch,
   Scissors,
   ShieldCheck,
 } from "lucide-react";
@@ -21,6 +22,7 @@ const icons = {
   "images-to-pdf": Images,
   "pdf-to-images": FileImage,
   "rotate-pdf": RotateCw,
+  "privacy-inspector": ScanSearch,
   "remove-metadata": ShieldCheck,
   "view-metadata": Eye,
 } as const;

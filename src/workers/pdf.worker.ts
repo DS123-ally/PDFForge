@@ -7,6 +7,7 @@ import { organizePdfBuffer } from "@/lib/pdf/organize-pdf";
 import { PageRangeError } from "@/lib/pdf/page-ranges";
 import { flattenPdfBuffer } from "@/lib/pdf/flatten-pdf";
 import { protectPdfBuffer, unlockPdfBuffer } from "@/lib/pdf/password-pdf";
+import { sanitizePdfBuffer } from "@/lib/pdf/privacy-sanitize";
 import {
   PdfCorruptError,
   PdfPasswordProtectedError,
@@ -90,6 +91,8 @@ async function runOperation(
       return unlockPdfJob(request);
     case "flatten-pdf":
       return flattenPdfJob(request);
+    case "sanitize-pdf":
+      return sanitizePdfJob(request);
     case "prepare":
       return inspectJob(request);
   }
@@ -243,6 +246,29 @@ async function unlockPdfJob(
   postProgress(request.id, 10, "Unlocking PDF locally");
   const result = await unlockPdfBuffer(file.bytes, password, file.name);
   postProgress(request.id, 100, "Unlocked PDF is ready");
+
+  return {
+    fileCount: result.fileCount,
+    filename: result.filename,
+    outputBytes: result.outputBytes,
+    totalBytes: file.size,
+    totalPages: result.totalPages,
+  };
+}
+
+async function sanitizePdfJob(
+  request: Extract<PdfWorkerRequest, { type: "prepare" }>,
+): Promise<PdfWorkerResult> {
+  const file = request.files[0];
+  const options = request.options?.sanitizePdf;
+
+  if (!file || !options) {
+    throw new Error("A PDF and sanitize options are required.");
+  }
+
+  postProgress(request.id, 10, "Sanitizing PDF locally");
+  const result = await sanitizePdfBuffer(file.bytes, options, file.name);
+  postProgress(request.id, 100, "Sanitized PDF is ready");
 
   return {
     fileCount: result.fileCount,

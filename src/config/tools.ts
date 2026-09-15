@@ -111,6 +111,16 @@ export const tools: ToolDefinition[] = [
     acceptedFileTypes: ["pdf"],
   },
   {
+    slug: "privacy-inspector",
+    title: "Privacy Inspector",
+    shortDescription: "Audit a PDF for leaks, then sanitize a local copy.",
+    description:
+      "Scan metadata, attachments, JavaScript, form values, leftovers, hidden text, and image EXIF on this device, then optionally write a cleaned copy.",
+    category: "Privacy",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
     slug: "remove-metadata",
     title: "Remove Metadata",
     shortDescription: "Clear common private document properties.",

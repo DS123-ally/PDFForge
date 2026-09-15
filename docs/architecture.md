@@ -404,3 +404,17 @@ Each completed tool has a unique public page at `/tools/[slug]` with one H1, the
 Exit checks: unique titles and descriptions in unit tests; Playwright coverage for Merge PDF metadata, JSON-LD, sitemap, and robots.
 
 Known limitations: canonical tool URLs are visible to the host and search engines; hash workspace pages are not indexed; JSON-LD is injected as a nonce-bearing `application/ld+json` script.
+
+## 23. Phase 14 outcome
+
+Release packaging treats PDFForge as a Node 24 Next.js server (`npm run build` then `npm start`). `NEXT_PUBLIC_SITE_URL` is the public origin for canonical URLs and the sitemap. CSP nonces in `src/proxy.ts` rule out static HTML export.
+
+Host HTTPS should add HSTS. The app still omits CSP `upgrade-insecure-requests` so HTTP/local Safari can load scripts. Rollback is a previous git revision plus an uncached `/sw.js`. Staging steps are in `docs/acceptance.md`; production steps are in `docs/release.md`.
+
+Exit checks: unit tests for supported Playwright engines and HTTPS site URLs; `npm run release:check` in CI; Playwright coverage that `/about` lists Chromium, Firefox, and WebKit.
+
+Known limitations: this phase does not pick a commercial host; Lighthouse scores still vary by network; WebKit offline service-worker reload remains skipped on Windows Playwright.
+
+## 24. Privacy Inspector
+
+Privacy Inspector (`/tools/privacy-inspector`) is a local scan-then-sanitize tool. The scan reports standard and XMP metadata, attachments, JavaScript actions, form values, incremental `%%EOF` leftovers, hidden/off-page text-layer items, and best-effort image EXIF. Sanitize uses an explicit checklist and always rewrites a new file. The UI states that this reduces leak surface and does not prove emptiness.

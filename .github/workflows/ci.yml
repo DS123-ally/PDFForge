@@ -20,6 +20,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run audit
+      - run: npm run release:check
       - run: npm run format:check
       - run: npm run lint
       - run: npm run typecheck

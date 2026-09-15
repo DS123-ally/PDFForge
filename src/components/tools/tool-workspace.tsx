@@ -14,6 +14,7 @@ import { ImagesToPdfWorkspace } from "@/components/tools/images-to-pdf-workspace
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
 import { PdfToImagesWorkspace } from "@/components/tools/pdf-to-images-workspace";
+import { PrivacyInspectorWorkspace } from "@/components/tools/privacy-inspector-workspace";
 import { ProcessingCard } from "@/components/tools/processing-card";
 import { RedactPdfWorkspace } from "@/components/tools/redact-pdf-workspace";
 import { SecurityWorkspace } from "@/components/tools/security-workspace";
@@ -39,6 +40,10 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
 
   if (tool.slug === "pdf-to-images") {
     return <PdfToImagesWorkspace />;
+  }
+
+  if (tool.slug === "privacy-inspector") {
+    return <PrivacyInspectorWorkspace />;
   }
 
   if (isPhaseNineTool(tool.slug)) {

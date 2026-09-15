@@ -81,9 +81,7 @@ export function ToolSeoSections({
                   </span>
                 </span>
               </summary>
-              <p className="mt-3 pr-11 leading-7 text-zinc-700">
-                {faq.answer}
-              </p>
+              <p className="mt-3 pr-11 leading-7 text-zinc-700">{faq.answer}</p>
             </details>
           ))}
         </div>
@@ -103,7 +101,10 @@ export function ToolSeoSections({
           <ul className="mt-6 grid gap-4 sm:grid-cols-3">
             {related.map((relatedTool) => (
               <li key={relatedTool.slug}>
-                <ToolCard className="h-full border-white/70 bg-white/40 hover:bg-white/70" tool={relatedTool} />
+                <ToolCard
+                  className="h-full border-white/70 bg-white/40 hover:bg-white/70"
+                  tool={relatedTool}
+                />
               </li>
             ))}
           </ul>
