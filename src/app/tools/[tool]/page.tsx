@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { PreferHashUrl } from "@/components/privacy/prefer-hash-url";
 import { PageShell } from "@/components/layout/page-shell";
+import { ToolSeoSections } from "@/components/tools/tool-seo-sections";
+import { ToolWorkspace } from "@/components/tools/tool-workspace";
+import { absoluteUrl, noIndex } from "@/config/site";
 import { getTool, tools } from "@/config/tools";
+import { getToolSeo } from "@/config/tool-seo";
 
 type ToolPageProps = {
   params: Promise<{ tool: string }>;
@@ -19,17 +23,42 @@ export async function generateMetadata({
 }: ToolPageProps): Promise<Metadata> {
   const { tool: slug } = await params;
   const tool = getTool(slug);
+  const seo = getToolSeo(slug);
 
-  if (!tool) return {};
+  if (!tool || !seo) {
+    return { robots: noIndex };
+  }
 
-  return { title: tool.title, description: tool.description };
+  const url = absoluteUrl(`/tools/${tool.slug}`);
+
+  return {
+    title: seo.pageTitle,
+    description: seo.metaDescription,
+    alternates: { canonical: url },
+    openGraph: {
+      title: seo.pageTitle,
+      description: seo.metaDescription,
+      url,
+      siteName: "PDFForge",
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title: seo.pageTitle,
+      description: seo.metaDescription,
+    },
+  };
 }
 
 export default async function ToolPage({ params }: ToolPageProps) {
   const { tool: slug } = await params;
   const tool = getTool(slug);
+  const seo = getToolSeo(slug);
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
 
-  if (!tool) notFound();
+  if (!tool || !seo) {
+    notFound();
+  }
 
   return (
     <PageShell>
@@ -62,10 +91,12 @@ export default async function ToolPage({ params }: ToolPageProps) {
             {tool.title}
           </h1>
           <p className="mt-3 max-w-3xl text-base leading-7 text-zinc-600 sm:text-lg">
-            Opening the local workspace. The tool name stays in the URL hash so
-            it is not sent to the host.
+            {seo.intro}
           </p>
-          <PreferHashUrl slug={tool.slug} />
+          <div className="mt-8">
+            <ToolWorkspace tool={tool} />
+          </div>
+          <ToolSeoSections nonce={nonce} seo={seo} tool={tool} />
         </div>
       </main>
     </PageShell>

@@ -3,9 +3,10 @@ import type { Metadata } from "next";
 import { ContentPage } from "@/components/layout/content-page";
 
 export const metadata: Metadata = {
-  title: "About",
+  title: "About local-first PDF tools",
   description:
-    "Learn why PDFForge is building practical, local-first PDF tools.",
+    "Learn why PDFForge is building practical, local-first PDF tools that run in the browser.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {

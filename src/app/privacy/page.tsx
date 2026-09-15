@@ -4,9 +4,10 @@ import Link from "next/link";
 import { ContentPage } from "@/components/layout/content-page";
 
 export const metadata: Metadata = {
-  title: "Privacy policy",
+  title: "Privacy policy for local PDF processing",
   description:
     "How PDFForge processes PDFs locally, what is never collected, and how temporary browser data is cleared.",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {
@@ -70,11 +71,12 @@ export default function PrivacyPage() {
       <section>
         <h2 className="text-2xl font-bold text-zinc-950">Hosting and logs</h2>
         <p className="mt-4">
-          Tool choice is kept in the URL hash (`/workspace#merge-pdf`). Browsers
-          do not send that hash to the host, so access logs see `/workspace` or
-          `/tools`, not which tool you opened. Those requests still never
-          include your documents. PDFForge application code does not log
-          filenames, document text, metadata, or passwords.
+          Indexed tool pages use paths such as `/tools/merge-pdf`, so a host
+          can log which public tool you opened. Document bytes are still never
+          uploaded. Use `/workspace#merge-pdf` when you want the tool name to
+          stay in the URL hash, which browsers do not send to the host.
+          PDFForge application code does not log filenames, document text,
+          metadata, or passwords.
         </p>
       </section>
       <section>

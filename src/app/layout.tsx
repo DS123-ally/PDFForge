@@ -5,16 +5,26 @@ import type { ReactNode } from "react";
 import { ExtensionGuard } from "@/components/privacy/extension-guard";
 import { PrivacyCleanupProvider } from "@/components/privacy/privacy-cleanup-provider";
 import { PwaProvider } from "@/components/pwa/pwa-provider";
+import { env } from "@/config/env";
 
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: env.siteUrl,
   title: {
-    default: "PDFForge — Private PDF tools",
+    default: "PDFForge — Private PDF tools that stay on this device",
     template: "%s | PDFForge",
   },
   description:
-    "Free, privacy-first PDF tools that process your files locally in the browser.",
+    "Free, privacy-first PDF tools that process your files locally in the browser. No uploads, accounts, or document logging.",
+  openGraph: {
+    title: "PDFForge — Private PDF tools that stay on this device",
+    description:
+      "Free, privacy-first PDF tools that process your files locally in the browser. No uploads, accounts, or document logging.",
+    url: "/",
+    siteName: "PDFForge",
+    type: "website",
+  },
   applicationName: "PDFForge",
   referrer: "no-referrer",
   manifest: "/manifest.webmanifest",

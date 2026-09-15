@@ -6,7 +6,7 @@ The linked Figma source currently contains the placeholder brand “PDFLocal.”
 
 ## Project status
 
-Phase 12 (Privacy and security audit) is complete pending approval. Security headers and CSP are enabled, temporary object URLs and workers are cleared on page hide, and the privacy policy matches actual local-only behaviour. SEO and release work remain later phases.
+Phase 13 (SEO and content) is complete pending approval. Every finished tool has a unique public page, sitemap entry, and structured data. The working tool stays above the SEO copy. `/workspace#slug` remains a noindex privacy route. Release packaging remains a later phase.
 
 - Architecture and roadmap: [`docs/architecture.md`](docs/architecture.md)
 - Privacy audit: [`docs/privacy-audit.md`](docs/privacy-audit.md)
@@ -31,8 +31,8 @@ Vitest, Testing Library, Playwright, Prettier, strict type checking, and GitHub 
 
 - `/` — responsive landing page
 - `/tools` — searchable, category-filtered tool directory (category in the URL hash)
-- `/workspace` — local tool workspace (selected tool in the URL hash)
-- `/tools/[tool]` — redirects into the hash workspace
+- `/tools/[tool]` — completed tool workspace plus unique SEO content
+- `/workspace` — noindex local workspace (selected tool in the URL hash)
 - `/tools/merge-pdf/states` — processing and completion state reference
 - `/privacy`, `/about`, and `/offline` — supporting product pages
 

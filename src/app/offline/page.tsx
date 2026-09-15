@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Offline",
   description:
     "Use PDFForge’s application shell when your network is unavailable.",
+  robots: { index: false, follow: false },
 };
 
 export default function OfflinePage() {

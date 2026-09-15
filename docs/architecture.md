@@ -393,4 +393,14 @@ Security headers and a nonce-based Content-Security-Policy are applied on every 
 
 Exit checks: unit tests for nonce CSP, hash tool URLs, extension-scheme detection, cache deny rules, and cleanup registration; Playwright coverage for privacy copy, nonce headers, same-origin network use during merge, and absence of document IndexedDB/localStorage keys; `npm audit --audit-level=high` in CI.
 
-Residual risk: `style-src` still allows `'unsafe-inline'`; isolated-world extension scripts can run without extension URLs in the DOM; a direct visit to `/tools/[slug]` is logged once before the hash redirect. The full findings are in `docs/privacy-audit.md`.
+Residual risk: `style-src` still allows `'unsafe-inline'`; isolated-world extension scripts can run without extension URLs in the DOM; indexed `/tools/[slug]` URLs appear in host logs. The full findings are in `docs/privacy-audit.md`.
+
+## 22. Phase 13 outcome
+
+Each completed tool has a unique public page at `/tools/[slug]` with one H1, the working tool above the copy, explanation, steps, FAQs, related tools, Open Graph tags, and FAQ/breadcrumb/WebApplication JSON-LD.
+
+`sitemap.xml` lists Home, All tools, Privacy, About, and completed tool routes only. `/workspace`, `/offline`, and `/tools/merge-pdf/states` are noindex and omitted from the sitemap. `/workspace#slug` remains a privacy alternative that does not send the tool name to the host.
+
+Exit checks: unique titles and descriptions in unit tests; Playwright coverage for Merge PDF metadata, JSON-LD, sitemap, and robots.
+
+Known limitations: canonical tool URLs are visible to the host and search engines; hash workspace pages are not indexed; JSON-LD is injected as a nonce-bearing `application/ld+json` script.

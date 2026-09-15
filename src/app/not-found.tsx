@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { PageShell } from "@/components/layout/page-shell";
 import { buttonStyles } from "@/components/ui/button";
+import { noIndex } from "@/config/site";
+
+export const metadata: Metadata = {
+  title: "Page not found",
+  robots: noIndex,
+};
 
 export default function NotFound() {
   return (

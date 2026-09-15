@@ -68,16 +68,16 @@ No analytics, ads, auth, ORM, or error-monitoring packages are present. `npm aud
 | ----------------------------------- | ----------------------------------------------------------------------- |
 | Accidental upload or telemetry      | Mitigated: no upload API, CSP, e2e network assertions                   |
 | Filename/text/password leakage      | Mitigated: no content logging; sanitized download names                 |
-| XSS reading in-memory files         | Mitigated: React escaping, CSP, no `dangerouslySetInnerHTML`            |
+| XSS reading in-memory files         | Mitigated: React escaping, CSP, JSON-LD serialized with escaped `<`     |
 | Stale object URLs                   | Mitigated: registry plus pagehide cleanup                               |
 | Service worker caching private data | Mitigated: allowlist and sensitive-type deny                            |
 | Supply-chain compromise             | Mitigated: lockfile, audit job, no extra runtime CDNs                   |
-| Host access logs                    | Mitigated: tools run at `/workspace` with the tool name in the URL hash |
+| Host access logs                    | Partial: public `/tools/[slug]` pages are indexed; `/workspace#slug` is a noindex alternative |
 | Browser extensions                  | Mitigated: nonce CSP plus warning for extension-scheme resources        |
 
 ## 8. Residual risk
 
 - `style-src` still allows `'unsafe-inline'` for Tailwind and React `style` attributes. Script hydration uses a nonce, not `'unsafe-inline'`.
-- Opening a legacy `/tools/merge-pdf` bookmark still appears once in host logs before the app switches to `/workspace#merge-pdf`.
+- Indexed public tool pages (`/tools/merge-pdf`) appear in host access logs by design so search engines can crawl unique content. Use `/workspace#merge-pdf` when the tool name should stay in the hash.
 - Chrome/Firefox isolated-world content scripts can run without injecting `chrome-extension:` URLs. The on-page warning covers extension-scheme nodes; a clean profile is still the strongest control.
 - WebKit Playwright cannot reliably emulate offline service-worker reloads on Windows; Chromium and Firefox cover that path.

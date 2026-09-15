@@ -56,7 +56,7 @@ describe("privacy persistence policy", () => {
 });
 
 describe("tool location privacy", () => {
-  it("keeps tool choice in the hash, not the request path", () => {
+  it("keeps the optional workspace tool choice in the hash", () => {
     expect(getWorkspaceHref("merge-pdf")).toBe("/workspace#merge-pdf");
     expect(requestLeaksToolChoice("http://127.0.0.1/workspace")).toBe(false);
     expect(requestLeaksToolChoice("http://127.0.0.1/tools/merge-pdf")).toBe(

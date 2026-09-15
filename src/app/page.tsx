@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 
@@ -14,6 +15,15 @@ const trustPoints = [
   "No document uploads",
   "No watermarks",
 ];
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "PDFForge — Private PDF tools that stay on this device",
+  },
+  description:
+    "Free, privacy-first PDF tools that process your files locally in the browser. No uploads, accounts, or document logging.",
+  alternates: { canonical: "/" },
+};
 
 export default function Home() {
   return (

@@ -1,3 +1,7 @@
+export function getToolHref(slug: string) {
+  return `/tools/${slug}`;
+}
+
 export function getWorkspaceHref(slug: string) {
   return `/workspace#${slug}`;
 }

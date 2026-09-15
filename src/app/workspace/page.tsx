@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Local workspace",
   description:
     "Run PDFForge tools locally. The selected tool stays in the URL hash and is not sent to the host.",
+  robots: { index: false, follow: false },
 };
 
 export default function WorkspacePage() {
