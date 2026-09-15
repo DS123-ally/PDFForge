@@ -418,3 +418,5 @@ Known limitations: this phase does not pick a commercial host; Lighthouse scores
 ## 24. Privacy Inspector
 
 Privacy Inspector (`/tools/privacy-inspector`) is a local scan-then-sanitize tool. The scan reports standard and XMP metadata, attachments, JavaScript actions, form values, incremental `%%EOF` leftovers, hidden/off-page text-layer items, and best-effort image EXIF. Sanitize uses an explicit checklist and always rewrites a new file. The UI states that this reduces leak surface and does not prove emptiness.
+
+Find and Redact PII (`/tools/find-redact-pii`) searches the selectable text layer for emails, phone numbers, ID-like values, or a custom phrase. The user confirms highlighted matches, then the existing raster redaction path fills those regions so tokens cannot be copied from the output.

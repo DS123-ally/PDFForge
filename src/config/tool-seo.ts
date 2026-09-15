@@ -524,7 +524,42 @@ export const toolSeo: ToolSeoContent[] = [
           "No. Redaction targets visible regions. Run Remove Metadata separately if properties also need clearing.",
       },
     ],
-    relatedSlugs: ["flatten-pdf", "remove-metadata", "password-protect-pdf"],
+    relatedSlugs: [
+      "find-redact-pii",
+      "remove-metadata",
+      "password-protect-pdf",
+    ],
+  },
+  {
+    slug: "find-redact-pii",
+    pageTitle: "Find and redact PII in a PDF locally",
+    metaDescription:
+      "Search a PDF on this device for emails, phone numbers, ID-like values, or a custom phrase. Confirm highlights, then rasterize so those tokens cannot be copied out.",
+    intro:
+      "Find and Redact PII is search-to-redact for HR, legal, and support files. Matches come from the selectable text layer. You confirm each hit, then PDFForge reuses the same raster redaction path as Redact PDF.",
+    steps: [
+      "Open a PDF that contains selectable text.",
+      "Choose email, phone, ID-like numbers, and/or type a custom phrase.",
+      "Find matches and confirm the highlights you want removed.",
+      "Redact confirmed matches locally and download the new file.",
+    ],
+    faqs: [
+      {
+        question: "Does search upload the PDF?",
+        answer: "No. Pattern matching and redaction run in this browser tab.",
+      },
+      {
+        question: "Why did a known value not match?",
+        answer:
+          "Only the text layer is searched. Split glyphs, unusual spacing, or scanned pages without OCR can miss hits. Use Redact PDF to draw a box instead.",
+      },
+      {
+        question: "Can confirmed text be copied from the output?",
+        answer:
+          "Confirmed regions are rasterized black on those pages, same as Redact PDF. Spot-check the download.",
+      },
+    ],
+    relatedSlugs: ["redact-pdf", "privacy-inspector", "extract-text"],
   },
   {
     slug: "flatten-pdf",

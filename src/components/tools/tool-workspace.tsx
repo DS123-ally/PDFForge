@@ -10,6 +10,7 @@ import { PdfViewer } from "@/components/pdf/pdf-viewer";
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { DownloadResultCard } from "@/components/tools/download-result-card";
 import { EditPrivacyWorkspace } from "@/components/tools/edit-privacy-workspace";
+import { FindRedactWorkspace } from "@/components/tools/find-redact-workspace";
 import { ImagesToPdfWorkspace } from "@/components/tools/images-to-pdf-workspace";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
@@ -52,6 +53,10 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
 
   if (isPhaseTenSecurityTool(tool.slug)) {
     return <SecurityWorkspace tool={tool} />;
+  }
+
+  if (tool.slug === "find-redact-pii") {
+    return <FindRedactWorkspace />;
   }
 
   if (tool.slug === "redact-pdf") {
