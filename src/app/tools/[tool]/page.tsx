@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { PageShell } from "@/components/layout/page-shell";
 import { ToolSeoSections } from "@/components/tools/tool-seo-sections";
 import { ToolWorkspace } from "@/components/tools/tool-workspace";
+import { GlassPanel } from "@/components/ui/glass-panel";
 import { absoluteUrl, noIndex } from "@/config/site";
 import { getTool, tools } from "@/config/tools";
 import { getToolSeo } from "@/config/tool-seo";
@@ -62,9 +63,23 @@ export default async function ToolPage({ params }: ToolPageProps) {
 
   return (
     <PageShell>
-      <main className="px-5 py-10 sm:px-8 sm:py-14" id="main-content">
+      <main
+        className="relative overflow-hidden px-5 py-10 sm:px-8 sm:py-14"
+        id="main-content"
+      >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10"
+        >
+          <div className="absolute -top-28 left-[-6rem] size-[28rem] rounded-full bg-red-400/30 blur-3xl" />
+          <div className="absolute top-24 right-[-8rem] size-[26rem] rounded-full bg-rose-200/70 blur-3xl" />
+          <div className="absolute bottom-0 left-1/3 size-[22rem] rounded-full bg-zinc-300/50 blur-3xl" />
+        </div>
         <div className="mx-auto max-w-5xl">
-          <nav aria-label="Breadcrumb" className="text-sm text-zinc-500">
+          <nav
+            aria-label="Breadcrumb"
+            className="glass-panel inline-flex rounded-full px-4 py-1 text-sm text-zinc-500"
+          >
             <ol className="flex flex-wrap items-center gap-2">
               <li>
                 <Link
@@ -84,18 +99,23 @@ export default async function ToolPage({ params }: ToolPageProps) {
                 </Link>
               </li>
               <li aria-hidden="true">/</li>
-              <li aria-current="page">{tool.title}</li>
+              <li aria-current="page" className="font-semibold text-zinc-950">
+                {tool.title}
+              </li>
             </ol>
           </nav>
-          <h1 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">
+          <p className="mt-8 text-sm font-bold tracking-wide text-red-600 uppercase">
+            Local {tool.category} tool
+          </p>
+          <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
             {tool.title}
           </h1>
           <p className="mt-3 max-w-3xl text-base leading-7 text-zinc-600 sm:text-lg">
             {seo.intro}
           </p>
-          <div className="mt-8">
+          <GlassPanel className="mt-8 p-4 sm:p-6">
             <ToolWorkspace tool={tool} />
-          </div>
+          </GlassPanel>
           <ToolSeoSections nonce={nonce} seo={seo} tool={tool} />
         </div>
       </main>

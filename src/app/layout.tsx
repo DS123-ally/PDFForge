@@ -57,8 +57,8 @@ export default async function RootLayout({
   await headers();
 
   return (
-    <html lang="en" className="h-full antialiased">
-      <body className="min-h-full">
+    <html className="h-full antialiased" lang="en" suppressHydrationWarning>
+      <body className="min-h-full" suppressHydrationWarning>
         {children}
         <ExtensionGuard />
         <PrivacyCleanupProvider />

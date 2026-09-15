@@ -12,6 +12,7 @@ import Link from "next/link";
 
 import type { ToolDefinition } from "@/config/tools";
 import { getToolHref } from "@/lib/privacy/tool-location";
+import { cn } from "@/lib/utils";
 
 const icons = {
   "merge-pdf": FileStack,
@@ -24,12 +25,21 @@ const icons = {
   "view-metadata": Eye,
 } as const;
 
-export function ToolCard({ tool }: { tool: ToolDefinition }) {
+export function ToolCard({
+  className,
+  tool,
+}: {
+  className?: string;
+  tool: ToolDefinition;
+}) {
   const Icon = icons[tool.slug as keyof typeof icons] ?? FileStack;
 
   return (
     <Link
-      className="group flex min-h-40 flex-col rounded-2xl border border-transparent p-5 transition hover:border-zinc-200 hover:bg-white hover:shadow-sm focus-visible:outline-2 focus-visible:outline-red-600"
+      className={cn(
+        "group flex min-h-40 flex-col rounded-2xl border border-transparent p-5 transition hover:border-zinc-200 hover:bg-white hover:shadow-sm focus-visible:outline-2 focus-visible:outline-red-600",
+        className,
+      )}
       href={getToolHref(tool.slug)}
     >
       <Icon aria-hidden="true" className="size-6 text-red-600" />

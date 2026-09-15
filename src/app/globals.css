@@ -19,12 +19,12 @@
 }
 
 html {
-  background: var(--background);
+  background: #f7f4f1;
 }
 
 body {
   margin: 0;
-  background: var(--background);
+  background: #f7f4f1;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -35,6 +35,19 @@ input,
 select,
 textarea {
   outline-offset: 3px;
+}
+
+.glass-panel {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.72) 0%,
+    rgba(255, 255, 255, 0.46) 100%
+  );
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.85) inset,
+    0 18px 50px rgba(24, 24, 27, 0.08);
+  backdrop-filter: blur(22px) saturate(1.45);
 }
 
 @media (prefers-reduced-motion: reduce) {
