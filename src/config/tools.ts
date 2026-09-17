@@ -16,7 +16,7 @@ export type ToolDefinition = {
   description: string;
   category: ToolCategory;
   acceptsMultiple: boolean;
-  acceptedFileTypes: Array<"pdf" | "image">;
+  acceptedFileTypes: Array<"pdf" | "image" | "any">;
 };
 
 export const tools: ToolDefinition[] = [
@@ -219,6 +219,16 @@ export const tools: ToolDefinition[] = [
     category: "Security",
     acceptsMultiple: false,
     acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "document-integrity",
+    title: "Document Integrity",
+    shortDescription: "Fingerprint, compare, or verify a file hash locally.",
+    description:
+      "Hash any file in this tab with SHA-256 or SHA-512. Compare two copies for tamper detection, or check a file against a hash you already have. Nothing is uploaded.",
+    category: "Security",
+    acceptsMultiple: true,
+    acceptedFileTypes: ["any"],
   },
 ];
 

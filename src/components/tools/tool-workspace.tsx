@@ -19,6 +19,7 @@ import { PrivacyInspectorWorkspace } from "@/components/tools/privacy-inspector-
 import { ProcessingCard } from "@/components/tools/processing-card";
 import { RecipeWorkspace } from "@/components/tools/recipe-workspace";
 import { ScanDocumentWorkspace } from "@/components/tools/scan-document-workspace";
+import { DocumentIntegrityWorkspace } from "@/components/tools/document-integrity-workspace";
 import { RedactPdfWorkspace } from "@/components/tools/redact-pdf-workspace";
 import { SecurityWorkspace } from "@/components/tools/security-workspace";
 import { SplitPdfWorkspace } from "@/components/tools/split-pdf-workspace";
@@ -35,6 +36,10 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
 
   if (tool.slug === "organize-pdf") {
     return <OrganizePdfWorkspace />;
+  }
+
+  if (tool.slug === "document-integrity") {
+    return <DocumentIntegrityWorkspace />;
   }
 
   if (tool.slug === "scan-document") {

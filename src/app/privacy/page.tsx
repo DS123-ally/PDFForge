@@ -100,6 +100,18 @@ export default function PrivacyPage() {
         </p>
       </section>
       <section>
+        <h2 className="text-2xl font-bold text-zinc-950">
+          Local document hashes
+        </h2>
+        <p className="mt-4">
+          Document Integrity fingerprints files with Web Crypto in this tab
+          (SHA-256 or SHA-512). Compare and Verify Hash only show whether two
+          digests match. Hashes you copy stay in your clipboard. PDFForge does
+          not upload files or hashes and does not store them after you leave the
+          page.
+        </p>
+      </section>
+      <section>
         <h2 className="text-2xl font-bold text-zinc-950">Browser extensions</h2>
         <p className="mt-4">
           A per-request Content-Security-Policy nonce blocks page scripts that

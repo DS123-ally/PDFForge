@@ -623,7 +623,39 @@ export const toolSeo: ToolSeoContent[] = [
           "No. Use Password Protect PDF if the flattened file also needs a password.",
       },
     ],
-    relatedSlugs: ["redact-pdf", "password-protect-pdf", "remove-metadata"],
+    relatedSlugs: ["document-integrity", "redact-pdf", "password-protect-pdf"],
+  },
+  {
+    slug: "document-integrity",
+    pageTitle: "Verify document integrity with a local file hash",
+    metaDescription:
+      "Fingerprint any file with SHA-256 or SHA-512 in your browser. Compare two copies for tampering or verify a known hash. Nothing is uploaded.",
+    intro:
+      "Document Integrity is a local checksum tool. Use it before you send a contract, after a download, or when you want to prove two copies are byte-for-byte the same. Hashes never leave this tab.",
+    steps: [
+      "Choose Fingerprint, Compare, or Verify Hash.",
+      "Drop a file (or two files to compare). Any type is allowed.",
+      "Read the SHA-256 or SHA-512 hex digest computed in this browser.",
+      "Copy the hash or paste an expected value to confirm a match.",
+    ],
+    faqs: [
+      {
+        question: "Does hashing upload my file?",
+        answer:
+          "No. Web Crypto runs in this tab. There is no hash API and no server-side store.",
+      },
+      {
+        question: "What does Compare tell me?",
+        answer:
+          "If two hashes match, every byte is the same. If they differ, the files are not identical. That is tamper detection, not a legal signature.",
+      },
+      {
+        question: "Which hash should I paste to Verify?",
+        answer:
+          "A 64-character hex string is treated as SHA-256. A 128-character hex string is treated as SHA-512. Spaces and 0x prefixes are ignored.",
+      },
+    ],
+    relatedSlugs: ["privacy-inspector", "password-protect-pdf", "flatten-pdf"],
   },
   {
     slug: "private-recipes",

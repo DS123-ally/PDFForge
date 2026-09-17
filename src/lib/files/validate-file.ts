@@ -5,7 +5,7 @@ import {
 } from "@/lib/pdf/pdf-errors";
 import { loadPdf } from "@/lib/pdf/load-pdf";
 
-export type AcceptedFileType = "pdf" | "image";
+export type AcceptedFileType = "pdf" | "image" | "any";
 
 export type FileValidationOptions = {
   acceptedTypes?: readonly AcceptedFileType[];
@@ -28,6 +28,10 @@ export function createFileFingerprint(file: File) {
 }
 
 export function getAcceptAttribute(acceptedTypes: readonly AcceptedFileType[]) {
+  if (acceptedTypes.includes("any")) {
+    return "";
+  }
+
   const accepts = new Set<string>();
 
   if (acceptedTypes.includes("pdf")) {
@@ -58,7 +62,7 @@ export async function validateFile(
     throw new FilePipelineError("duplicate_file");
   }
 
-  if (file.size === 0) {
+  if (file.size === 0 && !acceptedTypes.includes("any")) {
     throw new FilePipelineError("empty_file");
   }
 
@@ -69,13 +73,17 @@ export async function validateFile(
     );
   }
 
-  if (!isAcceptedFileType(file, acceptedTypes)) {
+  if (
+    !acceptedTypes.includes("any") &&
+    !isAcceptedFileType(file, acceptedTypes)
+  ) {
     throw new FilePipelineError("unsupported_type");
   }
 
-  const pdfDetails = isPdfFile(file)
-    ? await validatePdfFile(file, options.allowPasswordProtected)
-    : undefined;
+  const pdfDetails =
+    !acceptedTypes.includes("any") && isPdfFile(file)
+      ? await validatePdfFile(file, options.allowPasswordProtected)
+      : undefined;
 
   return {
     file,

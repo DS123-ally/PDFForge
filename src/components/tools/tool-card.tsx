@@ -1,5 +1,6 @@
 import {
   Eye,
+  Fingerprint,
   FileImage,
   FileStack,
   Highlighter,
@@ -22,6 +23,7 @@ const icons = {
   "merge-pdf": FileStack,
   "split-pdf": Scissors,
   "organize-pdf": ListRestart,
+  "document-integrity": Fingerprint,
   "scan-document": ScanLine,
   "images-to-pdf": Images,
   "pdf-to-images": FileImage,
