@@ -2,8 +2,7 @@ import type { Raster } from "@/lib/scan/image-data";
 
 type RasterCanvas = HTMLCanvasElement | OffscreenCanvas;
 type RasterContext =
-  | CanvasRenderingContext2D
-  | OffscreenCanvasRenderingContext2D;
+  CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 
 export function rasterToImageData(source: Raster) {
   const data = new Uint8ClampedArray(source.data.length);

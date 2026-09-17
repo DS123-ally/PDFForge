@@ -698,10 +698,7 @@ function CropEditor({
   const imageRef = useRef<HTMLImageElement>(null);
   const dragIndex = useRef<number | null>(null);
 
-  function updateCorner(
-    index: number,
-    event: ReactPointerEvent<Element>,
-  ) {
+  function updateCorner(index: number, event: ReactPointerEvent<Element>) {
     const image = imageRef.current;
 
     if (!image) {
