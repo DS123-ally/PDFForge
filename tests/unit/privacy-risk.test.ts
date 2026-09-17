@@ -22,10 +22,7 @@ describe("privacy risk detectors", () => {
     const aadhaar = makeValidAadhaar("49911866524");
     const line = `PAN ABCDE1234F GST 27ABCDE1234F1Z5 IFSC HDFC0001234 Aadhaar ${aadhaar} card 4111 1111 1111 1111 mail jane.doe@example.com phone 9876543210 DOB 12/03/1991 https://example.com IBAN DE89370400440532013000`;
 
-    const matches = findPrivacyRiskMatches(
-      [run(line, 20, 360, 480)],
-      pageSize,
-    );
+    const matches = findPrivacyRiskMatches([run(line, 20, 360, 480)], pageSize);
     const kinds = [...new Set(matches.map((match) => match.kind))].sort();
 
     expect(kinds).toEqual(

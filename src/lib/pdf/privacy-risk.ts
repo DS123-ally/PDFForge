@@ -134,7 +134,8 @@ const detectors: Array<{
   },
   {
     accept: (value, line) =>
-      /passport/i.test(line) || /^[A-PR-WY][1-9]\d{6}$/.test(value.toUpperCase()),
+      /passport/i.test(line) ||
+      /^[A-PR-WY][1-9]\d{6}$/.test(value.toUpperCase()),
     kind: "passport",
     regex: /\b[A-PR-WY][1-9]\d{6}\b/gi,
   },
@@ -192,7 +193,11 @@ export function findPrivacyRiskMatches(
           continue;
         }
 
-        if (accepted.some((match) => rangesOverlap(match.start, match.end, start, end))) {
+        if (
+          accepted.some((match) =>
+            rangesOverlap(match.start, match.end, start, end),
+          )
+        ) {
           continue;
         }
 
@@ -267,9 +272,14 @@ export async function scanPrivacyRisk(
   const notes: PrivacyRiskNote[] = [];
   const metadataSamples = audit.findings
     .filter((finding) =>
-      ["metadata", "xmp", "attachments", "javascript", "forms", "exif"].includes(
-        finding.category,
-      ),
+      [
+        "metadata",
+        "xmp",
+        "attachments",
+        "javascript",
+        "forms",
+        "exif",
+      ].includes(finding.category),
     )
     .flatMap((finding) => finding.samples)
     .filter(Boolean);
@@ -288,7 +298,9 @@ export async function scanPrivacyRisk(
     );
     notes.push({
       kind: "hidden-text",
-      samples: hiddenFinding?.samples ?? [`${audit.hiddenTextCount} hidden items`],
+      samples: hiddenFinding?.samples ?? [
+        `${audit.hiddenTextCount} hidden items`,
+      ],
       title: "Invisible or off-page text",
     });
   }
@@ -304,9 +316,11 @@ export async function scanPrivacyRisk(
 
   return {
     audit,
-    hiddenTextPages: uniquePageNumbers(audit.findings.flatMap((finding) =>
-      finding.category === "hidden-text" ? finding.samples : [],
-    )),
+    hiddenTextPages: uniquePageNumbers(
+      audit.findings.flatMap((finding) =>
+        finding.category === "hidden-text" ? finding.samples : [],
+      ),
+    ),
     matches,
     notes,
   } satisfies PrivacyRiskReport;
@@ -411,7 +425,12 @@ function unionToPercentBox(
   };
 }
 
-function rangesOverlap(leftStart: number, leftEnd: number, rightStart: number, rightEnd: number) {
+function rangesOverlap(
+  leftStart: number,
+  leftEnd: number,
+  rightStart: number,
+  rightEnd: number,
+) {
   return leftStart < rightEnd && rightStart < leftEnd;
 }
 

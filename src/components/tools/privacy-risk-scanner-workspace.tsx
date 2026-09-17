@@ -408,10 +408,7 @@ export function PrivacyRiskScannerWorkspace() {
 
       {status === "error" ? (
         <div className="mt-8">
-          <ErrorState
-            description={message}
-            title="Privacy risk scan failed"
-          />
+          <ErrorState description={message} title="Privacy risk scan failed" />
         </div>
       ) : null}
 

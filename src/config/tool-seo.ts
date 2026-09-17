@@ -364,11 +364,7 @@ export const toolSeo: ToolSeoContent[] = [
           "This tool targets metadata, not embedded files. Attachments may remain.",
       },
     ],
-    relatedSlugs: [
-      "privacy-risk-scanner",
-      "privacy-inspector",
-      "extract-text",
-    ],
+    relatedSlugs: ["privacy-risk-scanner", "privacy-inspector", "extract-text"],
   },
   {
     slug: "privacy-risk-scanner",
@@ -432,11 +428,7 @@ export const toolSeo: ToolSeoContent[] = [
           "Not by default. Use Redact PDF for selected visible regions. Sanitize focuses on metadata, attachments, JavaScript, form values, rewrite leftovers, and best-effort EXIF.",
       },
     ],
-    relatedSlugs: [
-      "privacy-risk-scanner",
-      "remove-metadata",
-      "redact-pdf",
-    ],
+    relatedSlugs: ["privacy-risk-scanner", "remove-metadata", "redact-pdf"],
   },
   {
     slug: "view-metadata",
@@ -631,11 +623,7 @@ export const toolSeo: ToolSeoContent[] = [
           "Confirmed regions are rasterized black on those pages, same as Redact PDF. Spot-check the download.",
       },
     ],
-    relatedSlugs: [
-      "privacy-risk-scanner",
-      "redact-pdf",
-      "privacy-inspector",
-    ],
+    relatedSlugs: ["privacy-risk-scanner", "redact-pdf", "privacy-inspector"],
   },
   {
     slug: "flatten-pdf",
