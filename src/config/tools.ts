@@ -131,6 +131,17 @@ export const tools: ToolDefinition[] = [
     acceptedFileTypes: ["pdf"],
   },
   {
+    slug: "privacy-risk-scanner",
+    title: "Privacy Risk Scanner",
+    shortDescription:
+      "Detect Aadhaar, PAN, cards, emails, and hidden data, then download a redacted copy.",
+    description:
+      "Scan a PDF locally for Aadhaar, PAN, cards, emails, IFSC, hidden metadata, and invisible text, then download a rasterized redacted copy. Nothing is uploaded.",
+    category: "Privacy",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
     slug: "privacy-inspector",
     title: "Privacy Inspector",
     shortDescription: "Audit a PDF for leaks, then sanitize a local copy.",

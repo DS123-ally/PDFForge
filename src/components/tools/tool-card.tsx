@@ -11,6 +11,7 @@ import {
   ScanLine,
   ScanSearch,
   Scissors,
+  ShieldAlert,
   ShieldCheck,
 } from "lucide-react";
 import Link from "next/link";
@@ -29,6 +30,7 @@ const icons = {
   "pdf-to-images": FileImage,
   "rotate-pdf": RotateCw,
   "find-redact-pii": Highlighter,
+  "privacy-risk-scanner": ShieldAlert,
   "privacy-inspector": ScanSearch,
   "private-recipes": ListTree,
   "remove-metadata": ShieldCheck,

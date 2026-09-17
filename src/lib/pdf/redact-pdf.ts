@@ -14,6 +14,7 @@ export type RedactionRegion = {
 };
 
 export type RedactPdfOptions = {
+  rasterizePages?: readonly number[];
   regions: readonly RedactionRegion[];
   scale?: number;
   sourceName?: string;
@@ -43,8 +44,9 @@ export async function redactPdf(file: File, options: RedactPdfOptions) {
   const regions = options.regions.filter(
     (region) => region.width > 0 && region.height > 0,
   );
+  const rasterizePages = new Set(options.rasterizePages ?? []);
 
-  if (regions.length === 0) {
+  if (regions.length === 0 && rasterizePages.size === 0) {
     throw new Error("Draw or add at least one redaction region.");
   }
 
@@ -59,7 +61,7 @@ export async function redactPdf(file: File, options: RedactPdfOptions) {
       (region) => region.pageNumber === pageNumber,
     );
 
-    if (pageRegions.length === 0) {
+    if (pageRegions.length === 0 && !rasterizePages.has(pageNumber)) {
       const [copiedPage] = await output.copyPages(source, [index]);
       output.addPage(copiedPage);
       continue;

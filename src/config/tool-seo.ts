@@ -364,7 +364,43 @@ export const toolSeo: ToolSeoContent[] = [
           "This tool targets metadata, not embedded files. Attachments may remain.",
       },
     ],
-    relatedSlugs: ["privacy-inspector", "extract-text", "redact-pdf"],
+    relatedSlugs: [
+      "privacy-risk-scanner",
+      "privacy-inspector",
+      "extract-text",
+    ],
+  },
+  {
+    slug: "privacy-risk-scanner",
+    pageTitle: "Scan a PDF for privacy risks locally",
+    metaDescription:
+      "Detect Aadhaar, PAN, cards, emails, IFSC, hidden metadata, and invisible text in your browser, then download a redacted PDF. Nothing is uploaded.",
+    intro:
+      "Privacy Risk Scanner is a local leak-and-identifier pass. It highlights text-layer matches, reports metadata and hidden text, then rasterizes confirmed hits so those tokens cannot be copied from the download.",
+    steps: [
+      "Drop a PDF from your device. The scan runs in this tab.",
+      "Review highlighted identifiers and structure notes.",
+      "Uncheck any match you want to keep visible.",
+      "Download a redacted copy. Confirmed regions are rasterized and common metadata is stripped.",
+    ],
+    faqs: [
+      {
+        question: "Does the scanner upload my PDF?",
+        answer:
+          "No. Pattern matching, metadata inspection, and redaction run in this browser tab.",
+      },
+      {
+        question: "Will every Aadhaar or card number be found?",
+        answer:
+          "Only selectable text is searched, with checksums for Aadhaar and payment cards. Scans without a text layer, split glyphs, or unusual spacing can miss hits. Use Redact PDF to draw a box instead.",
+      },
+      {
+        question: "Is the download a guarantee of emptiness?",
+        answer:
+          "No. Confirmed tokens are rasterized black and common metadata is cleared. Unknown encodings, images of text, and some objects can remain. Spot-check the file before sharing.",
+      },
+    ],
+    relatedSlugs: ["find-redact-pii", "privacy-inspector", "redact-pdf"],
   },
   {
     slug: "privacy-inspector",
@@ -396,7 +432,11 @@ export const toolSeo: ToolSeoContent[] = [
           "Not by default. Use Redact PDF for selected visible regions. Sanitize focuses on metadata, attachments, JavaScript, form values, rewrite leftovers, and best-effort EXIF.",
       },
     ],
-    relatedSlugs: ["remove-metadata", "view-metadata", "redact-pdf"],
+    relatedSlugs: [
+      "privacy-risk-scanner",
+      "remove-metadata",
+      "redact-pdf",
+    ],
   },
   {
     slug: "view-metadata",
@@ -591,7 +631,11 @@ export const toolSeo: ToolSeoContent[] = [
           "Confirmed regions are rasterized black on those pages, same as Redact PDF. Spot-check the download.",
       },
     ],
-    relatedSlugs: ["redact-pdf", "privacy-inspector", "extract-text"],
+    relatedSlugs: [
+      "privacy-risk-scanner",
+      "redact-pdf",
+      "privacy-inspector",
+    ],
   },
   {
     slug: "flatten-pdf",

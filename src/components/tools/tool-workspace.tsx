@@ -16,6 +16,7 @@ import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
 import { PdfToImagesWorkspace } from "@/components/tools/pdf-to-images-workspace";
 import { PrivacyInspectorWorkspace } from "@/components/tools/privacy-inspector-workspace";
+import { PrivacyRiskScannerWorkspace } from "@/components/tools/privacy-risk-scanner-workspace";
 import { ProcessingCard } from "@/components/tools/processing-card";
 import { RecipeWorkspace } from "@/components/tools/recipe-workspace";
 import { ScanDocumentWorkspace } from "@/components/tools/scan-document-workspace";
@@ -52,6 +53,10 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
 
   if (tool.slug === "pdf-to-images") {
     return <PdfToImagesWorkspace />;
+  }
+
+  if (tool.slug === "privacy-risk-scanner") {
+    return <PrivacyRiskScannerWorkspace />;
   }
 
   if (tool.slug === "privacy-inspector") {
