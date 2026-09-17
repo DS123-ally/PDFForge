@@ -15,6 +15,7 @@ Automated coverage: Playwright projects `chromium`, `firefox`, and `webkit`. Web
 - Home loads, no horizontal overflow at 375px, mobile menu opens from the keyboard
 - All tools directory search and category hash filters
 - Merge PDF: add two files, merge, download, no document POST
+- Private Recipes: drop two PDFs, merge then page numbers, optional opt-in settings save (no PDF or password in localStorage)
 - Split PDF range ZIP and Organize PDF save
 - Images to PDF and PDF to Images
 - Rotate PDF, Remove Metadata, View Metadata, Extract Text

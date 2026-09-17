@@ -61,6 +61,7 @@ No analytics, ads, auth, ORM, or error-monitoring packages are present. `npm aud
 - IndexedDB is not opened by application code.
 - Object URLs are tracked and revoked on file removal, unmount, page hide (except back-forward cache), and before unload.
 - Service worker cache `pdfforge-shell-v4` stores the public shell and hashed static assets. PDF, ZIP, blob, POST, and password query requests are excluded.
+- `localStorage` is unused for documents. Private Recipes may store opt-in step settings in `forge.private-recipes.v1` with passwords and PDF bytes stripped.
 
 ## 7. Threat-model follow-up
 

@@ -31,6 +31,16 @@ export const tools: ToolDefinition[] = [
     acceptedFileTypes: ["pdf"],
   },
   {
+    slug: "private-recipes",
+    title: "Private Recipes",
+    shortDescription: "Chain PDF tools in one local workspace.",
+    description:
+      "Drop files once and run a pipeline such as merge, page numbers, watermark, strip metadata, then password protect. Save settings only if you opt in.",
+    category: "Organize",
+    acceptsMultiple: true,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
     slug: "split-pdf",
     title: "Split PDF",
     shortDescription: "Extract pages into separate files.",
@@ -166,16 +176,6 @@ export const tools: ToolDefinition[] = [
     shortDescription: "Remove a password you already know.",
     description:
       "Open a protected PDF with the password you supply, then save an unlocked local copy.",
-    category: "Security",
-    acceptsMultiple: false,
-    acceptedFileTypes: ["pdf"],
-  },
-  {
-    slug: "find-redact-pii",
-    title: "Find and Redact PII",
-    shortDescription: "Search emails, phones, IDs, or a phrase, then redact.",
-    description:
-      "Find text-layer matches locally, confirm each highlight, then rasterize so those tokens cannot be copied from the output.",
     category: "Security",
     acceptsMultiple: false,
     acceptedFileTypes: ["pdf"],

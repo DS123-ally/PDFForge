@@ -15,6 +15,7 @@ import {
   PdfWrongPasswordError,
 } from "@/lib/pdf/pdf-errors";
 import { splitPdfBuffer } from "@/lib/pdf/split-pdf";
+import { runRecipe } from "@/lib/recipes/run-recipe";
 import type {
   PdfWorkerRequest,
   PdfWorkerResponse,
@@ -93,6 +94,8 @@ async function runOperation(
       return flattenPdfJob(request);
     case "sanitize-pdf":
       return sanitizePdfJob(request);
+    case "recipe":
+      return recipeJob(request);
     case "prepare":
       return inspectJob(request);
   }
@@ -322,6 +325,38 @@ async function organizeJob(
     filename: result.filename,
     outputBytes: result.outputBytes,
     totalBytes: file.size,
+    totalPages: result.totalPages,
+  };
+}
+
+async function recipeJob(
+  request: Extract<PdfWorkerRequest, { type: "prepare" }>,
+): Promise<PdfWorkerResult> {
+  const steps = request.options?.recipe?.steps;
+
+  if (!steps) {
+    throw new Error("Recipe steps are required.");
+  }
+
+  const result = await runRecipe(
+    request.files.map((file) => ({
+      bytes: file.bytes,
+      name: file.name,
+    })),
+    steps,
+    {
+      isCancelled: () => cancelledJobs.has(request.id),
+      onProgress: (progress, message) => {
+        postProgress(request.id, progress, message);
+      },
+    },
+  );
+
+  return {
+    fileCount: result.fileCount,
+    filename: result.filename,
+    outputBytes: result.outputBytes,
+    totalBytes: request.files.reduce((total, file) => total + file.size, 0),
     totalPages: result.totalPages,
   };
 }

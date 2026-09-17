@@ -4,4 +4,5 @@ export const persistencePolicy = {
   sessionStorage: false,
   analytics: false,
   cookies: false,
+  recipeSettings: "opt-in",
 } as const;

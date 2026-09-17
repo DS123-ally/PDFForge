@@ -46,7 +46,7 @@ export const toolSeo: ToolSeoContent[] = [
           "Merge PDF rejects encrypted files with a clear error. Unlock that file first if you know the password.",
       },
     ],
-    relatedSlugs: ["split-pdf", "organize-pdf", "rotate-pdf"],
+    relatedSlugs: ["split-pdf", "organize-pdf", "private-recipes"],
   },
   {
     slug: "split-pdf",
@@ -524,42 +524,7 @@ export const toolSeo: ToolSeoContent[] = [
           "No. Redaction targets visible regions. Run Remove Metadata separately if properties also need clearing.",
       },
     ],
-    relatedSlugs: [
-      "find-redact-pii",
-      "remove-metadata",
-      "password-protect-pdf",
-    ],
-  },
-  {
-    slug: "find-redact-pii",
-    pageTitle: "Find and redact PII in a PDF locally",
-    metaDescription:
-      "Search a PDF on this device for emails, phone numbers, ID-like values, or a custom phrase. Confirm highlights, then rasterize so those tokens cannot be copied out.",
-    intro:
-      "Find and Redact PII is search-to-redact for HR, legal, and support files. Matches come from the selectable text layer. You confirm each hit, then PDFForge reuses the same raster redaction path as Redact PDF.",
-    steps: [
-      "Open a PDF that contains selectable text.",
-      "Choose email, phone, ID-like numbers, and/or type a custom phrase.",
-      "Find matches and confirm the highlights you want removed.",
-      "Redact confirmed matches locally and download the new file.",
-    ],
-    faqs: [
-      {
-        question: "Does search upload the PDF?",
-        answer: "No. Pattern matching and redaction run in this browser tab.",
-      },
-      {
-        question: "Why did a known value not match?",
-        answer:
-          "Only the text layer is searched. Split glyphs, unusual spacing, or scanned pages without OCR can miss hits. Use Redact PDF to draw a box instead.",
-      },
-      {
-        question: "Can confirmed text be copied from the output?",
-        answer:
-          "Confirmed regions are rasterized black on those pages, same as Redact PDF. Spot-check the download.",
-      },
-    ],
-    relatedSlugs: ["redact-pdf", "privacy-inspector", "extract-text"],
+    relatedSlugs: ["flatten-pdf", "remove-metadata", "password-protect-pdf"],
   },
   {
     slug: "flatten-pdf",
@@ -592,6 +557,38 @@ export const toolSeo: ToolSeoContent[] = [
       },
     ],
     relatedSlugs: ["redact-pdf", "password-protect-pdf", "remove-metadata"],
+  },
+  {
+    slug: "private-recipes",
+    pageTitle: "Private PDF recipes in one local workspace",
+    metaDescription:
+      "Chain merge, page numbers, watermark, metadata strip, and protect in the browser. Recipe settings save only if you opt in. PDFs never go in localStorage.",
+    intro:
+      "Private Recipes is a pipeline, not a new PDF engine. Drop files once, order the same local tools you already use, then download one result. Saved recipes store step options only.",
+    steps: [
+      "Add one or more PDFs. Reorder them if you will merge.",
+      "Add pipeline steps. Merge first for multiple files; password protect last.",
+      "Run the recipe locally and download the output.",
+      "Optionally opt in to save settings on this device. Passwords are never stored.",
+    ],
+    faqs: [
+      {
+        question: "Does a recipe upload my PDFs?",
+        answer:
+          "No. The chain runs in the same-origin worker already used by Merge, Edit, Sanitize, Flatten, and Protect.",
+      },
+      {
+        question: "What is saved if I opt in?",
+        answer:
+          "Step types and non-secret options in localStorage. Not PDFs, filenames, extracted text, or passwords.",
+      },
+      {
+        question: "Why are split and redact missing?",
+        answer:
+          "Those tools produce ZIP archives, images, or page-region selections that do not chain as a single PDF buffer. Use their dedicated workspaces.",
+      },
+    ],
+    relatedSlugs: ["merge-pdf", "add-page-numbers", "password-protect-pdf"],
   },
 ];
 

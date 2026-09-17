@@ -70,5 +70,15 @@ describe("worker reuse", () => {
     expect(shouldReusePdfWorker("merge")).toBe(true);
     expect(shouldReusePdfWorker("protect-pdf")).toBe(false);
     expect(shouldReusePdfWorker("unlock-pdf")).toBe(false);
+    expect(
+      shouldReusePdfWorker("recipe", {
+        recipe: { steps: [{ id: "1", type: "merge-pdf" }] },
+      }),
+    ).toBe(true);
+    expect(
+      shouldReusePdfWorker("recipe", {
+        recipe: { steps: [{ id: "1", type: "password-protect-pdf" }] },
+      }),
+    ).toBe(false);
   });
 });

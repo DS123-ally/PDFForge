@@ -52,6 +52,7 @@ describe("privacy persistence policy", () => {
     expect(persistencePolicy.localStorage).toBe(false);
     expect(persistencePolicy.analytics).toBe(false);
     expect(persistencePolicy.cookies).toBe(false);
+    expect(persistencePolicy.recipeSettings).toBe("opt-in");
   });
 });
 

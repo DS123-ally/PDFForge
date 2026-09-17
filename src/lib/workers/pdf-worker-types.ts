@@ -4,6 +4,7 @@ import type {
   ImageOrientation,
   ImagePageSize,
 } from "@/lib/pdf/image-layout";
+import type { RecipeStep } from "@/lib/recipes/recipe";
 
 export type PdfWorkerFile = {
   id: string;
@@ -22,7 +23,8 @@ export type PdfWorkerOperation =
   | "protect-pdf"
   | "unlock-pdf"
   | "flatten-pdf"
-  | "sanitize-pdf";
+  | "sanitize-pdf"
+  | "recipe";
 
 export type PdfWorkerSplitOptions = {
   mode: "extract" | "ranges" | "every-page";
@@ -63,6 +65,9 @@ export type PdfWorkerOptions = {
   };
   organize?: {
     pages: PdfWorkerOrganizePage[];
+  };
+  recipe?: {
+    steps: RecipeStep[];
   };
   split?: PdfWorkerSplitOptions;
 };

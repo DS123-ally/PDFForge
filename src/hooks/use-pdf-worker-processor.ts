@@ -102,7 +102,7 @@ export function usePdfWorkerProcessor() {
             dispatch({ result: message.result, type: "complete" });
             jobIdRef.current = null;
 
-            if (!shouldReusePdfWorker(operation)) {
+            if (!shouldReusePdfWorker(operation, options)) {
               cleanupWorker();
             }
 

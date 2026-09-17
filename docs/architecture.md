@@ -151,7 +151,8 @@ Cancellation is cooperative. Loops check an abort flag between pages/files. A si
 
 - Default to memory: `File`, `ArrayBuffer`, `Blob`, and tracked object URLs.
 - Use IndexedDB only for an approved temporary-recovery feature with expiry and cleanup tests.
-- Never store file content, passwords, extracted text, or metadata in `localStorage`.
+- Never store file content, passwords, extracted text, or document metadata in `localStorage`.
+- Private Recipes may write **opt-in step settings only** to `forge.private-recipes.v1`. Passwords and PDF bytes are stripped before write.
 - Revoke object URLs on replacement, completion, cancellation, route exit, and unmount.
 - Promise reference release and browser-record deletion, not impossible guarantees about immediate JavaScript heap erasure.
 
@@ -418,5 +419,3 @@ Known limitations: this phase does not pick a commercial host; Lighthouse scores
 ## 24. Privacy Inspector
 
 Privacy Inspector (`/tools/privacy-inspector`) is a local scan-then-sanitize tool. The scan reports standard and XMP metadata, attachments, JavaScript actions, form values, incremental `%%EOF` leftovers, hidden/off-page text-layer items, and best-effort image EXIF. Sanitize uses an explicit checklist and always rewrites a new file. The UI states that this reduces leak surface and does not prove emptiness.
-
-Find and Redact PII (`/tools/find-redact-pii`) searches the selectable text layer for emails, phone numbers, ID-like values, or a custom phrase. The user confirms highlighted matches, then the existing raster redaction path fills those regions so tokens cannot be copied from the output.

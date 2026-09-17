@@ -52,8 +52,11 @@ export default function PrivacyPage() {
           Previews use short-lived object URLs. Those URLs, worker jobs, and
           in-memory buffers are released when you clear files, finish or cancel
           a job, leave the page, or close the tab. IndexedDB, localStorage, and
-          sessionStorage are not used for documents. The service worker may
-          cache the public app shell and hashed static assets only.
+          sessionStorage are not used for documents. If you opt in on Private
+          Recipes, this browser may store step settings only (never PDFs,
+          filenames, or passwords) under a non-document localStorage key. The
+          service worker may cache the public app shell and hashed static assets
+          only.
         </p>
       </section>
       <section>

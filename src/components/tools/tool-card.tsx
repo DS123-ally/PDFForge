@@ -6,6 +6,7 @@ import {
   Images,
   ListRestart,
   RotateCw,
+  ListTree,
   ScanSearch,
   Scissors,
   ShieldCheck,
@@ -25,6 +26,7 @@ const icons = {
   "rotate-pdf": RotateCw,
   "find-redact-pii": Highlighter,
   "privacy-inspector": ScanSearch,
+  "private-recipes": ListTree,
   "remove-metadata": ShieldCheck,
   "view-metadata": Eye,
 } as const;
