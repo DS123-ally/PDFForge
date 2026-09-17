@@ -15,6 +15,7 @@ import {
 } from "@/lib/privacy/temporary-data";
 import {
   getWorkspaceHref,
+  readWorkspaceSlug,
   requestLeaksToolChoice,
 } from "@/lib/privacy/tool-location";
 
@@ -58,7 +59,8 @@ describe("privacy persistence policy", () => {
 
 describe("tool location privacy", () => {
   it("keeps the optional workspace tool choice in the hash", () => {
-    expect(getWorkspaceHref("merge-pdf")).toBe("/workspace#merge-pdf");
+    expect(readWorkspaceSlug("#merge-pdf")).toBe("merge-pdf");
+    expect(readWorkspaceSlug("#main-content")).toBe("");
     expect(requestLeaksToolChoice("http://127.0.0.1/workspace")).toBe(false);
     expect(requestLeaksToolChoice("http://127.0.0.1/tools/merge-pdf")).toBe(
       true,

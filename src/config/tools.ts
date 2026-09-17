@@ -181,6 +181,16 @@ export const tools: ToolDefinition[] = [
     acceptedFileTypes: ["pdf"],
   },
   {
+    slug: "find-redact-pii",
+    title: "Find and Redact PII",
+    shortDescription: "Search emails, phones, IDs, or a phrase, then redact.",
+    description:
+      "Find text-layer matches locally, confirm each highlight, then rasterize so those tokens cannot be copied from the output.",
+    category: "Security",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
     slug: "redact-pdf",
     title: "Redact PDF",
     shortDescription: "Permanently remove selected page regions.",

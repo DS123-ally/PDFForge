@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
 
 import { PageShell } from "@/components/layout/page-shell";
 import { WorkspaceApp } from "@/components/tools/workspace-app";
 import { noIndex } from "@/config/site";
+import { workspaceHashCaptureScript } from "@/lib/privacy/tool-location";
 
 export const metadata: Metadata = {
   title: "Local workspace",
@@ -12,9 +14,15 @@ export const metadata: Metadata = {
   robots: noIndex,
 };
 
-export default function WorkspacePage() {
+export default async function WorkspacePage() {
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <PageShell>
+      <script
+        dangerouslySetInnerHTML={{ __html: workspaceHashCaptureScript }}
+        nonce={nonce}
+      />
       <main className="px-5 py-10 sm:px-8 sm:py-14" id="main-content">
         <div className="mx-auto max-w-5xl">
           <nav aria-label="Breadcrumb" className="text-sm text-zinc-500">

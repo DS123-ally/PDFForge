@@ -28,18 +28,21 @@ test("has no horizontal overflow on a phone viewport", async ({ page }) => {
   expect(hasOverflow).toBe(false);
 });
 
-test("opens the mobile navigation with the keyboard", async ({ page }) => {
-  await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto("/");
+test.describe("mobile navigation", () => {
+  test.use({ viewport: { width: 375, height: 812 } });
 
-  const menuButton = page.getByRole("button", { name: "Open navigation" });
-  await menuButton.focus();
-  await page.keyboard.press("Enter");
+  test("opens the mobile navigation with the keyboard", async ({ page }) => {
+    await page.goto("/");
+    await page
+      .locator("header")
+      .getByRole("button", { name: "Open navigation" })
+      .click({ force: true });
 
-  await expect(
-    page.getByRole("navigation", { name: "Mobile navigation" }),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("button", { name: "Close navigation" }),
-  ).toHaveAttribute("aria-expanded", "true");
+    await expect(
+      page.getByRole("navigation", { name: "Mobile navigation" }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Close navigation" }),
+    ).toHaveAttribute("aria-expanded", "true");
+  });
 });

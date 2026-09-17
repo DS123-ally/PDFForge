@@ -19,7 +19,7 @@ Automated coverage: Playwright projects `chromium`, `firefox`, and `webkit`. Web
 - Split PDF range ZIP and Organize PDF save
 - Images to PDF and PDF to Images
 - Rotate PDF, Remove Metadata, View Metadata, Extract Text
-- Password Protect / Unlock, Redact, Flatten
+- Password Protect / Unlock, Find and Redact PII, Redact, Flatten
 - `/privacy` and `/about` match actual local processing
 - `/tools/merge-pdf` shows the working tool above FAQs; title is unique
 - `/workspace#merge-pdf` is `noindex`

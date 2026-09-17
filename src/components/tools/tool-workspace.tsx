@@ -10,13 +10,14 @@ import { PdfViewer } from "@/components/pdf/pdf-viewer";
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { DownloadResultCard } from "@/components/tools/download-result-card";
 import { EditPrivacyWorkspace } from "@/components/tools/edit-privacy-workspace";
+import { FindRedactWorkspace } from "@/components/tools/find-redact-workspace";
 import { ImagesToPdfWorkspace } from "@/components/tools/images-to-pdf-workspace";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
 import { PdfToImagesWorkspace } from "@/components/tools/pdf-to-images-workspace";
 import { PrivacyInspectorWorkspace } from "@/components/tools/privacy-inspector-workspace";
-import { RecipeWorkspace } from "@/components/tools/recipe-workspace";
 import { ProcessingCard } from "@/components/tools/processing-card";
+import { RecipeWorkspace } from "@/components/tools/recipe-workspace";
 import { RedactPdfWorkspace } from "@/components/tools/redact-pdf-workspace";
 import { SecurityWorkspace } from "@/components/tools/security-workspace";
 import { SplitPdfWorkspace } from "@/components/tools/split-pdf-workspace";
@@ -57,6 +58,10 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
 
   if (isPhaseTenSecurityTool(tool.slug)) {
     return <SecurityWorkspace tool={tool} />;
+  }
+
+  if (tool.slug === "find-redact-pii") {
+    return <FindRedactWorkspace />;
   }
 
   if (tool.slug === "redact-pdf") {

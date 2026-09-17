@@ -124,7 +124,9 @@ export function validateRecipe(steps: readonly RecipeStep[], fileCount: number) 
   }
 
   if (fileCount > 1 && steps[0]?.type !== "merge-pdf") {
-    throw new Error("Start with Merge PDFs when more than one file is selected.");
+    throw new Error(
+      "Start with Merge PDFs when more than one file is selected.",
+    );
   }
 
   const protectIndex = steps.findIndex(

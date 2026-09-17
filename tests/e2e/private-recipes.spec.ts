@@ -53,7 +53,9 @@ test("chains merge and page numbers, then saves settings without the PDF", async
 
   await page.getByLabel("Save recipe settings on this device").check();
   await page.getByRole("button", { name: "Save recipe" }).click();
-  await expect(page.getByRole("button", { name: "Load" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Load", exact: true }),
+  ).toBeVisible();
 
   const persisted = await page.evaluate(() => {
     const key = Object.keys(localStorage).find((name) =>

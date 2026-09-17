@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/tools#Organize", label: "Organize PDF" },
@@ -63,19 +62,18 @@ export function SiteHeader() {
           aria-label={open ? "Close navigation" : "Open navigation"}
           className="size-11 p-0 lg:hidden"
           onClick={() => setOpen((current) => !current)}
+          type="button"
           variant="ghost"
         >
           {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
         </Button>
       </div>
-      <nav
-        aria-label="Mobile navigation"
-        className={cn(
-          "border-t border-zinc-200 bg-white px-5 py-4 lg:hidden",
-          !open && "hidden",
-        )}
-        id="mobile-navigation"
-      >
+      {open ? (
+        <nav
+          aria-label="Mobile navigation"
+          className="border-t border-zinc-200 bg-white px-5 py-4 lg:hidden"
+          id="mobile-navigation"
+        >
         <div className="mx-auto flex max-w-7xl flex-col">
           {navItems.map((item) => (
             <Link
@@ -96,6 +94,7 @@ export function SiteHeader() {
           </span>
         </div>
       </nav>
+      ) : null}
     </header>
   );
 }
