@@ -18,9 +18,12 @@
     "format:check": "prettier --check .",
     "icons:pwa": "node scripts/write-pwa-icons.mjs",
     "audit": "npm audit --audit-level=high",
+    "ocr:assets": "node scripts/copy-ocr-assets.mjs",
+    "postinstall": "node scripts/copy-ocr-assets.mjs",
     "release:check": "node scripts/release-check.mjs"
   },
   "dependencies": {
+    "@tesseract.js-data/eng": "^1.0.0",
     "clsx": "^2.1.1",
     "jszip": "^3.10.2",
     "lucide-react": "^1.45.0",
@@ -30,7 +33,8 @@
     "pdfjs-dist": "^6.3.289",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "tailwind-merge": "^3.6.0"
+    "tailwind-merge": "^3.6.0",
+    "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

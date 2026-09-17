@@ -142,7 +142,39 @@ export const toolSeo: ToolSeoContent[] = [
           "Yes. Choose original-size layout when you do not want A4 or Letter fitting.",
       },
     ],
-    relatedSlugs: ["pdf-to-images", "merge-pdf", "rotate-pdf"],
+    relatedSlugs: ["scan-document", "pdf-to-images", "merge-pdf"],
+  },
+  {
+    slug: "scan-document",
+    pageTitle: "Scan documents to PDF locally with OCR",
+    metaDescription:
+      "Turn camera or gallery photos into a flattened PDF in your browser. Optional on-device OCR makes the file searchable. Nothing is uploaded.",
+    intro:
+      "Scan Document is for paper on a desk, not for files you already have as PDF. Capture or import a photo, flatten the page, add more pages, then download a local PDF. OCR stays on this device and is English-only.",
+    steps: [
+      "Open the camera or import JPG/PNG photos from the gallery.",
+      "Adjust the four corners if the auto-edge outline is wrong, then add the page.",
+      "Repeat for more pages and choose whether to run on-device OCR.",
+      "Create the PDF and download it. Camera frames and OCR text stay in this tab.",
+    ],
+    faqs: [
+      {
+        question: "Does scanning upload my photos?",
+        answer:
+          "No. Camera frames, gallery files, warped pages, and OCR text stay in this browser tab. There is no document upload API.",
+      },
+      {
+        question: "Is the PDF searchable?",
+        answer:
+          "If you leave on-device OCR enabled, English text is added as an invisible layer. Accuracy varies with lighting, handwriting, and language. You can turn OCR off for a faster image-only PDF.",
+      },
+      {
+        question: "Why can’t I use the camera?",
+        answer:
+          "The camera needs a secure context (HTTPS or localhost) and permission. Import from gallery still works if the camera is blocked.",
+      },
+    ],
+    relatedSlugs: ["images-to-pdf", "extract-text", "privacy-inspector"],
   },
   {
     slug: "pdf-to-images",
@@ -402,9 +434,9 @@ export const toolSeo: ToolSeoContent[] = [
     slug: "extract-text",
     pageTitle: "Extract text from a PDF locally",
     metaDescription:
-      "Copy selectable text-layer content from a PDF in your browser. Scanned pages without a text layer need OCR, which PDFForge does not provide.",
+      "Copy selectable text-layer content from a PDF in your browser. For photos of paper, use Scan Document’s on-device OCR instead.",
     intro:
-      "Extract Text is for quotes, invoices, or notes already stored as text in the PDF. It does not reconstruct tables from images or run optical character recognition.",
+      "Extract Text is for quotes, invoices, or notes already stored as text in the PDF. It does not reconstruct tables from images. Photograph a page with Scan Document when you need OCR.",
     steps: [
       "Select a PDF that contains a text layer.",
       "Run Extract text.",
@@ -415,7 +447,7 @@ export const toolSeo: ToolSeoContent[] = [
       {
         question: "Why is the result empty?",
         answer:
-          "The file may be a scan with no text layer. This tool cannot OCR images of pages.",
+          "The file may be a scan with no text layer. Photograph the page with Scan Document to run on-device OCR.",
       },
       {
         question: "Is extracted text uploaded for analysis?",
@@ -428,7 +460,7 @@ export const toolSeo: ToolSeoContent[] = [
           "Order follows the PDF text layer, which can differ from how columns look on screen.",
       },
     ],
-    relatedSlugs: ["view-metadata", "pdf-to-images", "split-pdf"],
+    relatedSlugs: ["scan-document", "view-metadata", "pdf-to-images"],
   },
   {
     slug: "password-protect-pdf",
@@ -524,7 +556,11 @@ export const toolSeo: ToolSeoContent[] = [
           "No. Redaction targets visible regions. Run Remove Metadata separately if properties also need clearing.",
       },
     ],
-    relatedSlugs: ["find-redact-pii", "remove-metadata", "password-protect-pdf"],
+    relatedSlugs: [
+      "find-redact-pii",
+      "remove-metadata",
+      "password-protect-pdf",
+    ],
   },
   {
     slug: "find-redact-pii",

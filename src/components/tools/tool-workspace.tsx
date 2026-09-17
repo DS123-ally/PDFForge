@@ -18,6 +18,7 @@ import { PdfToImagesWorkspace } from "@/components/tools/pdf-to-images-workspace
 import { PrivacyInspectorWorkspace } from "@/components/tools/privacy-inspector-workspace";
 import { ProcessingCard } from "@/components/tools/processing-card";
 import { RecipeWorkspace } from "@/components/tools/recipe-workspace";
+import { ScanDocumentWorkspace } from "@/components/tools/scan-document-workspace";
 import { RedactPdfWorkspace } from "@/components/tools/redact-pdf-workspace";
 import { SecurityWorkspace } from "@/components/tools/security-workspace";
 import { SplitPdfWorkspace } from "@/components/tools/split-pdf-workspace";
@@ -34,6 +35,10 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
 
   if (tool.slug === "organize-pdf") {
     return <OrganizePdfWorkspace />;
+  }
+
+  if (tool.slug === "scan-document") {
+    return <ScanDocumentWorkspace />;
   }
 
   if (tool.slug === "images-to-pdf") {

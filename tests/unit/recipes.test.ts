@@ -108,7 +108,9 @@ describe("recipe storage", () => {
     const raw = storage.getItem(recipeStorageKey) ?? "";
     const store = readRecipeStore(storage);
 
-    expect(recipeStorageKey).not.toMatch(/pdf|document|file|password|metadata/i);
+    expect(recipeStorageKey).not.toMatch(
+      /pdf|document|file|password|metadata/i,
+    );
     expect(recipeStoreContainsSecrets(raw)).toBe(false);
     expect(raw).not.toContain("super-secret-pass");
     expect(raw).not.toContain("%PDF");

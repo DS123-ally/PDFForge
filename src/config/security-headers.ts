@@ -33,7 +33,7 @@ export function buildContentSecurityPolicy({
     "frame-ancestors 'none'",
     "frame-src 'none'",
     "object-src 'none'",
-    "media-src 'none'",
+    "media-src 'self' blob:",
     `script-src ${scriptSrc.join(" ")}`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' blob: data:",
@@ -66,7 +66,7 @@ export function getSecurityHeaders(): SecurityHeader[] {
     {
       key: "Permissions-Policy",
       value:
-        "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()",
+        "camera=(self), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()",
     },
     {
       key: "Cross-Origin-Resource-Policy",

@@ -118,7 +118,10 @@ export function createRecipeStep(type: PipelineStepType): RecipeStep {
   }
 }
 
-export function validateRecipe(steps: readonly RecipeStep[], fileCount: number) {
+export function validateRecipe(
+  steps: readonly RecipeStep[],
+  fileCount: number,
+) {
   if (steps.length === 0) {
     throw new Error("Add at least one step.");
   }

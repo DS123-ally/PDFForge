@@ -44,9 +44,7 @@ export async function runRecipe(
     const start = Math.round((index / steps.length) * 90);
     options.onProgress?.(start, `Running ${label}`);
 
-    current = [
-      await runStep(current, step, sourceName, options.isCancelled),
-    ];
+    current = [await runStep(current, step, sourceName, options.isCancelled)];
   }
 
   const output = current[0];

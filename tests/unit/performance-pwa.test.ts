@@ -28,7 +28,7 @@ describe("PWA cache policy", () => {
     expect(
       shouldCacheResponse({
         method: "GET",
-        url: "blob:http://127.0.0.1/abc",
+        url: "http://127.0.0.1/ocr/eng.traineddata.gz",
       }),
     ).toBe(false);
   });

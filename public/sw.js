@@ -75,6 +75,7 @@ function shouldHandleRequest(request) {
   return !(
     path.endsWith(".pdf") ||
     path.endsWith(".zip") ||
+    path.startsWith("/ocr/") ||
     path.includes("webpack-hmr")
   );
 }

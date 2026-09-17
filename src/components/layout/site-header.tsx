@@ -74,26 +74,26 @@ export function SiteHeader() {
           className="border-t border-zinc-200 bg-white px-5 py-4 lg:hidden"
           id="mobile-navigation"
         >
-        <div className="mx-auto flex max-w-7xl flex-col">
-          {navItems.map((item) => (
-            <Link
-              className="flex min-h-12 items-center rounded-lg px-3 font-semibold hover:bg-red-50 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-red-600"
-              href={item.href}
-              key={item.href}
-              onClick={() => setOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
-          <span className="mt-2 inline-flex min-h-11 items-center gap-2 px-3 text-sm font-semibold text-emerald-700">
-            <span
-              aria-hidden="true"
-              className="size-2 rounded-full bg-emerald-600"
-            />
-            Files stay local
-          </span>
-        </div>
-      </nav>
+          <div className="mx-auto flex max-w-7xl flex-col">
+            {navItems.map((item) => (
+              <Link
+                className="flex min-h-12 items-center rounded-lg px-3 font-semibold hover:bg-red-50 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-red-600"
+                href={item.href}
+                key={item.href}
+                onClick={() => setOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <span className="mt-2 inline-flex min-h-11 items-center gap-2 px-3 text-sm font-semibold text-emerald-700">
+              <span
+                aria-hidden="true"
+                className="size-2 rounded-full bg-emerald-600"
+              />
+              Files stay local
+            </span>
+          </div>
+        </nav>
       ) : null}
     </header>
   );

@@ -30,7 +30,7 @@ Every route receives:
 - Referrer-Policy: `no-referrer`
 - X-Content-Type-Options: `nosniff`
 - X-Frame-Options: `DENY`
-- Permissions-Policy disabling camera, microphone, geolocation, payment, USB, and topics
+- Permissions-Policy allowing camera on this origin only for Scan Document; microphone, geolocation, payment, USB, and topics remain disabled
 - Cross-Origin-Resource-Policy: `same-origin`
 
 `unsafe-eval` is development-only. Production script-src uses a per-request nonce and `'strict-dynamic'` instead of `'unsafe-inline'`. `upgrade-insecure-requests` is omitted so local HTTP and Safari/WebKit Playwright keep loading scripts; production HTTPS should set HSTS at the host.
@@ -39,14 +39,15 @@ Every route receives:
 
 Production runtime dependencies and reasons:
 
-| Package                      | Reason                                          |
-| ---------------------------- | ----------------------------------------------- |
-| `next`, `react`, `react-dom` | Application framework                           |
-| `pdfjs-dist`                 | Local rendering, text extraction, raster export |
-| `pdf-lib`, `pdf-lib-encrypt` | Local PDF mutation, AES-256 protect/unlock      |
-| `jszip`                      | Local ZIP downloads                             |
-| `lucide-react`               | Icons                                           |
-| `clsx`, `tailwind-merge`     | Class composition                               |
+| Package                      | Reason                                                   |
+| ---------------------------- | -------------------------------------------------------- |
+| `next`, `react`, `react-dom` | Application framework                                    |
+| `pdfjs-dist`                 | Local rendering, text extraction, raster export          |
+| `pdf-lib`, `pdf-lib-encrypt` | Local PDF mutation, AES-256 protect/unlock               |
+| `jszip`                      | Local ZIP downloads                                      |
+| `lucide-react`               | Icons                                                    |
+| `clsx`, `tailwind-merge`     | Class composition                                        |
+| `tesseract.js`               | Optional on-device OCR (lazy-loaded; models from `/ocr`) |
 
 No analytics, ads, auth, ORM, or error-monitoring packages are present. `npm audit` reported 0 vulnerabilities at the time of this review. CI runs `npm audit --audit-level=high` on every pull request.
 
@@ -58,7 +59,7 @@ No analytics, ads, auth, ORM, or error-monitoring packages are present. `npm aud
 
 ## 6. IndexedDB, cache, and service worker
 
-- IndexedDB is not opened by application code.
+- IndexedDB is not opened by application code. Scan Document OCR uses `cacheMethod: "none"` so Tesseract does not store traineddata in IndexedDB.
 - Object URLs are tracked and revoked on file removal, unmount, page hide (except back-forward cache), and before unload.
 - Service worker cache `pdfforge-shell-v4` stores the public shell and hashed static assets. PDF, ZIP, blob, POST, and password query requests are excluded.
 - `localStorage` is unused for documents. Private Recipes may store opt-in step settings in `forge.private-recipes.v1` with passwords and PDF bytes stripped.

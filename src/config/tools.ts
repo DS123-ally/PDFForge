@@ -61,6 +61,16 @@ export const tools: ToolDefinition[] = [
     acceptedFileTypes: ["pdf"],
   },
   {
+    slug: "scan-document",
+    title: "Scan Document",
+    shortDescription: "Camera or photos to a clean, searchable PDF.",
+    description:
+      "Capture or import a page, flatten the perspective locally, then optionally run on-device OCR. Nothing is uploaded.",
+    category: "Convert",
+    acceptsMultiple: true,
+    acceptedFileTypes: ["image"],
+  },
+  {
     slug: "images-to-pdf",
     title: "Images to PDF",
     shortDescription: "Turn JPG and PNG images into a PDF.",
@@ -155,7 +165,7 @@ export const tools: ToolDefinition[] = [
     title: "Extract Text",
     shortDescription: "Copy selectable text from PDF pages.",
     description:
-      "Extract available text-layer content locally. Scanned PDFs require OCR later.",
+      "Extract available text-layer content locally. For photos of pages, use Scan Document OCR.",
     category: "Privacy",
     acceptsMultiple: false,
     acceptedFileTypes: ["pdf"],

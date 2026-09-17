@@ -66,6 +66,10 @@ export function shouldCacheResponse(input: CacheDecisionInput) {
     return false;
   }
 
+  if (parsed.pathname.startsWith("/ocr/")) {
+    return false;
+  }
+
   if (shellPaths.has(parsed.pathname)) {
     return true;
   }

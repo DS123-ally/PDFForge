@@ -50,6 +50,10 @@ playwright-debug.log*
 # vercel
 .vercel
 
+# on-device OCR binaries copied from node_modules
+/public/ocr/*
+!/public/ocr/.gitkeep
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

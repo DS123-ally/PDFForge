@@ -23,6 +23,9 @@ export default function PrivacyPage() {
         </h2>
         <ul className="mt-4 list-disc space-y-2 pl-6">
           <li>PDF files, images, generated downloads, or ZIP archives.</li>
+          <li>
+            Camera frames, OCR text, or gallery photos used by Scan Document.
+          </li>
           <li>Document text, thumbnails, metadata, filenames, or passwords.</li>
           <li>
             Accounts, profiles, cookies for tracking, or payment information.
@@ -80,6 +83,20 @@ export default function PrivacyPage() {
           stay in the URL hash, which browsers do not send to the host. PDFForge
           application code does not log filenames, document text, metadata, or
           passwords.
+        </p>
+      </section>
+      <section>
+        <h2 className="text-2xl font-bold text-zinc-950">
+          Camera and on-device OCR
+        </h2>
+        <p className="mt-4">
+          Scan Document may open the camera only after you click Open Camera,
+          and only in a secure context (HTTPS or localhost). Video tracks stop
+          when you cancel, hide the tab, leave the page, or finish. Gallery
+          photos, warped pages, and OCR text stay in memory. OCR models are
+          loaded from this site on demand and are not precached by the service
+          worker. There is no cloud OCR. Camera permission is limited to this
+          origin; microphone remains disabled.
         </p>
       </section>
       <section>
