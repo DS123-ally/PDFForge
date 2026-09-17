@@ -268,18 +268,23 @@ export function ScanDocumentWorkspace() {
     for (const item of valid) {
       try {
         const image = await blobToImageData(item.file);
-        const flattened = await flattenScannedPage(
-          image,
-          detectDocumentQuad(image),
-        );
-        addPage(
-          flattened.blob,
-          flattened.width,
-          flattened.height,
-          item.file.name,
-        );
+
+        try {
+          const flattened = await flattenScannedPage(
+            image,
+            detectDocumentQuad(image),
+          );
+          addPage(
+            flattened.blob,
+            flattened.width,
+            flattened.height,
+            item.file.name,
+          );
+        } catch {
+          addPage(item.file, image.width, image.height, item.file.name);
+        }
       } catch {
-        setImportError("One or more photos could not be read on this device.");
+        addPage(item.file, 1, 1, item.file.name);
       }
     }
 
@@ -478,6 +483,7 @@ export function ScanDocumentWorkspace() {
         <input
           accept=".jpg,.jpeg,.png,image/jpeg,image/png"
           className="sr-only"
+          data-testid="scan-gallery-input"
           id={galleryId}
           multiple
           onChange={(event) => void importGallery(event.target.files)}

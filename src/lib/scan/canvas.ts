@@ -1,8 +1,6 @@
 import type { Raster } from "@/lib/scan/image-data";
 
-type RasterCanvas = HTMLCanvasElement | OffscreenCanvas;
-type RasterContext =
-  CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+type RasterContext = CanvasRenderingContext2D;
 
 export function rasterToImageData(source: Raster) {
   const data = new Uint8ClampedArray(source.data.length);
@@ -11,14 +9,18 @@ export function rasterToImageData(source: Raster) {
 }
 
 export async function blobToImageData(blob: Blob) {
-  if ("createImageBitmap" in globalThis) {
-    const bitmap = await createImageBitmap(blob);
+  try {
+    if ("createImageBitmap" in globalThis) {
+      const bitmap = await createImageBitmap(blob);
 
-    try {
-      return drawToImageData(bitmap, bitmap.width, bitmap.height);
-    } finally {
-      bitmap.close();
+      try {
+        return drawToImageData(bitmap, bitmap.width, bitmap.height);
+      } finally {
+        bitmap.close();
+      }
     }
+  } catch {
+    // Some browsers fail createImageBitmap on small PNGs; use an img element.
   }
 
   const url = URL.createObjectURL(blob);
@@ -31,8 +33,8 @@ export async function blobToImageData(blob: Blob) {
   }
 }
 
-export async function imageDataToJpegBlob(image: ImageData, quality = 0.86) {
-  const canvas = createCanvas(image.width, image.height);
+export async function imageDataToPngBlob(image: ImageData) {
+  const canvas = createHtmlCanvas(image.width, image.height);
   const context = get2dContext(canvas);
 
   if (!context) {
@@ -40,12 +42,7 @@ export async function imageDataToJpegBlob(image: ImageData, quality = 0.86) {
   }
 
   context.putImageData(image, 0, 0);
-
-  if ("convertToBlob" in canvas) {
-    return canvas.convertToBlob({ type: "image/jpeg", quality });
-  }
-
-  return canvasToBlob(canvas as HTMLCanvasElement, "image/jpeg", quality);
+  return canvasToBlob(canvas, "image/png");
 }
 
 export function videoFrameToImageData(video: HTMLVideoElement, maxEdge = 1600) {
@@ -59,7 +56,7 @@ export function videoFrameToImageData(video: HTMLVideoElement, maxEdge = 1600) {
   const scale = Math.min(1, maxEdge / Math.max(width, height));
   const targetWidth = Math.max(1, Math.round(width * scale));
   const targetHeight = Math.max(1, Math.round(height * scale));
-  const canvas = createCanvas(targetWidth, targetHeight);
+  const canvas = createHtmlCanvas(targetWidth, targetHeight);
   const context = get2dContext(canvas);
 
   if (!context) {
@@ -75,7 +72,7 @@ function drawToImageData(
   width: number,
   height: number,
 ) {
-  const canvas = createCanvas(width, height);
+  const canvas = createHtmlCanvas(width, height);
   const context = get2dContext(canvas);
 
   if (!context) {
@@ -86,39 +83,29 @@ function drawToImageData(
   return context.getImageData(0, 0, width, height);
 }
 
-function createCanvas(width: number, height: number): RasterCanvas {
-  if (typeof OffscreenCanvas !== "undefined") {
-    return new OffscreenCanvas(width, height);
-  }
-
+function createHtmlCanvas(width: number, height: number) {
   const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
+  canvas.width = Math.max(1, width);
+  canvas.height = Math.max(1, height);
   return canvas;
 }
 
-function get2dContext(canvas: RasterCanvas) {
-  return canvas.getContext("2d") as RasterContext | null;
+function get2dContext(canvas: HTMLCanvasElement) {
+  return canvas.getContext("2d", {
+    willReadFrequently: true,
+  }) as RasterContext | null;
 }
 
-function canvasToBlob(
-  canvas: HTMLCanvasElement,
-  type: string,
-  quality: number,
-) {
+function canvasToBlob(canvas: HTMLCanvasElement, type: string) {
   return new Promise<Blob>((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => {
-        if (blob) {
-          resolve(blob);
-          return;
-        }
+    canvas.toBlob((blob) => {
+      if (blob) {
+        resolve(blob);
+        return;
+      }
 
-        reject(new Error("This browser could not encode the scanned page."));
-      },
-      type,
-      quality,
-    );
+      reject(new Error("This browser could not encode the scanned page."));
+    }, type);
   });
 }
 

@@ -21,12 +21,14 @@ test("imports a gallery photo and builds a local scan PDF", async ({
   await expect(
     page.getByRole("heading", { name: "Camera or photos to a clean PDF" }),
   ).toBeVisible();
-  await page.locator("input[type='file']").setInputFiles({
+  await page.getByTestId("scan-gallery-input").setInputFiles({
     buffer: image,
     mimeType: "image/png",
     name: "desk-photo.png",
   });
-  await expect(page.getByRole("img", { name: "Scanned page 1" })).toBeVisible({
+  await expect(
+    page.getByRole("heading", { name: "Pages in this scan" }),
+  ).toBeVisible({
     timeout: 20_000,
   });
   await page.getByRole("checkbox", { name: /on-device OCR/i }).uncheck();

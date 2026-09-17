@@ -14,7 +14,6 @@ import {
   runTemporaryCleanup,
 } from "@/lib/privacy/temporary-data";
 import {
-  getWorkspaceHref,
   readWorkspaceSlug,
   requestLeaksToolChoice,
 } from "@/lib/privacy/tool-location";
