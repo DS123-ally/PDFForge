@@ -36,6 +36,9 @@ for (const marker of [
   "Strict-Transport-Security",
   "NEXT_PUBLIC_SITE_URL",
   "next start",
+  "/health",
+  "/sw.js",
+  "docker compose",
 ]) {
   if (!releaseDoc.includes(marker)) {
     fail(`docs/release.md is missing "${marker}".`);

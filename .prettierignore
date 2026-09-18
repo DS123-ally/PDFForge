@@ -4,3 +4,6 @@ coverage
 playwright-report
 test-results
 public/vendor
+Dockerfile
+deploy/nginx/**/*.conf
+.env.example

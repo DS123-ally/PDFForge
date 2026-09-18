@@ -4,11 +4,43 @@ import { getSecurityHeaders } from "./src/config/security-headers";
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.0.100"],
+  output: "standalone",
   poweredByHeader: false,
   headers: async () => [
     {
       source: "/:path*",
       headers: getSecurityHeaders(),
+    },
+    {
+      source: "/_next/static/:path*",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "public, max-age=31536000, immutable",
+        },
+      ],
+    },
+    {
+      source: "/ocr/:path*",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "public, max-age=31536000, immutable",
+        },
+      ],
+    },
+    {
+      source: "/health",
+      headers: [
+        {
+          key: "Cache-Control",
+          value: "no-store",
+        },
+        {
+          key: "X-Robots-Tag",
+          value: "noindex, nofollow",
+        },
+      ],
     },
     {
       source: "/sw.js",
