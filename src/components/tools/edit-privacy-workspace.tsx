@@ -43,6 +43,7 @@ export function EditPrivacyWorkspace({ tool }: { tool: ToolDefinition }) {
   );
   const [headerText, setHeaderText] = useState("");
   const [footerText, setFooterText] = useState("");
+  const [ocrEmptyPages, setOcrEmptyPages] = useState(true);
   const [localStatus, setLocalStatus] = useState<LocalStatus>("idle");
   const [localMessage, setLocalMessage] = useState("Ready");
   const [metadata, setMetadata] = useState<PdfMetadata | null>(null);
@@ -108,6 +109,7 @@ export function EditPrivacyWorkspace({ tool }: { tool: ToolDefinition }) {
 
     try {
       const text = await extractTextFromPdf(file.file, {
+        ocrEmptyPages,
         ranges: ranges.trim() || undefined,
       });
       setExtractedText(text || "No selectable text was found in these pages.");
@@ -207,6 +209,7 @@ export function EditPrivacyWorkspace({ tool }: { tool: ToolDefinition }) {
             footerText={footerText}
             headerText={headerText}
             numberFormat={numberFormat}
+            ocrEmptyPages={ocrEmptyPages}
             opacity={opacity}
             position={position}
             ranges={ranges}
@@ -215,6 +218,7 @@ export function EditPrivacyWorkspace({ tool }: { tool: ToolDefinition }) {
             setFooterText={setFooterText}
             setHeaderText={setHeaderText}
             setNumberFormat={setNumberFormat}
+            setOcrEmptyPages={setOcrEmptyPages}
             setOpacity={setOpacity}
             setPosition={setPosition}
             setRanges={setRanges}
@@ -314,6 +318,7 @@ type SettingsProps = {
   footerText: string;
   headerText: string;
   numberFormat: "page" | "page-of-total";
+  ocrEmptyPages: boolean;
   opacity: number;
   position: TextPosition;
   ranges: string;
@@ -322,6 +327,7 @@ type SettingsProps = {
   setFooterText: (value: string) => void;
   setHeaderText: (value: string) => void;
   setNumberFormat: (value: "page" | "page-of-total") => void;
+  setOcrEmptyPages: (value: boolean) => void;
   setOpacity: (value: number) => void;
   setPosition: (value: TextPosition) => void;
   setRanges: (value: string) => void;
@@ -351,16 +357,27 @@ function PhaseNineSettings(props: SettingsProps) {
 
   if (props.toolSlug === "extract-text") {
     return (
-      <label className="mt-4 block text-sm font-bold text-zinc-950">
-        Pages to extract
-        <input
-          className="mt-2 min-h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm outline-none focus:border-red-600 focus:ring-2 focus:ring-red-100"
-          onChange={(event) => props.setRanges(event.target.value)}
-          placeholder="Leave blank for all pages, or use 1-3, 5"
-          type="text"
-          value={props.ranges}
-        />
-      </label>
+      <div className="mt-4 space-y-4">
+        <label className="block text-sm font-bold text-zinc-950">
+          Pages to extract
+          <input
+            className="mt-2 min-h-11 w-full rounded-lg border border-zinc-300 px-3 text-sm outline-none focus:border-red-600 focus:ring-2 focus:ring-red-100"
+            onChange={(event) => props.setRanges(event.target.value)}
+            placeholder="Leave blank for all pages, or use 1-3, 5"
+            type="text"
+            value={props.ranges}
+          />
+        </label>
+        <label className="flex min-h-14 items-center gap-3 rounded-xl border border-zinc-200 p-4 text-sm font-bold">
+          <input
+            checked={props.ocrEmptyPages}
+            className="size-4 accent-red-600"
+            onChange={(event) => props.setOcrEmptyPages(event.target.checked)}
+            type="checkbox"
+          />
+          OCR pages with no selectable text
+        </label>
+      </div>
     );
   }
 

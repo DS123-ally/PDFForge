@@ -38,10 +38,12 @@ export default function AboutPage() {
       <section>
         <h2 className="text-2xl font-bold text-zinc-950">Honest limitations</h2>
         <p className="mt-4">
-          Complex encryption beyond AES-256 password protection, OCR, and
-          high-fidelity Office conversion remain limited or excluded. Redaction
-          rasterizes selected pages rather than editing hidden PDF operators one
-          by one.
+          PDFForge still cannot reconstruct every PDF feature. Rewrites can drop
+          digital signatures, tags, and uncommon annotations. Office export and
+          Extract Text use the text layer first, then on-device English OCR for
+          pages with no selectable text — they are not a desktop publisher. Some
+          AES-128 files unlock only as images. Redaction rasterizes pages.
+          Strong compression, accounts, and cloud storage are not offered.
         </p>
       </section>
       <section>

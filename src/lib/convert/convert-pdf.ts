@@ -1,5 +1,6 @@
 import { buildDocx } from "@/lib/convert/docx";
 import { buildHtml } from "@/lib/convert/html";
+import { fillEmptyPagesWithOcr } from "@/lib/convert/ocr-empty-pages";
 import { buildPptx } from "@/lib/convert/pptx";
 import { readPdfConvertPages } from "@/lib/convert/read-pdf-pages";
 import { buildXlsx } from "@/lib/convert/xlsx";
@@ -39,16 +40,26 @@ export async function convertPdfDocument(
   file: File,
   options: {
     includePageImages: boolean;
+    ocrEmptyPages?: boolean;
     pages: readonly number[];
     scale?: number;
     target: ConvertTarget;
   },
 ) {
+  const scale = options.scale ?? 1.5;
+  const ocrEmptyPages = options.ocrEmptyPages ?? true;
   const pages = await readPdfConvertPages(file, {
     includePageImages: options.includePageImages,
     pages: options.pages,
-    scale: options.scale ?? 1.5,
+    scale,
   });
+
+  if (ocrEmptyPages) {
+    await fillEmptyPagesWithOcr(file, pages, {
+      keepImages: options.includePageImages,
+      scale,
+    });
+  }
   const title = file.name.replace(/\.pdf$/i, "") || "document";
   const meta = convertTargetMeta[options.target];
   const bytes =

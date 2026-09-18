@@ -230,12 +230,12 @@ export const toolSeo: ToolSeoContent[] = [
       {
         question: "Will the Word file match the PDF layout exactly?",
         answer:
-          "No. The output follows the text layer and optional rasters. Complex layouts, custom fonts, and vector art can differ. Spot-check in Word or LibreOffice.",
+          "No. Text, optional English OCR, and optional page pictures are assembled into .docx. Complex layouts, custom fonts, and vector art can differ. Spot-check in Word or LibreOffice.",
       },
       {
         question: "What about scanned pages?",
         answer:
-          "Pages without selectable text need Include page pictures, or run Scan Document OCR first so a text layer exists.",
+          "Pages without selectable text run on-device English OCR unless you turn that option off. You can also include page pictures, or prepare the scan with Scan Document first.",
       },
     ],
     relatedSlugs: ["pdf-to-html", "pdf-to-excel", "extract-text"],
@@ -297,7 +297,7 @@ export const toolSeo: ToolSeoContent[] = [
       {
         question: "Why might a slide be blank?",
         answer:
-          "The page had no selectable text and page pictures were turned off. Enable pictures or OCR the scan first.",
+          "The page had no selectable text, OCR was turned off or found nothing, and page pictures were also off. Leave OCR or pictures enabled for scans.",
       },
     ],
     relatedSlugs: ["pdf-to-images", "pdf-to-word", "pdf-to-html"],
@@ -591,20 +591,20 @@ export const toolSeo: ToolSeoContent[] = [
     slug: "extract-text",
     pageTitle: "Extract text from a PDF locally",
     metaDescription:
-      "Copy selectable text-layer content from a PDF in your browser. For photos of paper, use Scan Document’s on-device OCR instead.",
+      "Copy PDF text in your browser. PDFForge reads the text layer and can OCR pages with no selectable text on this device.",
     intro:
-      "Extract Text is for quotes, invoices, or notes already stored as text in the PDF. It does not reconstruct tables from images. Photograph a page with Scan Document when you need OCR.",
+      "Extract Text is for quotes, invoices, or notes. Selectable text comes from the PDF text layer. Pages with no text can run on-device English OCR in this tab.",
     steps: [
-      "Select a PDF that contains a text layer.",
+      "Select a PDF from your device.",
+      "Optionally limit pages and leave OCR on for scans.",
       "Run Extract text.",
-      "Review the text in this tab.",
       "Copy what you need, then clear the file.",
     ],
     faqs: [
       {
         question: "Why is the result empty?",
         answer:
-          "The file may be a scan with no text layer. Photograph the page with Scan Document to run on-device OCR.",
+          "OCR may have found nothing, or it was turned off on a scan. Lighting, handwriting, and non-English pages reduce accuracy. Photograph paper with Scan Document if you need a searchable PDF.",
       },
       {
         question: "Is extracted text uploaded for analysis?",

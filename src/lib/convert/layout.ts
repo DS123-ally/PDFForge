@@ -78,6 +78,31 @@ export function splitCells(runs: readonly LayoutRun[]) {
   return cells.filter(Boolean);
 }
 
+export function ocrWordsToLines(
+  words: readonly {
+    text: string;
+    x0: number;
+    x1: number;
+    y0: number;
+    y1: number;
+  }[],
+  page: { height: number; width: number },
+  image: { height: number; width: number },
+) {
+  const scaleX = page.width / Math.max(image.width, 1);
+  const scaleY = page.height / Math.max(image.height, 1);
+
+  return groupRunsIntoLines(
+    words.map((word) => ({
+      height: Math.max(1, (word.y1 - word.y0) * scaleY),
+      str: word.text,
+      width: Math.max(1, (word.x1 - word.x0) * scaleX),
+      x: word.x0 * scaleX,
+      y: page.height - word.y1 * scaleY,
+    })),
+  );
+}
+
 export function looksLikeTable(lines: readonly LayoutLine[]) {
   const multi = lines.filter((line) => line.cells.length >= 2);
   return multi.length >= 2;

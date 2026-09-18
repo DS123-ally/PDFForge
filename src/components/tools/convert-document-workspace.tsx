@@ -46,6 +46,7 @@ export function ConvertDocumentWorkspace({ slug }: { slug: string }) {
   const [selectionMode, setSelectionMode] = useState<"all" | "custom">("all");
   const [ranges, setRanges] = useState("");
   const [includePageImages, setIncludePageImages] = useState(target === "pptx");
+  const [ocrEmptyPages, setOcrEmptyPages] = useState(true);
   const [status, setStatus] = useState<
     "idle" | "processing" | "success" | "error"
   >("idle");
@@ -100,6 +101,7 @@ export function ConvertDocumentWorkspace({ slug }: { slug: string }) {
     try {
       const result = await convertPdfDocument(selectedFile.file, {
         includePageImages: showImageOption && includePageImages,
+        ocrEmptyPages,
         pages: selectedPages,
         target,
       });
@@ -127,7 +129,7 @@ export function ConvertDocumentWorkspace({ slug }: { slug: string }) {
   if (status === "success" && output) {
     return (
       <DownloadResultCard
-        description={`${output.pageCount} pages converted locally. Text comes from the PDF text layer; pictures are optional rasters of the page.`}
+        description={`${output.pageCount} pages converted locally. Empty pages used on-device OCR when that option was on.`}
         downloadLabel={downloadLabels[target]}
         onDownload={() =>
           createDownload(output.bytes, {
@@ -153,10 +155,9 @@ export function ConvertDocumentWorkspace({ slug }: { slug: string }) {
         <section className="mt-6 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
           <h2 className="text-lg font-black">Conversion settings</h2>
           <p className="mt-2 text-sm leading-6 text-zinc-600">
-            Output is built in this browser. Editable text follows the PDF text
-            layer. Scans without selectable text need page pictures or Scan
-            Document OCR first. Complex layout, fonts, and charts are not
-            reconstructed pixel-perfectly.
+            Conversion stays in this tab. Selectable text is used first. Pages
+            with no text layer run on-device English OCR unless you turn it off.
+            Optional page pictures keep a visual copy of each page.
           </p>
 
           <fieldset className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -210,6 +211,16 @@ export function ConvertDocumentWorkspace({ slug }: { slug: string }) {
               Include page pictures
             </label>
           ) : null}
+
+          <label className="mt-3 flex min-h-14 items-center gap-3 rounded-xl border border-zinc-200 p-4 text-sm font-bold">
+            <input
+              checked={ocrEmptyPages}
+              className="size-4 accent-red-600"
+              onChange={(event) => setOcrEmptyPages(event.target.checked)}
+              type="checkbox"
+            />
+            OCR pages with no selectable text
+          </label>
 
           <p className="mt-4 text-sm font-semibold text-zinc-700" role="status">
             {selectedPages.length || 0}{" "}

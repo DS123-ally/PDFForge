@@ -216,7 +216,7 @@ export const tools: ToolDefinition[] = [
     title: "Extract Text",
     shortDescription: "Copy selectable text from PDF pages.",
     description:
-      "Extract available text-layer content locally. For photos of pages, use Scan Document OCR.",
+      "Extract text-layer content locally. Pages without selectable text can run on-device English OCR.",
     category: "Privacy",
     acceptsMultiple: false,
     acceptedFileTypes: ["pdf"],

@@ -3,7 +3,12 @@ import { describe, expect, it } from "vitest";
 
 import { buildDocx } from "@/lib/convert/docx";
 import { buildHtml } from "@/lib/convert/html";
-import { groupRunsIntoLines, type ConvertPage } from "@/lib/convert/layout";
+import {
+  groupRunsIntoLines,
+  ocrWordsToLines,
+  type ConvertPage,
+} from "@/lib/convert/layout";
+import { pngSize } from "@/lib/convert/ocr-empty-pages";
 import { buildPptx } from "@/lib/convert/pptx";
 import { escapeXml } from "@/lib/convert/xml";
 import { buildXlsx, columnName } from "@/lib/convert/xlsx";
@@ -32,6 +37,19 @@ describe("convert layout", () => {
 
     expect(lines[0]?.cells).toEqual(["Name", "Amount"]);
     expect(lines[1]?.cells).toEqual(["Ada", "12"]);
+  });
+
+  it("maps OCR boxes into reading-order lines", () => {
+    const lines = ocrWordsToLines(
+      [
+        { text: "Hello", x0: 10, x1: 50, y0: 10, y1: 20 },
+        { text: "world", x0: 60, x1: 110, y0: 10, y1: 20 },
+      ],
+      { height: 100, width: 200 },
+      { height: 100, width: 200 },
+    );
+
+    expect(lines[0]?.text).toBe("Hello world");
   });
 });
 
@@ -67,5 +85,10 @@ describe("office packages", () => {
     expect(slideXml).toContain("Invoice");
     expect(html).toContain("<td>Widget</td>");
     expect(html).not.toContain("<script");
+  });
+
+  it("reads PNG width and height from IHDR", async () => {
+    const { createPngBytes } = await import("../fixtures/pdf");
+    expect(pngSize(createPngBytes())).toEqual({ height: 12, width: 16 });
   });
 });

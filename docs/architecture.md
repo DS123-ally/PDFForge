@@ -210,21 +210,21 @@ Estimate peak use from input bytes, decoded canvases, output duplication, and ZI
 
 ## 9. Capability and limitation review
 
-| Feature                               | Browser-only status                                              | Decision                                                 |
-| ------------------------------------- | ---------------------------------------------------------------- | -------------------------------------------------------- |
-| View, thumbnails, page count          | Reliable with PDF.js                                             | MVP                                                      |
-| Merge, split, reorder, rotate         | Reliable for ordinary PDFs with pdf-lib                          | MVP                                                      |
-| Images to PDF                         | Reliable with explicit layout rules                              | MVP                                                      |
-| PDF to PNG/JPG                        | Reliable by rasterizing; memory-heavy at high resolution         | MVP with warnings                                        |
-| Text extraction                       | Works for text-layer PDFs; OCR is excluded                       | Later with scanned-PDF limitation                        |
-| Metadata view/removal                 | Basic fields are feasible; hidden data needs output verification | Later with tests                                         |
-| Watermark, numbering, headers/footers | Feasible as new page content                                     | Later                                                    |
-| Password-protect output               | Current stack does not provide required assurance                | Add an audited local engine or exclude                   |
-| Unlock and resave encrypted PDFs      | Reliable decrypted rewriting is not covered by current stack     | Research before commitment                               |
-| True redaction                        | An overlay is unsafe; content can remain recoverable             | Exclude until recovery tests prove removal/rasterization |
-| Flatten forms/annotations             | Basic AcroForms may work; XFA/signatures/appearances vary        | Limited only after fixture tests                         |
-| Strong compression                    | Needs codecs and heuristics beyond current stack                 | Excluded initially                                       |
-| Office conversions                    | High fidelity is not reliable fully in-browser                   | Excluded                                                 |
+| Feature                               | Browser-only status                                              | Decision                                |
+| ------------------------------------- | ---------------------------------------------------------------- | --------------------------------------- |
+| View, thumbnails, page count          | Reliable with PDF.js                                             | Shipped                                 |
+| Merge, split, reorder, rotate         | Reliable for ordinary PDFs with pdf-lib                          | Shipped                                 |
+| Images to PDF                         | Reliable with explicit layout rules                              | Shipped                                 |
+| PDF to PNG/JPG                        | Reliable by rasterizing; memory-heavy at high resolution         | Shipped with warnings                   |
+| Text extraction                       | Text layer plus optional on-device English OCR for empty pages   | Shipped                                 |
+| Metadata view/removal                 | Basic fields plus Privacy Inspector for extra leak paths         | Shipped                                 |
+| Watermark, numbering, headers/footers | Feasible as new page content                                     | Shipped                                 |
+| Password-protect output               | AES-256 via pdf-lib-encrypt, verified locally                    | Shipped                                 |
+| Unlock and resave encrypted PDFs      | AES-256 rewrite; some AES-128 files rasterize                    | Shipped with raster fallback            |
+| True redaction                        | Rasterize selected regions; recovery tests required              | Shipped                                 |
+| Flatten forms/annotations             | Basic AcroForms via pdf-lib; XFA/appearances vary                | Limited, shipped                        |
+| Strong compression                    | Needs codecs and heuristics beyond current stack                 | Excluded                                |
+| Office conversions                    | Local .docx/.xlsx/.pptx/.html from text layer, OCR, and pictures | Shipped; not desktop-publisher fidelity |
 
 Warn that nearly any mutation invalidates digital signatures. Linearization, tagged accessibility structure, complex forms, attachments, JavaScript actions, and uncommon color spaces may not survive every rewrite. Never promise preservation without fixture evidence.
 
@@ -267,7 +267,7 @@ MVP includes:
 - Split PDF, Organize PDF, Images to PDF, and PDF to Images after Merge is stable.
 - Cross-browser tests, network privacy tests, dependency review, CSP/security headers, and release documentation.
 
-Not MVP: advanced editing, passwords, unlock, redaction, form flattening, PWA/offline mode, OCR, Office conversion, strong compression, accounts, cloud storage, collaboration, AI, or unreviewed analytics.
+Not MVP: strong compression, accounts, cloud storage, collaboration, AI, or unreviewed analytics.
 
 ## 12. Technical risks
 
@@ -322,7 +322,7 @@ Merge PDF is the first complete production tool. Users can add multiple local PD
 
 Exit checks for this phase: unit tests for merge order, mixed page sizes, and encrypted input; Playwright coverage for merge, reorder, password rejection, session reset, and no document POST/body traffic.
 
-Known limitations that remain in later phases: other public tool routes are still upload/preview shells, pdf-lib rewrites can drop signatures and some annotations, cancellation is cooperative between files/pages, and encrypted PDFs are rejected rather than unlocked.
+Known limitations that remain: pdf-lib rewrites can drop signatures and some annotations, cancellation is cooperative between files/pages, and some encrypted PDFs still need Unlock PDF (including a raster fallback) rather than merging locked.
 
 ## 16. Phase 7 outcome
 
@@ -346,7 +346,7 @@ PDF to Images accepts one PDF, supports all pages or validated custom page range
 
 Exit checks for this phase: unit tests for image placement and image-to-PDF output, plus Playwright coverage for image-to-PDF PDF downloads and PDF-to-images ZIP downloads across Chromium, Firefox, and WebKit.
 
-Known limitations that remain in later phases: PDF-to-images raster export can consume significant memory at high resolution, browser canvas encoders determine exact JPG quality output, image color profile handling depends on browser decoding and pdf-lib embedding, and conversion output is raster/image based rather than editable document reconstruction.
+Known limitations that remain: PDF-to-images raster export can consume significant memory at high resolution, browser canvas encoders determine exact JPG quality, and image color profiles depend on browser decoding. PDF to Word/Excel/PowerPoint/HTML reconstructs text, optional OCR, and optional page pictures; they do not match a desktop publisher.
 
 ## 18. Phase 9 outcome
 
@@ -354,11 +354,11 @@ Editing and privacy tools now complete the non-security editing phase without ad
 
 Rotate PDF supports all pages or validated custom ranges and saves page rotations through the shared worker. Add Watermark supports text, opacity, position, and rotation. Add Page Numbers supports position, starting number, and page-only or page-of-total formats. Add Headers and Footers applies repeated text to every page.
 
-Remove Metadata clears common pdf-lib metadata fields and sets neutral PDFForge creator/producer fields. View Metadata reads common fields locally without producing an output file. Extract Text reads selectable text-layer content through PDF.js and provides copy/download actions; scanned PDF OCR remains out of scope.
+Remove Metadata clears common pdf-lib metadata fields and sets neutral PDFForge creator/producer fields. View Metadata reads common fields locally without producing an output file. Extract Text reads the selectable text layer through PDF.js and, when a page has no text, can run on-device English OCR. Scan Document remains the dedicated camera/OCR path for paper photos.
 
 Exit checks for this phase: unit tests for rotation, metadata cleaning, and text-overlay output; Playwright coverage for Rotate PDF, Remove Metadata, View Metadata, and Extract Text across supported browser projects.
 
-Known limitations that remain in later phases: metadata cleaning does not remove visible content or guarantee removal of every hidden/custom PDF structure, text extraction does not OCR scanned pages, visual overlays can invalidate digital signatures, and watermarks/page text are added as ordinary PDF content rather than security controls.
+Known limitations that remain: metadata cleaning does not remove visible content or guarantee every hidden/custom object is gone, on-device OCR is English-only and varies with image quality, visual overlays can invalidate digital signatures, and watermarks/page text are ordinary PDF content rather than security controls.
 
 ## 19. Phase 10 outcome
 
@@ -419,3 +419,9 @@ Known limitations: this phase does not pick a commercial host; Lighthouse scores
 ## 24. Privacy Inspector
 
 Privacy Inspector (`/tools/privacy-inspector`) is a local scan-then-sanitize tool. The scan reports standard and XMP metadata, attachments, JavaScript actions, form values, incremental `%%EOF` leftovers, hidden/off-page text-layer items, and best-effort image EXIF. Sanitize uses an explicit checklist and always rewrites a new file. The UI states that this reduces leak surface and does not prove emptiness.
+
+Privacy Risk Scanner finds identifiers such as Aadhaar, PAN, cards, and emails, then can rasterize confirmed hits. Document Integrity hashes files locally. Private Recipes chains supported steps in one workspace.
+
+## 25. Local Office and HTML conversion
+
+PDF to Word, Excel, PowerPoint, and HTML run entirely in the tab. They read the PDF.js text layer, optionally OCR pages with no selectable text using the same on-device English engine as Scan Document, and can embed page rasters. The packages are Office Open XML or a self-contained HTML file built with JSZip. Layout, fonts, and vector art are not reconstructed at desktop-publisher fidelity.

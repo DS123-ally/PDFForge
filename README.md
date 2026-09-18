@@ -6,7 +6,7 @@ The linked Figma source currently contains the placeholder brand “PDFLocal.”
 
 ## Project status
 
-Phase 14 (cross-browser release) is complete pending approval. Privacy Inspector is available as a local scan-then-sanitize tool. Production uses Node 24, `NEXT_PUBLIC_SITE_URL`, and `next start`. Staging acceptance and rollback steps are in `docs/acceptance.md` and `docs/release.md`.
+Phase 14 (cross-browser release) is complete pending approval. Local tools now include Scan Document OCR, Privacy Inspector, Privacy Risk Scanner, Private Recipes, Document Integrity, and PDF to Word/Excel/PowerPoint/HTML. Production uses Node 24, `NEXT_PUBLIC_SITE_URL`, and `next start`. Staging acceptance and rollback steps are in `docs/acceptance.md` and `docs/release.md`.
 
 - Architecture and roadmap: [`docs/architecture.md`](docs/architecture.md)
 - Privacy audit: [`docs/privacy-audit.md`](docs/privacy-audit.md)
