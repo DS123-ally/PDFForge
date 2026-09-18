@@ -206,7 +206,132 @@ export const toolSeo: ToolSeoContent[] = [
           "Yes. Pages are named in a stable page-number pattern so you can sort them after download.",
       },
     ],
-    relatedSlugs: ["images-to-pdf", "extract-text", "split-pdf"],
+    relatedSlugs: ["pdf-to-html", "images-to-pdf", "extract-text"],
+  },
+  {
+    slug: "pdf-to-word",
+    pageTitle: "Convert PDF to Word locally",
+    metaDescription:
+      "Turn a PDF into a .docx file in your browser. PDFForge uses the text layer and optional page pictures. Nothing is uploaded.",
+    intro:
+      "PDF to Word writes an Office Open XML document on this device. Paragraphs and simple tables come from selectable text. It does not rebuild every font, column, or graphic the way a desktop publisher would.",
+    steps: [
+      "Select a PDF from your device.",
+      "Choose all pages or a custom range.",
+      "Optionally include page pictures for scans.",
+      "Convert locally and download the .docx file.",
+    ],
+    faqs: [
+      {
+        question: "Does conversion upload my PDF?",
+        answer:
+          "No. Text extraction, packaging, and download run in this browser tab.",
+      },
+      {
+        question: "Will the Word file match the PDF layout exactly?",
+        answer:
+          "No. The output follows the text layer and optional rasters. Complex layouts, custom fonts, and vector art can differ. Spot-check in Word or LibreOffice.",
+      },
+      {
+        question: "What about scanned pages?",
+        answer:
+          "Pages without selectable text need Include page pictures, or run Scan Document OCR first so a text layer exists.",
+      },
+    ],
+    relatedSlugs: ["pdf-to-html", "pdf-to-excel", "extract-text"],
+  },
+  {
+    slug: "pdf-to-excel",
+    pageTitle: "Convert PDF to Excel locally",
+    metaDescription:
+      "Export PDF text to an .xlsx workbook in your browser. Lines become rows; clear column gaps become extra sheets. Nothing is uploaded.",
+    intro:
+      "PDF to Excel is for invoices, lists, and reports that already have a text layer. One sheet lists every line. Pages that look tabular get another sheet with split columns.",
+    steps: [
+      "Open a PDF that contains selectable text.",
+      "Choose the pages to export.",
+      "Convert locally in this tab.",
+      "Download the .xlsx file and review columns in a spreadsheet app.",
+    ],
+    faqs: [
+      {
+        question: "Are tables detected perfectly?",
+        answer:
+          "No. Columns are guessed from horizontal gaps in the text layer. Merged cells, ruling lines, and scans without text can be wrong. Always review the sheet.",
+      },
+      {
+        question: "Does this keep formulas?",
+        answer:
+          "No. PDFForge writes values as text. There are no Excel formulas in the output.",
+      },
+      {
+        question: "Is the file uploaded for conversion?",
+        answer: "No. The workbook is assembled with JSZip in this tab.",
+      },
+    ],
+    relatedSlugs: ["pdf-to-word", "extract-text", "pdf-to-html"],
+  },
+  {
+    slug: "pdf-to-ppt",
+    pageTitle: "Convert PDF to PowerPoint locally",
+    metaDescription:
+      "Create a .pptx with one slide per PDF page in your browser. Page pictures become slides. Nothing is uploaded.",
+    intro:
+      "PDF to PowerPoint is for turning a document into slides you can present. With page pictures on, each slide is a raster of that page. With pictures off, slide text comes from the text layer only.",
+    steps: [
+      "Select a PDF.",
+      "Choose pages and whether to include page pictures.",
+      "Convert locally.",
+      "Download the .pptx and open it in PowerPoint or LibreOffice.",
+    ],
+    faqs: [
+      {
+        question: "Are objects on the slide editable?",
+        answer:
+          "Page pictures are images, not native shapes. Text-only mode is editable but will not match the original layout.",
+      },
+      {
+        question: "Does this use a conversion server?",
+        answer: "No. Slides are packaged as Office Open XML in this browser.",
+      },
+      {
+        question: "Why might a slide be blank?",
+        answer:
+          "The page had no selectable text and page pictures were turned off. Enable pictures or OCR the scan first.",
+      },
+    ],
+    relatedSlugs: ["pdf-to-images", "pdf-to-word", "pdf-to-html"],
+  },
+  {
+    slug: "pdf-to-html",
+    pageTitle: "Convert PDF to HTML locally",
+    metaDescription:
+      "Export PDF pages to an HTML file in your browser, with paragraphs, simple tables, and optional page pictures. Nothing is uploaded.",
+    intro:
+      "PDF to HTML is for a readable local copy you can open in any browser. It is not a pixel-perfect clone of print CSS. Scanned pages need pictures or an OCR text layer.",
+    steps: [
+      "Choose a PDF from your device.",
+      "Select pages and optionally include page pictures.",
+      "Convert locally.",
+      "Download the HTML file and open it from disk.",
+    ],
+    faqs: [
+      {
+        question: "Does the HTML call a CDN?",
+        answer:
+          "No. The file is self-contained. Page pictures, if included, are embedded as data URLs and can make the file large.",
+      },
+      {
+        question: "Will links and forms work?",
+        answer:
+          "Text links that appear in the PDF text layer are not automatically turned into HTML anchors. Forms stay as visible text if they were in the text layer.",
+      },
+      {
+        question: "Is JavaScript added to the download?",
+        answer: "No. The export is static HTML and CSS only.",
+      },
+    ],
+    relatedSlugs: ["extract-text", "pdf-to-word", "pdf-to-images"],
   },
   {
     slug: "rotate-pdf",

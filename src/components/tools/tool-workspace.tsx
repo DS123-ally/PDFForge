@@ -14,6 +14,7 @@ import { FindRedactWorkspace } from "@/components/tools/find-redact-workspace";
 import { ImagesToPdfWorkspace } from "@/components/tools/images-to-pdf-workspace";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
+import { ConvertDocumentWorkspace } from "@/components/tools/convert-document-workspace";
 import { PdfToImagesWorkspace } from "@/components/tools/pdf-to-images-workspace";
 import { PrivacyInspectorWorkspace } from "@/components/tools/privacy-inspector-workspace";
 import { PrivacyRiskScannerWorkspace } from "@/components/tools/privacy-risk-scanner-workspace";
@@ -53,6 +54,15 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
 
   if (tool.slug === "pdf-to-images") {
     return <PdfToImagesWorkspace />;
+  }
+
+  if (
+    tool.slug === "pdf-to-word" ||
+    tool.slug === "pdf-to-excel" ||
+    tool.slug === "pdf-to-ppt" ||
+    tool.slug === "pdf-to-html"
+  ) {
+    return <ConvertDocumentWorkspace slug={tool.slug} />;
   }
 
   if (tool.slug === "privacy-risk-scanner") {

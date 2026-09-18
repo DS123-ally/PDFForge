@@ -91,6 +91,46 @@ export const tools: ToolDefinition[] = [
     acceptedFileTypes: ["pdf"],
   },
   {
+    slug: "pdf-to-word",
+    title: "PDF to Word",
+    shortDescription: "Turn a PDF into an editable .docx file locally.",
+    description:
+      "Build a Word document from the PDF text layer in this browser. Optionally embed page pictures. Nothing is uploaded.",
+    category: "Convert",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "pdf-to-excel",
+    title: "PDF to Excel",
+    shortDescription: "Export PDF lines and detected columns to .xlsx.",
+    description:
+      "Write spreadsheet rows from selectable PDF text. Lines with clear gaps become extra columns on a page sheet.",
+    category: "Convert",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "pdf-to-ppt",
+    title: "PDF to PowerPoint",
+    shortDescription: "Make one slide per PDF page as a local .pptx.",
+    description:
+      "Create a PowerPoint file in this tab. Page pictures become slides; if pictures are off, slide text comes from the text layer.",
+    category: "Convert",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "pdf-to-html",
+    title: "PDF to HTML",
+    shortDescription: "Save PDF pages as a local HTML file.",
+    description:
+      "Export headings, paragraphs, simple tables, and optional page pictures to HTML that stays on this device.",
+    category: "Convert",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
     slug: "rotate-pdf",
     title: "Rotate PDF",
     shortDescription: "Rotate selected pages precisely.",
