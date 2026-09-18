@@ -40,6 +40,7 @@ describe("indexable routes", () => {
     expect(indexablePaths).toContain("/about");
     expect(indexablePaths).not.toContain("/workspace");
     expect(indexablePaths).not.toContain("/offline");
+    expect(indexablePaths).not.toContain("/health");
     expect(indexablePaths).not.toContain("/tools/merge-pdf/states");
 
     for (const tool of tools) {

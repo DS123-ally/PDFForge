@@ -35,6 +35,7 @@ test("keeps the hash workspace out of the index", async ({ page }) => {
   const robotsBody = (await robots?.text()) ?? "";
   expect(robotsBody).toContain("Disallow: /workspace");
   expect(robotsBody).toContain("Disallow: /offline");
+  expect(robotsBody).toContain("Disallow: /health");
   expect(robotsBody).toContain("Sitemap:");
 
   const sitemap = await page.goto("/sitemap.xml");

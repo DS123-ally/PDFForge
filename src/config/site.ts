@@ -10,6 +10,7 @@ export function absoluteUrl(path = "/") {
 export const noIndex = { index: false, follow: false } as const;
 
 export const noindexPaths = [
+  "/health",
   "/offline",
   "/workspace",
   "/tools/merge-pdf/states",
