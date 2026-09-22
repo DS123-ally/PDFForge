@@ -4,7 +4,7 @@ PDFForge is a free, privacy-first PDF utility suite. Document processing is desi
 
 ## Project status
 
-Phase 14 (cross-browser release) is complete pending approval. Local tools now include Scan Document OCR, Privacy Inspector, Privacy Risk Scanner, Private Recipes, Document Integrity, and PDF to Word/Excel/PowerPoint/HTML. Production uses Node 24, `NEXT_PUBLIC_SITE_URL`, and `next start`. Staging acceptance and rollback steps are in `docs/acceptance.md` and `docs/release.md`.
+Phase 14 (cross-browser release) is complete pending approval. Local tools now include Scan Document OCR, Privacy Inspector, Privacy Risk Scanner, Private Recipes, Document Integrity, and PDF to Word/Excel/PowerPoint/HTML. Production uses Node 24, `NEXT_PUBLIC_SITE_URL`, and `next start` (Docker/VPS) or Vercel for a public `*.vercel.app` URL. Staging acceptance and rollback steps are in `docs/acceptance.md` and `docs/release.md`.
 
 - Architecture and roadmap: [`docs/architecture.md`](docs/architecture.md)
 - Privacy audit: [`docs/privacy-audit.md`](docs/privacy-audit.md)

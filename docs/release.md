@@ -10,6 +10,14 @@ Phase 14. Host the application as a Next.js Node server. Document processing sti
 
 CSP nonces are applied in `src/proxy.ts`. Static HTML export is not supported.
 
+## Vercel (public URL without a VPS)
+
+Import the GitHub repo at [vercel.com](https://vercel.com). The project root is this `pdfforge` directory. Docker `output: "standalone"` is skipped on Vercel.
+
+Optional: set `NEXT_PUBLIC_SITE_URL` to the production origin (for example `https://your-project.vercel.app`). If it is unset, the app uses `VERCEL_PROJECT_PRODUCTION_URL` / `VERCEL_URL`.
+
+After deploy, share the `https://…vercel.app` URL. Document processing still happens in each visitor’s browser. Do not add upload APIs.
+
 ## Build and start
 
 ```bash
@@ -51,7 +59,9 @@ export NEXT_PUBLIC_SITE_URL=https://example.com
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 ```
 
-`docker-compose.yml` runs two Node replicas (`app`, `app2`) behind nginx on port 80, each limited to 512 MB RAM and 1 CPU. Only `app` **builds** `pdfforge:local` (`pull_policy: build`); `app2` reuses that tag (`pull_policy: never`) so Compose does not pull a Hub repo named `pdfforge` and does not run two `npm ci` builds at once. Host port **8080** is also published for machines where port 80 is already taken. `docker-compose.prod.yml` swaps in `deploy/nginx/conf.d/https.conf` and mounts `deploy/certs` (HTTPS on 443, and 8443 when 443 is busy).
+`docker-compose.yml` runs two Node replicas (`app`, `app2`) behind nginx, each limited to 512 MB RAM and 1 CPU. Only `app` **builds** `pdfforge:local` (`pull_policy: build`); `app2` reuses that tag (`pull_policy: never`) so Compose does not pull a Hub repo named `pdfforge` and does not run two `npm ci` builds at once.
+
+On Windows/WSL, **port 80 is often already Ubuntu nginx**, so local Compose publishes **8080** only. Open `http://127.0.0.1:8080`, not `http://localhost`. `docker-compose.prod.yml` binds 80+443 for a VPS and 8080+8443 for local TLS; HTTP on 8080 redirects to HTTPS on 8443.
 
 The first build still needs Docker Hub for `node:24-alpine`. If you see `lookup registry-1.docker.io: no such host`, Docker Desktop cannot resolve the registry (VPN, DNS, or a brief outage). Fix host DNS, then:
 

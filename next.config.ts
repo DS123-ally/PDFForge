@@ -4,7 +4,7 @@ import { getSecurityHeaders } from "./src/config/security-headers";
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["192.168.0.100"],
-  output: "standalone",
+  ...(process.env.VERCEL ? {} : { output: "standalone" }),
   poweredByHeader: false,
   headers: async () => [
     {

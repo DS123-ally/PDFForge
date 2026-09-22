@@ -1,7 +1,21 @@
 const DEFAULT_SITE_URL = "http://localhost:3000";
 
+function vercelOrigin(): string | undefined {
+  const production = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+  if (production) {
+    return `https://${production.replace(/^https?:\/\//, "")}`;
+  }
+
+  const deployment = process.env.VERCEL_URL?.trim();
+  if (deployment) {
+    return `https://${deployment.replace(/^https?:\/\//, "")}`;
+  }
+
+  return undefined;
+}
+
 function readPublicUrl(value: string | undefined): URL {
-  const candidate = value?.trim() || DEFAULT_SITE_URL;
+  const candidate = value?.trim() || vercelOrigin() || DEFAULT_SITE_URL;
 
   try {
     const url = new URL(candidate);
