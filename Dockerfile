@@ -6,7 +6,7 @@ ENV NPM_CONFIG_FETCH_RETRIES=5 \
 COPY package.json package-lock.json ./
 RUN set -eux; \
   i=0; \
-  until npm ci --no-audit --no-fund; do \
+  until npm ci --ignore-scripts --no-audit --no-fund; do \
     i=$((i + 1)); \
     if [ "$i" -ge 5 ]; then exit 1; fi; \
     echo "npm ci failed, retry $i/5 in 20s"; \
@@ -20,7 +20,7 @@ ARG NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
+RUN npm run ocr:assets && npm run build
 
 FROM node:24-alpine AS runner
 WORKDIR /app
