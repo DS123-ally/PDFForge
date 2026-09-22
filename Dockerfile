@@ -1,7 +1,17 @@
 FROM node:24-alpine AS deps
 WORKDIR /app
+ENV NPM_CONFIG_FETCH_RETRIES=5 \
+    NPM_CONFIG_FETCH_RETRY_MINTIMEOUT=20000 \
+    NPM_CONFIG_FETCH_RETRY_MAXTIMEOUT=120000
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN set -eux; \
+  i=0; \
+  until npm ci --no-audit --no-fund; do \
+    i=$((i + 1)); \
+    if [ "$i" -ge 5 ]; then exit 1; fi; \
+    echo "npm ci failed, retry $i/5 in 20s"; \
+    sleep 20; \
+  done
 
 FROM node:24-alpine AS builder
 WORKDIR /app

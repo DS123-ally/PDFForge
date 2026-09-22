@@ -51,7 +51,7 @@ export NEXT_PUBLIC_SITE_URL=https://example.com
 docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 ```
 
-`docker-compose.yml` runs two Node replicas (`app`, `app2`) behind nginx on port 80, each limited to 512 MB RAM and 1 CPU. Both services **build** the local `pdfforge:local` image (`pull_policy: build`) so Compose does not try to download a Hub repo named `pdfforge`. `docker-compose.prod.yml` swaps in `deploy/nginx/conf.d/https.conf` and mounts `deploy/certs`.
+`docker-compose.yml` runs two Node replicas (`app`, `app2`) behind nginx on port 80, each limited to 512 MB RAM and 1 CPU. Only `app` **builds** `pdfforge:local` (`pull_policy: build`); `app2` reuses that tag (`pull_policy: never`) so Compose does not pull a Hub repo named `pdfforge` and does not run two `npm ci` builds at once. `docker-compose.prod.yml` swaps in `deploy/nginx/conf.d/https.conf` and mounts `deploy/certs`.
 
 The first build still needs Docker Hub for `node:24-alpine`. If you see `lookup registry-1.docker.io: no such host`, Docker Desktop cannot resolve the registry (VPN, DNS, or a brief outage). Fix host DNS, then:
 

@@ -1,10 +1,5 @@
 x-pdfforge-app: &pdfforge-app
   image: pdfforge:local
-  pull_policy: build
-  build:
-    context: .
-    args:
-      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost}
   environment:
     NODE_ENV: production
     NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost}
@@ -29,9 +24,15 @@ x-pdfforge-app: &pdfforge-app
 services:
   app:
     <<: *pdfforge-app
+    pull_policy: build
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost}
 
   app2:
     <<: *pdfforge-app
+    pull_policy: never
     depends_on:
       app:
         condition: service_healthy
