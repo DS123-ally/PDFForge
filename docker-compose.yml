@@ -1,56 +1,40 @@
+x-pdfforge-app: &pdfforge-app
+  image: pdfforge:local
+  pull_policy: build
+  build:
+    context: .
+    args:
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost}
+  environment:
+    NODE_ENV: production
+    NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost}
+  restart: unless-stopped
+  expose:
+    - "3000"
+  mem_limit: 512m
+  cpus: "1.0"
+  healthcheck:
+    test:
+      [
+        "CMD",
+        "node",
+        "-e",
+        "fetch('http://127.0.0.1:3000/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+      ]
+    interval: 30s
+    timeout: 5s
+    retries: 3
+    start_period: 25s
+
 services:
   app:
-    build:
-      context: .
-      args:
-        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost}
-    image: pdfforge:local
-    environment:
-      NODE_ENV: production
-      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost}
-    restart: unless-stopped
-    expose:
-      - "3000"
-    mem_limit: 512m
-    cpus: "1.0"
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "node",
-          "-e",
-          "fetch('http://127.0.0.1:3000/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
-        ]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 25s
+    <<: *pdfforge-app
 
   app2:
-    image: pdfforge:local
-    environment:
-      NODE_ENV: production
-      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost}
-    restart: unless-stopped
+    <<: *pdfforge-app
     depends_on:
       app:
         condition: service_healthy
-    expose:
-      - "3000"
-    mem_limit: 512m
-    cpus: "1.0"
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "node",
-          "-e",
-          "fetch('http://127.0.0.1:3000/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
-        ]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 25s
 
   nginx:
     image: nginx:1.27-alpine
