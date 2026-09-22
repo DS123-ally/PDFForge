@@ -2,8 +2,6 @@
 
 PDFForge is a free, privacy-first PDF utility suite. Document processing is designed to happen locally in the browser: files, extracted text, metadata, and passwords must not be uploaded or logged.
 
-The linked Figma source currently contains the placeholder brand “PDFLocal.” **PDFForge is the confirmed public product name**, so implementation must retain the design language while replacing PDFLocal labels and logos.
-
 ## Project status
 
 Phase 14 (cross-browser release) is complete pending approval. Local tools now include Scan Document OCR, Privacy Inspector, Privacy Risk Scanner, Private Recipes, Document Integrity, and PDF to Word/Excel/PowerPoint/HTML. Production uses Node 24, `NEXT_PUBLIC_SITE_URL`, and `next start`. Staging acceptance and rollback steps are in `docs/acceptance.md` and `docs/release.md`.
