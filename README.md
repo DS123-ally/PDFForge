@@ -26,14 +26,14 @@ Extra users cost the host **bandwidth for JS/OCR assets**, not CPU for their PDF
 
 ### Layers
 
-| Layer | Responsibility |
-| --- | --- |
-| **Edge / Node** | Serve pages, hashed `/_next/static` files, `/ocr` WASM/lang data, `/sw.js`. `GET /health` for probes. No PDF I/O. |
-| **Next.js App Router** | Marketing routes, SEO, CSP nonces in [`src/proxy.ts`](src/proxy.ts), tool pages at `/tools/[slug]`. |
-| **React workspaces** | UI only. They never mutate PDF bytes themselves. |
-| **`src/lib/*`** | Validation, PDF.js rendering/text, pdf-lib edits, OCR, OOXML/HTML convert, recipes. |
-| **`src/workers/pdf.worker.ts`** | Isolated thread for merge/split/organize and other mutations. |
-| **Browser** | File API, memory, downloads. Optional PWA shell cache (never document bytes). |
+| Layer                           | Responsibility                                                                                                    |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **Edge / Node**                 | Serve pages, hashed `/_next/static` files, `/ocr` WASM/lang data, `/sw.js`. `GET /health` for probes. No PDF I/O. |
+| **Next.js App Router**          | Marketing routes, SEO, CSP nonces in [`src/proxy.ts`](src/proxy.ts), tool pages at `/tools/[slug]`.               |
+| **React workspaces**            | UI only. They never mutate PDF bytes themselves.                                                                  |
+| **`src/lib/*`**                 | Validation, PDF.js rendering/text, pdf-lib edits, OCR, OOXML/HTML convert, recipes.                               |
+| **`src/workers/pdf.worker.ts`** | Isolated thread for merge/split/organize and other mutations.                                                     |
+| **Browser**                     | File API, memory, downloads. Optional PWA shell cache (never document bytes).                                     |
 
 ### Request vs document path
 
@@ -81,13 +81,13 @@ UI components call libraries; libraries may post work to the PDF worker. That ke
 
 Defined in [`src/config/tools.ts`](src/config/tools.ts).
 
-| Category | Tools |
-| --- | --- |
-| Organize | Merge, Split, Organize, Private Recipes |
-| Convert | Scan Document, Images to PDF, PDF to Images, PDF to Word / Excel / PPT / HTML |
-| Edit | Rotate, Watermark, Page numbers, Headers/footers, Extract text |
-| Privacy | Privacy Risk Scanner, Privacy Inspector, Remove/view metadata, Find & redact PII, Redact PDF |
-| Security | Password protect, Unlock, Flatten, Document Integrity |
+| Category | Tools                                                                                        |
+| -------- | -------------------------------------------------------------------------------------------- |
+| Organize | Merge, Split, Organize, Private Recipes                                                      |
+| Convert  | Scan Document, Images to PDF, PDF to Images, PDF to Word / Excel / PPT / HTML                |
+| Edit     | Rotate, Watermark, Page numbers, Headers/footers, Extract text                               |
+| Privacy  | Privacy Risk Scanner, Privacy Inspector, Remove/view metadata, Find & redact PII, Redact PDF |
+| Security | Password protect, Unlock, Flatten, Document Integrity                                        |
 
 Conversion and OCR use the in-tab text layer and optional on-device English Tesseract. They are not desktop-publisher reconstructions of layout.
 
@@ -95,14 +95,14 @@ Conversion and OCR use the in-tab text layer and optional on-device English Tess
 
 Shipped on top of the original Merge-first roadmap. All of these still run **in the tab**.
 
-| Area | What was added |
-| --- | --- |
-| Privacy | Privacy Inspector (metadata, JS, hidden text, EXIF); Privacy Risk Scanner (Aadhaar, PAN, cards, emails, IFSC) with optional raster redaction |
-| Convert | PDF → Word, Excel, PowerPoint, HTML via OOXML/JSZip; OCR on pages with no selectable text (same engine as Scan Document) |
-| Capture | Scan Document: camera/photos, perspective flatten, searchable PDF |
-| Workflow | Private Recipes: chain steps (merge, numbers, watermark, strip metadata, protect) in one local session |
-| Trust | Document Integrity: SHA-256/512 fingerprint, compare two files, verify a known hash |
-| Hosting | Docker + nginx (cache static/OCR, `no-store` on `/sw.js`), `/health`, Vercel without `standalone` |
+| Area     | What was added                                                                                                                               |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Privacy  | Privacy Inspector (metadata, JS, hidden text, EXIF); Privacy Risk Scanner (Aadhaar, PAN, cards, emails, IFSC) with optional raster redaction |
+| Convert  | PDF → Word, Excel, PowerPoint, HTML via OOXML/JSZip; OCR on pages with no selectable text (same engine as Scan Document)                     |
+| Capture  | Scan Document: camera/photos, perspective flatten, searchable PDF                                                                            |
+| Workflow | Private Recipes: chain steps (merge, numbers, watermark, strip metadata, protect) in one local session                                       |
+| Trust    | Document Integrity: SHA-256/512 fingerprint, compare two files, verify a known hash                                                          |
+| Hosting  | Docker + nginx (cache static/OCR, `no-store` on `/sw.js`), `/health`, Vercel without `standalone`                                            |
 
 ### Next enhancements (keep local-first)
 
@@ -129,15 +129,15 @@ Do **not** “enhance” by adding file-upload APIs, PDF queues, or a third-part
 
 ## Routes
 
-| Path | Role |
-| --- | --- |
-| `/` | Landing |
-| `/tools` | Directory (category in the URL hash) |
-| `/tools/[slug]` | Indexed tool page + workspace |
-| `/workspace#slug` | Noindex workspace (tool name not in the path) |
-| `/privacy`, `/about`, `/offline` | Policy, product, PWA fallback |
-| `/health` | Liveness JSON, `noindex` |
-| `/sitemap.xml`, `/robots.txt` | Public routes only |
+| Path                             | Role                                          |
+| -------------------------------- | --------------------------------------------- |
+| `/`                              | Landing                                       |
+| `/tools`                         | Directory (category in the URL hash)          |
+| `/tools/[slug]`                  | Indexed tool page + workspace                 |
+| `/workspace#slug`                | Noindex workspace (tool name not in the path) |
+| `/privacy`, `/about`, `/offline` | Policy, product, PWA fallback                 |
+| `/health`                        | Liveness JSON, `noindex`                      |
+| `/sitemap.xml`, `/robots.txt`    | Public routes only                            |
 
 ## Privacy invariants
 
@@ -198,10 +198,10 @@ Then **https://127.0.0.1:8443** when 443 is busy. Details: [`docs/release.md`](d
 
 ## Public hosting
 
-| Option | When to use |
-| --- | --- |
-| **Vercel** | Public `https://….vercel.app` without a VPS. Import the GitHub repo; root is this directory. `output: "standalone"` is Docker-only. |
-| **VPS + nginx** | Your domain, HSTS, cache `/_next/static` and `/ocr`, `no-store` on `/sw.js`. |
+| Option          | When to use                                                                                                                         |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Vercel**      | Public `https://….vercel.app` without a VPS. Import the GitHub repo; root is this directory. `output: "standalone"` is Docker-only. |
+| **VPS + nginx** | Your domain, HSTS, cache `/_next/static` and `/ocr`, `no-store` on `/sw.js`.                                                        |
 
 Set `NEXT_PUBLIC_SITE_URL` to the public origin before a production build (Vercel can fall back to `VERCEL_URL`). Staging and rollback: [`docs/acceptance.md`](docs/acceptance.md), [`docs/release.md`](docs/release.md).
 

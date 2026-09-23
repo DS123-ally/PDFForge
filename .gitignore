@@ -42,6 +42,8 @@ playwright-debug.log*
 # local temporary files
 *.tmp
 *.temp
+/health.json
+/health-https.json
 
 # env files (can opt-in for committing if needed)
 .env*

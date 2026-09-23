@@ -7,3 +7,5 @@ public/vendor
 Dockerfile
 deploy/nginx/**/*.conf
 .env.example
+/health.json
+/health-https.json
