@@ -425,3 +425,14 @@ Privacy Risk Scanner finds identifiers such as Aadhaar, PAN, cards, and emails, 
 ## 25. Local Office and HTML conversion
 
 PDF to Word, Excel, PowerPoint, and HTML run entirely in the tab. They read the PDF.js text layer, optionally OCR pages with no selectable text using the same on-device English engine as Scan Document, and can embed page rasters. The packages are Office Open XML or a self-contained HTML file built with JSZip. Layout, fonts, and vector art are not reconstructed at desktop-publisher fidelity.
+
+## 26. Feature enhancements
+
+Shipped after the original Merge-first plan, still in-browser only:
+
+- Privacy Inspector and Privacy Risk Scanner (including India-centric identifiers and optional raster redaction).
+- Local PDF → Word / Excel / PowerPoint / HTML, with OCR on empty text pages.
+- Scan Document, Private Recipes, Document Integrity.
+- Production serving: Docker/nginx asset cache, `/health`, Vercel (`standalone` skipped on Vercel).
+
+Planned enhancements that preserve the privacy boundary: better OOXML layout fidelity, more OCR languages, less rasterization on redact/unlock, first-visit offline tool chunks, tighter CSP `style-src`. Do not add upload APIs or third-party processing CDNs. Product-facing summary: [`README.md`](../README.md#feature-enhancements).
