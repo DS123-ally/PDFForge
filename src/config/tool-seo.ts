@@ -815,6 +815,38 @@ export const toolSeo: ToolSeoContent[] = [
     relatedSlugs: ["privacy-inspector", "password-protect-pdf", "flatten-pdf"],
   },
   {
+    slug: "gst-invoice",
+    pageTitle: "Create a GST invoice PDF locally",
+    metaDescription:
+      "Build an Indian tax invoice or bill of supply in your browser. CGST, SGST, and IGST stay on this device, then download the PDF. Nothing is uploaded.",
+    intro:
+      "GST Invoice is a local form for a tax invoice or bill of supply. Enter the supplier GSTIN, buyer, place of supply, and HSN or SAC lines. The browser splits CGST and SGST for supplies inside the same state, or charges IGST when the place of supply is different.",
+    steps: [
+      "Fill the seller, buyer, invoice, and item tabs. Load a saved template only if you stored one on this device.",
+      "Check the compliance list and the live subtotal, tax, and grand total.",
+      "Preview the invoice, then download the PDF. The file is created in this tab.",
+      "Use Save Template if you want the form, not the PDF, kept in local storage.",
+    ],
+    faqs: [
+      {
+        question: "Does creating an invoice upload my GSTIN or buyer details?",
+        answer:
+          "No. Totals and the PDF are built in this browser. Save Template is optional and writes only the form fields to local storage on this device.",
+      },
+      {
+        question: "When is the tax CGST and SGST instead of IGST?",
+        answer:
+          "If the supplier state and the place of supply match, the GST rate is split equally into CGST and SGST. If they differ, the full rate is IGST. A bill of supply has no tax.",
+      },
+      {
+        question: "Is this a GST return filing tool?",
+        answer:
+          "No. It formats an invoice and checks that common fields are present. It does not connect to the GST portal or replace advice from your tax practitioner.",
+      },
+    ],
+    relatedSlugs: ["document-integrity", "privacy-risk-scanner", "merge-pdf"],
+  },
+  {
     slug: "private-recipes",
     pageTitle: "Private PDF recipes in one local workspace",
     metaDescription:

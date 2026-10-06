@@ -3,6 +3,7 @@ export const toolCategories = [
   "Organize",
   "Convert",
   "Edit",
+  "Business",
   "Privacy",
   "Security",
 ] as const;
@@ -270,6 +271,16 @@ export const tools: ToolDefinition[] = [
     category: "Security",
     acceptsMultiple: false,
     acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "gst-invoice",
+    title: "GST Invoice",
+    shortDescription: "Create a tax invoice or bill of supply as a local PDF.",
+    description:
+      "Fill seller, buyer, and line items in this browser. CGST, SGST, and IGST are calculated on device, then you download the PDF. Nothing is uploaded.",
+    category: "Business",
+    acceptsMultiple: false,
+    acceptedFileTypes: [],
   },
   {
     slug: "document-integrity",
