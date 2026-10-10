@@ -1,4 +1,5 @@
 import type { PdfEditOptions } from "@/lib/pdf/edit-pdf";
+import type { RecipeIntegrityTrail } from "@/lib/recipes/recipe-integrity";
 import type {
   ImageFitMode,
   ImageOrientation,
@@ -113,6 +114,7 @@ export type PdfWorkerResponse =
 export type PdfWorkerResult = {
   fileCount: number;
   filename?: string;
+  integrityTrail?: RecipeIntegrityTrail;
   outputMimeType?: string;
   outputBytes?: ArrayBuffer;
   redactionCheck?: RedactionCheckResult;

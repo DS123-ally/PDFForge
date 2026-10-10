@@ -1,6 +1,7 @@
 import { PDFDocument } from "pdf-lib";
 import { describe, expect, it } from "vitest";
 
+import { hashBytes } from "@/lib/integrity/hash-file";
 import {
   createRecipeStep,
   createSendExternallyPresetSteps,
@@ -8,6 +9,11 @@ import {
   stripRecipeSecrets,
   validateRecipe,
 } from "@/lib/recipes/recipe";
+import {
+  createRecipeExport,
+  recipeExportFilename,
+  recipeExportToJson,
+} from "@/lib/recipes/recipe-export";
 import {
   recipeStorageKey,
   recipeStoreContainsSecrets,
@@ -106,6 +112,15 @@ describe("runRecipe", () => {
     expect(result.totalPages).toBe(3);
     expect(result.filename).toBe("first-recipe.pdf");
     expect(output.getPageCount()).toBe(3);
+    expect(result.integrityTrail).toMatchObject({
+      after: { name: "first-recipe.pdf" },
+      algorithm: "SHA-256",
+      before: [
+        { hash: await hashBytes(first, "SHA-256"), name: "first.pdf" },
+        { hash: await hashBytes(second, "SHA-256"), name: "second.pdf" },
+      ],
+    });
+    expect(result.integrityTrail?.after.hash).toMatch(/^[0-9a-f]{64}$/);
   });
 });
 
@@ -142,5 +157,34 @@ describe("recipe storage", () => {
       type: "password-protect-pdf",
     });
     expect(store.recipes[0]?.steps[1]).not.toHaveProperty("password");
+  });
+});
+
+describe("recipe JSON export", () => {
+  it("exports non-secret recipe settings as stable JSON", () => {
+    const exported = createRecipeExport({
+      exportedAt: "2026-10-10T00:00:00.000Z",
+      id: "send",
+      name: "Send externally",
+      steps: [
+        createRecipeStep("remove-metadata"),
+        {
+          id: "protect",
+          password: "super-secret-pass",
+          type: "password-protect-pdf",
+        },
+      ],
+    });
+    const json = recipeExportToJson(exported);
+
+    expect(exported.steps[1]).toEqual({
+      id: "protect",
+      type: "password-protect-pdf",
+    });
+    expect(json).toContain('"schema": "forge.private-recipe.v1"');
+    expect(json).not.toContain("super-secret-pass");
+    expect(recipeExportFilename(exported.name)).toBe(
+      "send-externally-recipe.json",
+    );
   });
 });

@@ -1,4 +1,5 @@
 import { createOutputName } from "@/lib/files/create-output-name";
+import { hashBytes } from "@/lib/integrity/hash-file";
 import { editPdfBuffer } from "@/lib/pdf/edit-pdf";
 import { flattenPdfBuffer } from "@/lib/pdf/flatten-pdf";
 import { mergePdfBuffers, PdfMergeCancelledError } from "@/lib/pdf/merge-pdf";
@@ -17,6 +18,7 @@ import {
   validateRecipe,
   type RecipeStep,
 } from "@/lib/recipes/recipe";
+import type { RecipeIntegrityTrail } from "@/lib/recipes/recipe-integrity";
 
 export type RecipeFile = {
   bytes: ArrayBuffer;
@@ -50,6 +52,12 @@ export async function runRecipe(
     pages: 0,
   }));
   const sourceName = files[0]?.name ?? "document.pdf";
+  const beforeHashes = await Promise.all(
+    files.map(async (file) => ({
+      hash: await hashBytes(file.bytes, "SHA-256"),
+      name: file.name,
+    })),
+  );
 
   for (const [index, step] of steps.entries()) {
     throwIfCancelled(options.isCancelled);
@@ -67,10 +75,20 @@ export async function runRecipe(
   }
 
   options.onProgress?.(100, "Recipe output is ready");
+  const filename = createOutputName(sourceName, { suffix: "recipe" });
+  const integrityTrail: RecipeIntegrityTrail = {
+    after: {
+      hash: await hashBytes(output.bytes, "SHA-256"),
+      name: filename,
+    },
+    algorithm: "SHA-256",
+    before: beforeHashes,
+  };
 
   return {
     fileCount: files.length,
-    filename: createOutputName(sourceName, { suffix: "recipe" }),
+    filename,
+    integrityTrail,
     outputBytes: output.bytes,
     redactionCheck: output.redactionCheck,
     totalPages: output.pages,

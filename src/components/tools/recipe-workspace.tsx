@@ -12,6 +12,7 @@ import { DownloadResultCard } from "@/components/tools/download-result-card";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { ProcessingCard } from "@/components/tools/processing-card";
 import { RedactionCheckNotice } from "@/components/tools/redaction-check-notice";
+import { RecipeIntegrityTrailNotice } from "@/components/tools/recipe-integrity-trail";
 import { RecipeStepFields } from "@/components/tools/recipe-step-fields";
 import { Button } from "@/components/ui/button";
 import { ErrorState } from "@/components/ui/error-state";
@@ -26,6 +27,11 @@ import {
   type PipelineStepType,
   type RecipeStep,
 } from "@/lib/recipes/recipe";
+import {
+  createRecipeExport,
+  recipeExportFilename,
+  recipeExportToJson,
+} from "@/lib/recipes/recipe-export";
 import {
   deleteRecipe,
   getRecipeStoreServerSnapshot,
@@ -130,6 +136,28 @@ export function RecipeWorkspace() {
           : "Recipe settings were not saved.",
       );
     }
+  }
+
+  function exportRecipeJson() {
+    setLocalError(null);
+
+    if (steps.length === 0) {
+      setLocalError("Add at least one step before exporting a recipe.");
+      return;
+    }
+
+    const exported = createRecipeExport({
+      id: recipeId,
+      name: recipeName.trim() || "Untitled recipe",
+      steps,
+    });
+    const blob = new Blob([recipeExportToJson(exported)], {
+      type: "application/json",
+    });
+
+    createDownload(blob, {
+      filename: recipeExportFilename(exported.name),
+    });
   }
 
   function loadRecipe(recipe: StoredRecipe) {
@@ -279,6 +307,7 @@ export function RecipeWorkspace() {
         <p className="mt-2 text-sm leading-6 text-zinc-600">
           Optional. Only step types and non-secret options are stored. PDFs,
           filenames, and passwords are never written to localStorage.
+          Downloading JSON exports the same recipe settings to a local file.
         </p>
         <label className="mt-4 flex min-h-11 items-center gap-3 text-sm font-bold">
           <input
@@ -300,7 +329,7 @@ export function RecipeWorkspace() {
             value={recipeName}
           />
         </label>
-        <div className="mt-4">
+        <div className="mt-4 flex flex-wrap gap-3">
           <Button
             disabled={!optedIn || steps.length === 0}
             onClick={persistRecipe}
@@ -308,6 +337,14 @@ export function RecipeWorkspace() {
             variant="secondary"
           >
             Save recipe
+          </Button>
+          <Button
+            disabled={steps.length === 0}
+            onClick={exportRecipeJson}
+            type="button"
+            variant="secondary"
+          >
+            Download recipe JSON
           </Button>
         </div>
         {savedRecipes.length > 0 ? (
@@ -372,6 +409,9 @@ export function RecipeWorkspace() {
           >
             {state.result.redactionCheck ? (
               <RedactionCheckNotice result={state.result.redactionCheck} />
+            ) : null}
+            {state.result.integrityTrail ? (
+              <RecipeIntegrityTrailNotice trail={state.result.integrityTrail} />
             ) : null}
           </DownloadResultCard>
         </div>

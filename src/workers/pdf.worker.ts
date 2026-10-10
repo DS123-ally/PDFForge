@@ -355,6 +355,7 @@ async function recipeJob(
   return {
     fileCount: result.fileCount,
     filename: result.filename,
+    integrityTrail: result.integrityTrail,
     outputBytes: result.outputBytes,
     redactionCheck: result.redactionCheck,
     totalBytes: request.files.reduce((total, file) => total + file.size, 0),
