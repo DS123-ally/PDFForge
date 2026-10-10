@@ -8,6 +8,10 @@ import { sanitizePdfBuffer } from "@/lib/pdf/privacy-sanitize";
 import { scanPrivacyRisk } from "@/lib/pdf/privacy-risk";
 import { percentRectToPdfRegion, redactPdfBuffer } from "@/lib/pdf/redact-pdf";
 import {
+  verifyTokensRemovedFromTextLayer,
+  type RedactionCheckResult,
+} from "@/lib/pdf/redaction-check";
+import {
   pipelineStepLabels,
   toEditOptions,
   validateRecipe,
@@ -17,6 +21,13 @@ import {
 export type RecipeFile = {
   bytes: ArrayBuffer;
   name: string;
+};
+
+type RecipeWorkingFile = {
+  bytes: ArrayBuffer;
+  name: string;
+  pages: number;
+  redactionCheck?: RedactionCheckResult;
 };
 
 export async function runRecipe(
@@ -33,12 +44,11 @@ export async function runRecipe(
     throw new Error("Add at least one PDF.");
   }
 
-  let current: Array<{ bytes: ArrayBuffer; name: string; pages: number }> =
-    files.map((file) => ({
-      bytes: file.bytes,
-      name: file.name,
-      pages: 0,
-    }));
+  let current: RecipeWorkingFile[] = files.map((file) => ({
+    bytes: file.bytes,
+    name: file.name,
+    pages: 0,
+  }));
   const sourceName = files[0]?.name ?? "document.pdf";
 
   for (const [index, step] of steps.entries()) {
@@ -62,12 +72,13 @@ export async function runRecipe(
     fileCount: files.length,
     filename: createOutputName(sourceName, { suffix: "recipe" }),
     outputBytes: output.bytes,
+    redactionCheck: output.redactionCheck,
     totalPages: output.pages,
   };
 }
 
 async function runStep(
-  files: Array<{ bytes: ArrayBuffer; name: string; pages: number }>,
+  files: RecipeWorkingFile[],
   step: RecipeStep,
   sourceName: string,
   isCancelled?: () => boolean,
@@ -98,6 +109,7 @@ async function runStep(
       bytes: edited.outputBytes,
       name: sourceName,
       pages: edited.totalPages,
+      redactionCheck: input.redactionCheck,
     };
   }
 
@@ -107,6 +119,7 @@ async function runStep(
       bytes: flattened.outputBytes,
       name: sourceName,
       pages: flattened.totalPages,
+      redactionCheck: input.redactionCheck,
     };
   }
 
@@ -120,6 +133,7 @@ async function runStep(
       bytes: sanitized.outputBytes,
       name: sourceName,
       pages: sanitized.totalPages,
+      redactionCheck: input.redactionCheck,
     };
   }
 
@@ -137,6 +151,7 @@ async function runStep(
       bytes: protectedPdf.outputBytes,
       name: sourceName,
       pages: protectedPdf.totalPages,
+      redactionCheck: input.redactionCheck,
     };
   }
 
@@ -160,6 +175,9 @@ async function scanAndRedactPii(
     const document = await loadingTask.promise;
     const report = await scanPrivacyRisk(bytes, document);
     const regions = [];
+    const confirmedTokens = step.confirmAllMatches
+      ? report.matches.map((match) => match.text)
+      : [];
 
     if (step.confirmAllMatches) {
       for (const match of report.matches) {
@@ -182,8 +200,12 @@ async function scanAndRedactPii(
 
     if (regions.length === 0 && rasterizePages.length === 0) {
       const totalPages = document.numPages;
+      const redactionCheck = await verifyTokensRemovedFromTextLayer(
+        bytes,
+        confirmedTokens,
+      );
       await document.cleanup();
-      return { bytes, name: sourceName, pages: totalPages };
+      return { bytes, name: sourceName, pages: totalPages, redactionCheck };
     }
 
     const redacted = await redactPdfBuffer(bytes, {
@@ -191,12 +213,17 @@ async function scanAndRedactPii(
       regions,
       sourceName,
     });
+    const redactionCheck = await verifyTokensRemovedFromTextLayer(
+      redacted.outputBytes,
+      confirmedTokens,
+    );
     await document.cleanup();
 
     return {
       bytes: redacted.outputBytes,
       name: sourceName,
       pages: redacted.totalPages,
+      redactionCheck,
     };
   } finally {
     destroyLoadingTask(loadingTask);

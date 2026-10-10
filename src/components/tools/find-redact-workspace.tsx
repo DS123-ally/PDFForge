@@ -10,6 +10,7 @@ import {
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { DownloadResultCard } from "@/components/tools/download-result-card";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
+import { RedactionCheckNotice } from "@/components/tools/redaction-check-notice";
 import { Button } from "@/components/ui/button";
 import { ErrorState } from "@/components/ui/error-state";
 import { createDownload } from "@/lib/files/create-download";
@@ -21,6 +22,10 @@ import {
 } from "@/lib/pdf/find-pii";
 import { destroyLoadingTask, getPdfJs } from "@/lib/pdf/pdfjs";
 import { percentRectToPdfRegion, redactPdf } from "@/lib/pdf/redact-pdf";
+import {
+  verifyTokensRemovedFromTextLayer,
+  type RedactionCheckResult,
+} from "@/lib/pdf/redaction-check";
 
 type ListedMatch = PiiMatch & { confirmed: boolean; id: string };
 
@@ -41,6 +46,7 @@ export function FindRedactWorkspace() {
   const [output, setOutput] = useState<{
     bytes: ArrayBuffer;
     filename: string;
+    redactionCheck: RedactionCheckResult;
     totalPages: number;
   } | null>(null);
   const selectedFile = files[0];
@@ -162,9 +168,14 @@ export function FindRedactWorkspace() {
         regions,
         sourceName: selectedFile.file.name,
       });
+      const redactionCheck = await verifyTokensRemovedFromTextLayer(
+        result.outputBytes,
+        confirmed.map((match) => match.text),
+      );
       setOutput({
         bytes: result.outputBytes,
         filename: result.filename,
+        redactionCheck,
         totalPages: result.totalPages,
       });
       setStatus("success");
@@ -208,7 +219,9 @@ export function FindRedactWorkspace() {
         }
         onProcessAnother={processAnother}
         title="Your PDF is ready"
-      />
+      >
+        <RedactionCheckNotice result={output.redactionCheck} />
+      </DownloadResultCard>
     );
   }
 

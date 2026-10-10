@@ -44,6 +44,7 @@ test("finds a phrase and redacts it so it cannot be copied back out", async ({
   ).toBeVisible({
     timeout: 30_000,
   });
+  await expect(page.getByText("Visible redaction check: Pass")).toBeVisible();
 
   const download = await downloadBytes(page, "Download PDF");
   const output = await PDFDocument.load(download.bytes);

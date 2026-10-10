@@ -16,6 +16,7 @@ export const privacyRiskKinds = [
   "phone",
   "ifsc",
   "gst",
+  "upi",
   "metadata",
   "url",
   "hidden-text",
@@ -37,6 +38,7 @@ export type PrivacyRiskMatch = {
     | "phone"
     | "ifsc"
     | "gst"
+    | "upi"
     | "url"
     | "dob"
   >;
@@ -69,6 +71,7 @@ export const privacyRiskLabels: Record<PrivacyRiskKind, string> = {
   pan: "PAN Number",
   passport: "Passport Number",
   phone: "Phone Number",
+  upi: "UPI ID",
   url: "Embedded URLs & IPs",
 };
 
@@ -84,6 +87,7 @@ export const privacyRiskChips: Array<{
   { kind: "email", label: "Email Address" },
   { kind: "phone", label: "Phone Number" },
   { kind: "ifsc", label: "IFSC & GST Codes" },
+  { kind: "upi", label: "UPI ID" },
   { kind: "metadata", label: "Hidden Metadata" },
   { kind: "url", label: "Embedded URLs & IPs" },
   { kind: "hidden-text", label: "Invisible Text Layers" },
@@ -121,6 +125,20 @@ const detectors: Array<{
     accept: (value) => /^[A-Z]{4}0[A-Z0-9]{6}$/.test(value.toUpperCase()),
     kind: "ifsc",
     regex: /\b[A-Z]{4}0[A-Z0-9]{6}\b/gi,
+  },
+  {
+    accept: (value) => {
+      const [local, handle] = value.split("@");
+      return Boolean(
+        local &&
+        handle &&
+        local.length >= 2 &&
+        handle.length >= 3 &&
+        !handle.includes("."),
+      );
+    },
+    kind: "upi",
+    regex: /\b[A-Z0-9._-]{2,256}@[A-Z][A-Z0-9]{2,64}\b(?!\.)/gi,
   },
   {
     accept: isValidAadhaar,

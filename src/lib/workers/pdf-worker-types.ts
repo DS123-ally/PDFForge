@@ -5,6 +5,7 @@ import type {
   ImagePageSize,
 } from "@/lib/pdf/image-layout";
 import type { RecipeStep } from "@/lib/recipes/recipe";
+import type { RedactionCheckResult } from "@/lib/pdf/redaction-check";
 
 export type PdfWorkerFile = {
   id: string;
@@ -114,6 +115,7 @@ export type PdfWorkerResult = {
   filename?: string;
   outputMimeType?: string;
   outputBytes?: ArrayBuffer;
+  redactionCheck?: RedactionCheckResult;
   totalBytes: number;
   totalPages: number;
 };

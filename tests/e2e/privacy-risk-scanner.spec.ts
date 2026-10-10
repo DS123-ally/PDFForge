@@ -38,6 +38,7 @@ test("scans an email and downloads a redacted copy without leaking the token", a
   ).toBeVisible({
     timeout: 30_000,
   });
+  await expect(page.getByText("Visible redaction check: Pass")).toBeVisible();
 
   const download = await downloadBytes(page, "Download PDF");
   const output = await PDFDocument.load(download.bytes);

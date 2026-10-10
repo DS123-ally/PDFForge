@@ -20,7 +20,7 @@ describe("privacy risk detectors", () => {
 
   it("finds Indian identifiers, contact data, and payment cards", () => {
     const aadhaar = makeValidAadhaar("49911866524");
-    const line = `PAN ABCDE1234F GST 27ABCDE1234F1Z5 IFSC HDFC0001234 Aadhaar ${aadhaar} card 4111 1111 1111 1111 mail jane.doe@example.com phone 9876543210 DOB 12/03/1991 https://example.com IBAN DE89370400440532013000`;
+    const line = `PAN ABCDE1234F GST 27ABCDE1234F1Z5 IFSC HDFC0001234 UPI dinesh.shop@ybl Aadhaar ${aadhaar} card 4111 1111 1111 1111 mail jane.doe@example.com phone 9876543210 DOB 12/03/1991 https://example.com IBAN DE89370400440532013000`;
 
     const matches = findPrivacyRiskMatches([run(line, 20, 360, 480)], pageSize);
     const kinds = [...new Set(matches.map((match) => match.kind))].sort();
@@ -36,6 +36,7 @@ describe("privacy risk detectors", () => {
         "ifsc",
         "pan",
         "phone",
+        "upi",
         "url",
       ]),
     );
@@ -50,6 +51,24 @@ describe("privacy risk detectors", () => {
     );
 
     expect(matches.map((match) => match.kind)).toEqual(["gst"]);
+  });
+
+  it("detects UPI IDs without flagging email domains", () => {
+    const matches = findPrivacyRiskMatches(
+      [
+        run(
+          "Pay dinesh.store@okaxis or email dinesh.store@example.com",
+          20,
+          360,
+          320,
+        ),
+      ],
+      pageSize,
+    );
+
+    expect(matches.filter((match) => match.kind === "upi")).toEqual([
+      expect.objectContaining({ text: "dinesh.store@okaxis" }),
+    ]);
   });
 });
 

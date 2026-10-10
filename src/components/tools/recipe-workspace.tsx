@@ -11,6 +11,7 @@ import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { DownloadResultCard } from "@/components/tools/download-result-card";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { ProcessingCard } from "@/components/tools/processing-card";
+import { RedactionCheckNotice } from "@/components/tools/redaction-check-notice";
 import { RecipeStepFields } from "@/components/tools/recipe-step-fields";
 import { Button } from "@/components/ui/button";
 import { ErrorState } from "@/components/ui/error-state";
@@ -368,7 +369,11 @@ export function RecipeWorkspace() {
             }
             onProcessAnother={processAnother}
             title="Your recipe PDF is ready"
-          />
+          >
+            {state.result.redactionCheck ? (
+              <RedactionCheckNotice result={state.result.redactionCheck} />
+            ) : null}
+          </DownloadResultCard>
         </div>
       ) : null}
 

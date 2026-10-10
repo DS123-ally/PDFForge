@@ -356,6 +356,7 @@ async function recipeJob(
     fileCount: result.fileCount,
     filename: result.filename,
     outputBytes: result.outputBytes,
+    redactionCheck: result.redactionCheck,
     totalBytes: request.files.reduce((total, file) => total + file.size, 0),
     totalPages: result.totalPages,
   };

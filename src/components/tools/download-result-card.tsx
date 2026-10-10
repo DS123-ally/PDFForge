@@ -1,9 +1,11 @@
 import { CheckCircle2, Download } from "lucide-react";
+import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 
 type DownloadResultCardProps = {
+  children?: ReactNode;
   title?: string;
   description?: string;
   downloadLabel?: string;
@@ -12,6 +14,7 @@ type DownloadResultCardProps = {
 };
 
 export function DownloadResultCard({
+  children,
   title = "Your PDF is ready",
   description = "3 files merged into one document.",
   downloadLabel = "Download PDF",
@@ -28,6 +31,7 @@ export function DownloadResultCard({
       </span>
       <h2 className="mt-6 text-2xl font-bold">{title}</h2>
       <p className="mt-3 text-sm text-zinc-600">{description}</p>
+      {children}
       <Button
         className="mt-6 w-full"
         disabled={!onDownload}

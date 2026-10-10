@@ -10,12 +10,17 @@ import {
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { DownloadResultCard } from "@/components/tools/download-result-card";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
+import { RedactionCheckNotice } from "@/components/tools/redaction-check-notice";
 import { Button } from "@/components/ui/button";
 import { ErrorState } from "@/components/ui/error-state";
 import { createDownload } from "@/lib/files/create-download";
 import { createOutputName } from "@/lib/files/create-output-name";
 import { percentRectToPdfRegion, redactPdf } from "@/lib/pdf/redact-pdf";
 import { destroyLoadingTask, getPdfJs } from "@/lib/pdf/pdfjs";
+import {
+  verifyTokensRemovedFromTextLayer,
+  type RedactionCheckResult,
+} from "@/lib/pdf/redaction-check";
 import {
   countByRiskKind,
   privacyRiskChips,
@@ -45,6 +50,7 @@ export function PrivacyRiskScannerWorkspace() {
   const [output, setOutput] = useState<{
     bytes: ArrayBuffer;
     filename: string;
+    redactionCheck: RedactionCheckResult;
     totalPages: number;
   } | null>(null);
   const selectedFile = files[0];
@@ -202,12 +208,17 @@ export function PrivacyRiskScannerWorkspace() {
         defaultPrivacySanitizeOptions,
         selectedFile.file.name,
       );
+      const redactionCheck = await verifyTokensRemovedFromTextLayer(
+        sanitized.outputBytes,
+        confirmed.map((match) => match.text),
+      );
 
       setOutput({
         bytes: sanitized.outputBytes,
         filename: createOutputName(selectedFile.file.name, {
           suffix: "redacted",
         }),
+        redactionCheck,
         totalPages,
       });
       setStatus("success");
@@ -242,7 +253,9 @@ export function PrivacyRiskScannerWorkspace() {
         }
         onProcessAnother={processAnother}
         title="Your redacted PDF is ready"
-      />
+      >
+        <RedactionCheckNotice result={output.redactionCheck} />
+      </DownloadResultCard>
     );
   }
 
