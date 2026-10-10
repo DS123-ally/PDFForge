@@ -38,6 +38,9 @@ describe("indexable routes", () => {
     expect(indexablePaths).toContain("/tools");
     expect(indexablePaths).toContain("/privacy");
     expect(indexablePaths).toContain("/about");
+    expect(indexablePaths).toContain("/compare/ilovepdf");
+    expect(indexablePaths).toContain("/compare/smallpdf");
+    expect(indexablePaths).toContain("/compare/adobe");
     expect(indexablePaths).not.toContain("/workspace");
     expect(indexablePaths).not.toContain("/offline");
     expect(indexablePaths).not.toContain("/health");

@@ -1,6 +1,12 @@
 "use client";
 
-import { useCallback, useMemo, useState, useSyncExternalStore } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 import {
   FileUploader,
@@ -20,11 +26,13 @@ import { usePdfWorkerProcessor } from "@/hooks/use-pdf-worker-processor";
 import { createDownload } from "@/lib/files/create-download";
 import {
   createRecipeStep,
-  createSendExternallyPresetSteps,
+  getRecipePreset,
   pipelineStepLabels,
   pipelineStepTypes,
+  recipePresets,
   validateRecipe,
   type PipelineStepType,
+  type RecipePreset,
   type RecipeStep,
 } from "@/lib/recipes/recipe";
 import {
@@ -81,13 +89,37 @@ export function RecipeWorkspace() {
     setLocalError(null);
   }
 
-  function loadSendExternallyPreset() {
-    setRecipeId(createLocalId());
-    setRecipeName("Send externally");
-    setSteps(createSendExternallyPresetSteps());
-    setLocalError(null);
-    reset();
-  }
+  const applyPreset = useCallback(
+    (preset: RecipePreset) => {
+      setRecipeId(createLocalId());
+      setRecipeName(preset.name);
+      setSteps(preset.createSteps());
+      setLocalError(null);
+      reset();
+
+      if (
+        window.location.pathname.startsWith("/tools/") &&
+        window.location.hash !== `#${preset.id}`
+      ) {
+        window.history.replaceState(null, "", `#${preset.id}`);
+      }
+    },
+    [reset],
+  );
+
+  useEffect(() => {
+    function applyFromLocation() {
+      const preset = getRecipePreset(window.location.hash.replace(/^#/, ""));
+
+      if (preset) {
+        applyPreset(preset);
+      }
+    }
+
+    applyFromLocation();
+    window.addEventListener("hashchange", applyFromLocation);
+    return () => window.removeEventListener("hashchange", applyFromLocation);
+  }, [applyPreset]);
 
   function moveStep(index: number, direction: -1 | 1) {
     setSteps((current) => {
@@ -191,21 +223,26 @@ export function RecipeWorkspace() {
           Drop files once, then chain tools that output a PDF. Split, images,
           extract, and redact stay as separate workspaces.
         </p>
-        <div className="mt-4 rounded-xl border border-red-100 bg-red-50 p-4">
-          <h3 className="font-bold text-red-950">Send externally preset</h3>
-          <p className="mt-2 text-sm leading-6 text-red-900">
-            Loads a saved recipe that strips metadata, scans and redacts
-            confirmed PII hits, flattens, watermarks, and password-protects the
-            output. Add the password before running.
-          </p>
-          <Button
-            className="mt-3"
-            onClick={loadSendExternallyPreset}
-            type="button"
-            variant="secondary"
-          >
-            Load preset
-          </Button>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {recipePresets.map((preset) => (
+            <div
+              className="rounded-xl border border-red-100 bg-red-50 p-4"
+              key={preset.id}
+            >
+              <h3 className="font-bold text-red-950">{preset.name}</h3>
+              <p className="mt-2 text-sm leading-6 text-red-900">
+                {preset.summary}
+              </p>
+              <Button
+                className="mt-3"
+                onClick={() => applyPreset(preset)}
+                type="button"
+                variant="secondary"
+              >
+                Use {preset.name}
+              </Button>
+            </div>
+          ))}
         </div>
         {files.length > 1 ? (
           <p className="mt-3 text-sm leading-6 text-zinc-700">

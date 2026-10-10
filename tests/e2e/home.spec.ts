@@ -7,9 +7,24 @@ test("shows the responsive PDFForge homepage", async ({ page }) => {
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: /edit pdfs directly in your browser/i,
+      name: /clean, redact, and share without uploading/i,
     }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Send externally" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Clean a copy" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Redact a copy" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Number a packet" }),
+  ).toBeVisible();
+  for (const group of ["Organize", "Edit", "Convert", "Privacy", "Security"]) {
+    await expect(page.getByRole("heading", { name: group })).toBeVisible();
+  }
   await expect(
     page.getByText("Your documents never leave your device"),
   ).toBeVisible();

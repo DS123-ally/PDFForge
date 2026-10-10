@@ -1,12 +1,13 @@
-export const toolCategories = [
-  "All",
+export const directoryGroups = [
   "Organize",
-  "Convert",
   "Edit",
-  "Business",
+  "Convert",
   "Privacy",
   "Security",
+  "Business",
 ] as const;
+
+export const toolCategories = ["All", ...directoryGroups] as const;
 
 export type ToolCategory = Exclude<(typeof toolCategories)[number], "All">;
 

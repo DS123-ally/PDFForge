@@ -133,6 +133,66 @@ export function createRecipeStep(type: PipelineStepType): RecipeStep {
   }
 }
 
+export function createCleanCopyPresetSteps(): RecipeStep[] {
+  return [
+    createRecipeStep("remove-metadata"),
+    createRecipeStep("sanitize-pdf"),
+  ];
+}
+
+export function createRedactCopyPresetSteps(): RecipeStep[] {
+  return [createRecipeStep("scan-redact-pii"), createRecipeStep("flatten-pdf")];
+}
+
+export function createNumberPacketPresetSteps(): RecipeStep[] {
+  return [createRecipeStep("merge-pdf"), createRecipeStep("add-page-numbers")];
+}
+
+export type RecipePreset = {
+  createSteps: () => RecipeStep[];
+  id: string;
+  name: string;
+  summary: string;
+};
+
+export const recipePresets: readonly RecipePreset[] = [
+  {
+    createSteps: createSendExternallyPresetSteps,
+    id: "send-externally",
+    name: "Send externally",
+    summary:
+      "Strip metadata, redact confirmed PII, flatten, watermark, and password-protect a copy you can send. Add a password before you run it.",
+  },
+  {
+    createSteps: createCleanCopyPresetSteps,
+    id: "clean-a-copy",
+    name: "Clean a copy",
+    summary:
+      "Strip document properties, attachments, scripts, form values, and image EXIF.",
+  },
+  {
+    createSteps: createRedactCopyPresetSteps,
+    id: "redact-a-copy",
+    name: "Redact a copy",
+    summary:
+      "Find emails, phones, and IDs, redact the confirmed hits, then flatten the pages.",
+  },
+  {
+    createSteps: createNumberPacketPresetSteps,
+    id: "number-a-packet",
+    name: "Number a packet",
+    summary: "Merge the PDFs you drop, then add page numbers.",
+  },
+];
+
+export function getRecipePreset(id: string) {
+  return recipePresets.find((preset) => preset.id === id);
+}
+
+export function getRecipePresetHref(id: string) {
+  return `/tools/private-recipes#${id}`;
+}
+
 export function createSendExternallyPresetSteps(): RecipeStep[] {
   const watermark = createRecipeStep("add-watermark") as Extract<
     RecipeStep,

@@ -3,9 +3,13 @@ import { describe, expect, it } from "vitest";
 
 import { hashBytes } from "@/lib/integrity/hash-file";
 import {
+  createCleanCopyPresetSteps,
+  createNumberPacketPresetSteps,
   createRecipeStep,
+  createRedactCopyPresetSteps,
   createSendExternallyPresetSteps,
   pipelineStepLabels,
+  recipePresets,
   stripRecipeSecrets,
   validateRecipe,
 } from "@/lib/recipes/recipe";
@@ -92,6 +96,27 @@ describe("validateRecipe", () => {
       text: "External copy",
       type: "add-watermark",
     });
+  });
+
+  it("offers clean, redact, and packet presets after send externally", () => {
+    expect(recipePresets.map((preset) => preset.id)).toEqual([
+      "send-externally",
+      "clean-a-copy",
+      "redact-a-copy",
+      "number-a-packet",
+    ]);
+    expect(createCleanCopyPresetSteps().map((step) => step.type)).toEqual([
+      "remove-metadata",
+      "sanitize-pdf",
+    ]);
+    expect(createRedactCopyPresetSteps().map((step) => step.type)).toEqual([
+      "scan-redact-pii",
+      "flatten-pdf",
+    ]);
+    expect(createNumberPacketPresetSteps().map((step) => step.type)).toEqual([
+      "merge-pdf",
+      "add-page-numbers",
+    ]);
   });
 });
 

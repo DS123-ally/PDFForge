@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { CheckCircle2 } from "lucide-react";
+
 import Link from "next/link";
 
+import { HomeRecipes } from "@/components/home/home-recipes";
 import { PageShell } from "@/components/layout/page-shell";
 import { FileUploader } from "@/components/pdf/file-uploader";
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
-import { ToolCard } from "@/components/tools/tool-card";
+import { ToolGroups } from "@/components/tools/tool-groups";
 import { buttonStyles } from "@/components/ui/button";
 import { tools } from "@/config/tools";
 
@@ -21,7 +23,7 @@ export const metadata: Metadata = {
     absolute: "PDFForge — Private PDF tools that stay on this device",
   },
   description:
-    "Free, privacy-first PDF tools that process your files locally in the browser. No uploads, accounts, or document logging.",
+    "Clean, redact, and share PDFs without uploading. PDFForge processes files in the browser.",
   alternates: { canonical: "/" },
 };
 
@@ -35,17 +37,19 @@ export default function Home() {
               Private · Local · Free
             </p>
             <h1 className="mx-auto mt-4 max-w-5xl text-4xl leading-[1.08] font-black tracking-tight text-balance sm:text-5xl lg:text-[3.25rem]">
-              Edit PDFs directly in your browser. No uploads. No signups. No
-              nonsense.
+              Clean, redact, and share without uploading.
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-zinc-600 sm:text-lg">
-              Simple PDF tools that process documents locally on your device.
+              Merge, edit, convert, and lock PDFs on this device. Nothing is
+              sent to a server.
             </p>
             <div className="mx-auto mt-7 max-w-4xl text-left">
               <FileUploader multiple />
             </div>
           </div>
         </section>
+
+        <HomeRecipes />
 
         <section
           className="bg-zinc-50 px-5 py-14 sm:px-8"
@@ -68,10 +72,8 @@ export default function Home() {
                 Browse all tools
               </Link>
             </div>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {tools.slice(0, 4).map((tool) => (
-                <ToolCard key={tool.slug} tool={tool} />
-              ))}
+            <div className="mt-10">
+              <ToolGroups headingLevel="h3" linkHeadings tools={tools} />
             </div>
           </div>
         </section>
@@ -97,20 +99,22 @@ export default function Home() {
                 <PrivacyNotice />
               </div>
             </div>
-            <ul className="rounded-2xl border border-zinc-200 p-6 shadow-sm">
-              {trustPoints.map((point) => (
-                <li
-                  className="flex min-h-11 items-center gap-3 text-sm font-semibold"
-                  key={point}
-                >
-                  <CheckCircle2
-                    aria-hidden="true"
-                    className="size-5 text-emerald-600"
-                  />
-                  {point}
-                </li>
-              ))}
-            </ul>
+            <div>
+              <ul className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+                {trustPoints.map((point) => (
+                  <li
+                    className="flex min-h-11 items-center gap-3 text-sm font-semibold"
+                    key={point}
+                  >
+                    <CheckCircle2
+                      aria-hidden="true"
+                      className="size-5 text-emerald-600"
+                    />
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
       </main>

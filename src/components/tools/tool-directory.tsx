@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CategoryFilters } from "@/components/tools/category-filters";
 import { SearchInput } from "@/components/tools/search-input";
 import { ToolCard } from "@/components/tools/tool-card";
+import { ToolGroups } from "@/components/tools/tool-groups";
 import { EmptyState } from "@/components/ui/empty-state";
 import { toolCategories, tools, type ToolCategory } from "@/config/tools";
 import {
@@ -73,11 +74,17 @@ export function ToolDirectory({
         />
       </div>
       {filteredTools.length ? (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {filteredTools.map((tool) => (
-            <ToolCard key={tool.slug} tool={tool} />
-          ))}
-        </div>
+        category === "All" ? (
+          <div className="mt-10">
+            <ToolGroups tools={filteredTools} />
+          </div>
+        ) : (
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {filteredTools.map((tool) => (
+              <ToolCard key={tool.slug} tool={tool} />
+            ))}
+          </div>
+        )
       ) : (
         <div className="mt-8">
           <EmptyState

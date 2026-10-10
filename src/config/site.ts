@@ -1,3 +1,4 @@
+import { comparisons } from "@/config/comparisons";
 import { env } from "@/config/env";
 import { tools } from "@/config/tools";
 
@@ -21,5 +22,6 @@ export const indexablePaths = [
   "/tools",
   "/privacy",
   "/about",
+  ...comparisons.map((page) => `/compare/${page.slug}`),
   ...tools.map((tool) => `/tools/${tool.slug}`),
 ] as const;
