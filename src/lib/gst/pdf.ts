@@ -36,7 +36,10 @@ const line = rgb(0.82, 0.82, 0.85);
 const paper = rgb(0.97, 0.97, 0.96);
 const red = rgb(0.86, 0.15, 0.15);
 
-export async function buildGstInvoicePdf(invoice: GstInvoice, logo?: GstInvoiceLogo) {
+export async function buildGstInvoicePdf(
+  invoice: GstInvoice,
+  logo?: GstInvoiceLogo,
+) {
   const pdf = await PDFDocument.create();
   const font = await pdf.embedFont(StandardFonts.Helvetica);
   const bold = await pdf.embedFont(StandardFonts.HelveticaBold);
@@ -77,18 +80,37 @@ function drawHeader(
   bold: PDFFont,
   logo: PDFImage | null,
 ) {
-  page.drawRectangle({ color: ink, height: 72, width: pageWidth, x: 0, y: pageHeight - 72 });
-  page.drawRectangle({ color: red, height: 4, width: pageWidth, x: 0, y: pageHeight - 76 });
+  page.drawRectangle({
+    color: ink,
+    height: 72,
+    width: pageWidth,
+    x: 0,
+    y: pageHeight - 72,
+  });
+  page.drawRectangle({
+    color: red,
+    height: 4,
+    width: pageWidth,
+    x: 0,
+    y: pageHeight - 76,
+  });
 
   let textX = margin;
 
   if (logo) {
-    page.drawImage(logo, { height: 40, width: 40, x: margin, y: pageHeight - 56 });
+    page.drawImage(logo, {
+      height: 40,
+      width: 40,
+      x: margin,
+      y: pageHeight - 56,
+    });
     textX = margin + 50;
   }
 
   const title =
-    invoice.seller.tradeName.trim() || invoice.seller.legalName.trim() || "GST Invoice";
+    invoice.seller.tradeName.trim() ||
+    invoice.seller.legalName.trim() ||
+    "GST Invoice";
 
   page.drawText(pdfText(title).slice(0, 42), {
     color: rgb(1, 1, 1),
@@ -111,13 +133,16 @@ function drawHeader(
     x: pageWidth - margin - 160,
     y: pageHeight - 32,
   });
-  page.drawText(pdfText(`Date ${formatInvoiceDate(invoice.invoice.date) || "—"}`), {
-    color: rgb(0.9, 0.9, 0.92),
-    font,
-    size: 9,
-    x: pageWidth - margin - 160,
-    y: pageHeight - 48,
-  });
+  page.drawText(
+    pdfText(`Date ${formatInvoiceDate(invoice.invoice.date) || "—"}`),
+    {
+      color: rgb(0.9, 0.9, 0.92),
+      font,
+      size: 9,
+      x: pageWidth - margin - 160,
+      y: pageHeight - 48,
+    },
+  );
 
   return pageHeight - 96;
 }
@@ -229,7 +254,10 @@ function drawRow(
   });
 
   tableColumns(mode).forEach((column, columnIndex) => {
-    const text = pdfText(values[columnIndex] ?? "").slice(0, column.key === "desc" ? 32 : 16);
+    const text = pdfText(values[columnIndex] ?? "").slice(
+      0,
+      column.key === "desc" ? 32 : 16,
+    );
 
     page.drawText(text, {
       color: ink,
@@ -277,14 +305,31 @@ function drawTotals(
     cursor -= row.emphasis ? 18 : 14;
   }
 
-  const words = wrapText(amountInWords(totals.total), font, 8, pageWidth - margin * 2);
+  const words = wrapText(
+    amountInWords(totals.total),
+    font,
+    8,
+    pageWidth - margin * 2,
+  );
 
   cursor -= 6;
-  page.drawText("Amount in words", { color: muted, font, size: 8, x: margin, y: cursor });
+  page.drawText("Amount in words", {
+    color: muted,
+    font,
+    size: 8,
+    x: margin,
+    y: cursor,
+  });
   cursor -= 12;
 
   for (const wordLine of words.slice(0, 2)) {
-    page.drawText(pdfText(wordLine), { color: ink, font: bold, size: 8, x: margin, y: cursor });
+    page.drawText(pdfText(wordLine), {
+      color: ink,
+      font: bold,
+      size: 8,
+      x: margin,
+      y: cursor,
+    });
     cursor -= 12;
   }
 
@@ -300,7 +345,9 @@ function drawFooter(
 ) {
   const notes = [
     invoice.other.bankName ? `Bank: ${invoice.other.bankName}` : "",
-    invoice.other.accountName ? `Account name: ${invoice.other.accountName}` : "",
+    invoice.other.accountName
+      ? `Account name: ${invoice.other.accountName}`
+      : "",
     invoice.other.accountNumber ? `A/c: ${invoice.other.accountNumber}` : "",
     invoice.other.ifsc ? `IFSC: ${invoice.other.ifsc}` : "",
     invoice.other.upi ? `UPI: ${invoice.other.upi}` : "",
@@ -315,7 +362,13 @@ function drawFooter(
         return;
       }
 
-      page.drawText(pdfText(wrapped), { color: muted, font, size: 8, x: margin, y: cursor });
+      page.drawText(pdfText(wrapped), {
+        color: muted,
+        font,
+        size: 8,
+        x: margin,
+        y: cursor,
+      });
       cursor -= 11;
     }
   }
@@ -338,7 +391,9 @@ function drawFooter(
 
 function supplierLines(invoice: GstInvoice) {
   return [
-    invoice.seller.legalName.trim() || invoice.seller.tradeName.trim() || "Supplier",
+    invoice.seller.legalName.trim() ||
+      invoice.seller.tradeName.trim() ||
+      "Supplier",
     invoice.seller.gstin ? `GSTIN ${invoice.seller.gstin}` : "",
     invoice.seller.pan ? `PAN ${invoice.seller.pan}` : "",
     ...formatAddress(invoice.seller),
@@ -397,7 +452,11 @@ function tableColumns(mode: SupplyMode) {
   ];
 }
 
-function rowValues(mode: SupplyMode, index: number, item: InvoiceTotals["lines"][number]) {
+function rowValues(
+  mode: SupplyMode,
+  index: number,
+  item: InvoiceTotals["lines"][number],
+) {
   const qty = `${trimNumber(item.quantity)} ${item.unit}`.trim();
 
   if (mode === "intra") {
@@ -438,7 +497,9 @@ function rowValues(mode: SupplyMode, index: number, item: InvoiceTotals["lines"]
 }
 
 function totalRows(totals: InvoiceTotals) {
-  const rows = [{ emphasis: false, label: "Taxable value", value: money(totals.taxable) }];
+  const rows = [
+    { emphasis: false, label: "Taxable value", value: money(totals.taxable) },
+  ];
 
   if (totals.mode === "intra") {
     rows.push(
@@ -451,7 +512,11 @@ function totalRows(totals: InvoiceTotals) {
     rows.push({ emphasis: false, label: "GST", value: money(totals.tax) });
   }
 
-  rows.push({ emphasis: true, label: "Grand total", value: money(totals.total) });
+  rows.push({
+    emphasis: true,
+    label: "Grand total",
+    value: money(totals.total),
+  });
 
   return rows;
 }
@@ -465,10 +530,18 @@ function trimNumber(value: number) {
 }
 
 function pdfText(value: string) {
-  return value.replace(/[^\x20-\x7E]/g, " ").replace(/\s+/g, " ").trim();
+  return value
+    .replace(/[^\x20-\x7E]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-function wrapText(value: string, font: PDFFont, size: number, maxWidth: number) {
+function wrapText(
+  value: string,
+  font: PDFFont,
+  size: number,
+  maxWidth: number,
+) {
   const words = pdfText(value).split(" ").filter(Boolean);
   const lines: string[] = [];
   let current = "";

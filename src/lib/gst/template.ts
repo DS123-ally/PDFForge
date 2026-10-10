@@ -115,7 +115,8 @@ function sanitizeInvoice(value: unknown): GstInvoice | null {
     invoice: {
       date: text(invoice.date, 10),
       dueDate: text(invoice.dueDate, 10),
-      kind: invoice.kind === "bill-of-supply" ? "bill-of-supply" : "tax-invoice",
+      kind:
+        invoice.kind === "bill-of-supply" ? "bill-of-supply" : "tax-invoice",
       number: text(invoice.number, 40),
       placeOfSupply: text(invoice.placeOfSupply, 2),
       reverseCharge: invoice.reverseCharge === true,
@@ -172,7 +173,12 @@ function text(value: unknown, max: number) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
 }
 
-function clampNumber(value: unknown, min: number, max: number, fallback: number) {
+function clampNumber(
+  value: unknown,
+  min: number,
+  max: number,
+  fallback: number,
+) {
   const number = typeof value === "number" ? value : Number.NaN;
 
   if (!Number.isFinite(number)) {

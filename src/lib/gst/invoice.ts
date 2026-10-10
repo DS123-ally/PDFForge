@@ -118,7 +118,9 @@ let lineSequence = 0;
 
 export const gstRateOptions = [0, 0.25, 3, 5, 12, 18, 28, 40];
 
-export function createLineItem(partial: Partial<GstLineItem> = {}): GstLineItem {
+export function createLineItem(
+  partial: Partial<GstLineItem> = {},
+): GstLineItem {
   lineSequence += 1;
 
   return {
@@ -166,7 +168,10 @@ export function createEmptyInvoice(today = ""): GstInvoice {
 }
 
 export function normalizeGstin(value: string) {
-  return value.toUpperCase().replace(/[^0-9A-Z]/g, "").slice(0, 15);
+  return value
+    .toUpperCase()
+    .replace(/[^0-9A-Z]/g, "")
+    .slice(0, 15);
 }
 
 export function gstinCheckDigit(body: string) {
@@ -294,7 +299,11 @@ export function formatAddress(party: {
   pincode: string;
   stateCode: string;
 }) {
-  const cityLine = [party.city.trim(), stateName(party.stateCode), party.pincode.trim()]
+  const cityLine = [
+    party.city.trim(),
+    stateName(party.stateCode),
+    party.pincode.trim(),
+  ]
     .filter(Boolean)
     .join(", ");
 
@@ -380,7 +389,9 @@ export function downloadBlockers(invoice: GstInvoice) {
   }
 
   if (invoice.buyer.gstin.trim() && !isValidGstin(invoice.buyer.gstin)) {
-    blockers.push("Buyer GSTIN is optional. Leave it blank or enter a valid one.");
+    blockers.push(
+      "Buyer GSTIN is optional. Leave it blank or enter a valid one.",
+    );
   }
 
   const priced = invoice.items.filter(
@@ -432,7 +443,9 @@ export function supplyLabel(mode: SupplyMode) {
 }
 
 function lineTotals(item: GstLineItem, mode: SupplyMode): LineTotals {
-  const quantity = Number.isFinite(item.quantity) ? Math.max(0, item.quantity) : 0;
+  const quantity = Number.isFinite(item.quantity)
+    ? Math.max(0, item.quantity)
+    : 0;
   const rate = Number.isFinite(item.rate) ? Math.max(0, item.rate) : 0;
   const taxablePaise = Math.round(quantity * rate * 100);
   const gstRate =

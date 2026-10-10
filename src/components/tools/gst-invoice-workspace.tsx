@@ -60,20 +60,29 @@ export function GstInvoiceWorkspace() {
     getGstTemplateRaw,
     getGstTemplateServerRaw,
   );
-  const [invoice, setInvoice] = useState<GstInvoice>(() => createEmptyInvoice(""));
+  const [invoice, setInvoice] = useState<GstInvoice>(() =>
+    createEmptyInvoice(""),
+  );
   const [tab, setTab] = useState<InvoiceTab>("seller");
-  const [logo, setLogo] = useState<(GstInvoiceLogo & { url: string }) | null>(null);
+  const [logo, setLogo] = useState<(GstInvoiceLogo & { url: string }) | null>(
+    null,
+  );
   const [showPreview, setShowPreview] = useState(false);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const savedTemplate = useMemo(() => parseGstTemplate(templateRaw), [templateRaw]);
+  const savedTemplate = useMemo(
+    () => parseGstTemplate(templateRaw),
+    [templateRaw],
+  );
   const totals = useMemo(() => calculateInvoice(invoice), [invoice]);
   const checks = useMemo(() => complianceChecklist(invoice), [invoice]);
   const doneCount = checks.filter((item) => item.done).length;
   const gstinState = stateCodeFromGstin(invoice.seller.gstin);
   const stateMismatch = Boolean(
-    gstinState && invoice.seller.stateCode && gstinState !== invoice.seller.stateCode,
+    gstinState &&
+    invoice.seller.stateCode &&
+    gstinState !== invoice.seller.stateCode,
   );
 
   useEffect(() => {
@@ -110,7 +119,9 @@ export function GstInvoiceWorkspace() {
   function updateItem(id: string, patch: Partial<GstLineItem>) {
     setInvoice((current) => ({
       ...current,
-      items: current.items.map((item) => (item.id === id ? { ...item, ...patch } : item)),
+      items: current.items.map((item) =>
+        item.id === id ? { ...item, ...patch } : item,
+      ),
     }));
   }
 
@@ -165,7 +176,8 @@ export function GstInvoiceWorkspace() {
   return (
     <div>
       <p className="text-center text-sm text-zinc-600">
-        Tax Invoice · Bill of Supply · CGST/SGST/IGST · HSN/SAC · 100% local, no upload
+        Tax Invoice · Bill of Supply · CGST/SGST/IGST · HSN/SAC · 100% local, no
+        upload
       </p>
       <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
         <Button onClick={saveTemplate} type="button" variant="secondary">
@@ -185,7 +197,12 @@ export function GstInvoiceWorkspace() {
         >
           Preview
         </Button>
-        <Button disabled={busy} onClick={() => void downloadPdf()} type="button" variant="secondary">
+        <Button
+          disabled={busy}
+          onClick={() => void downloadPdf()}
+          type="button"
+          variant="secondary"
+        >
           {busy ? "Building PDF…" : "Download PDF"}
         </Button>
       </div>
@@ -195,7 +212,10 @@ export function GstInvoiceWorkspace() {
         </p>
       ) : null}
       {error ? (
-        <p className="mt-4 text-center text-sm font-semibold text-red-700" role="alert">
+        <p
+          className="mt-4 text-center text-sm font-semibold text-red-700"
+          role="alert"
+        >
           {error}
         </p>
       ) : null}
@@ -215,7 +235,9 @@ export function GstInvoiceWorkspace() {
                   aria-selected={selected}
                   className={cn(
                     "min-h-11 rounded-xl px-3 text-sm font-bold",
-                    selected ? "bg-zinc-950 text-white" : "text-zinc-600 hover:text-zinc-950",
+                    selected
+                      ? "bg-zinc-950 text-white"
+                      : "text-zinc-600 hover:text-zinc-950",
                   )}
                   key={item.id}
                   onClick={() => setTab(item.id)}
@@ -310,11 +332,19 @@ export function GstInvoiceWorkspace() {
               {checks.map((item) => (
                 <li className="flex items-center gap-2 text-sm" key={item.id}>
                   {item.done ? (
-                    <CheckCircle2 aria-hidden="true" className="size-4 text-emerald-600" />
+                    <CheckCircle2
+                      aria-hidden="true"
+                      className="size-4 text-emerald-600"
+                    />
                   ) : (
-                    <Circle aria-hidden="true" className="size-4 text-zinc-300" />
+                    <Circle
+                      aria-hidden="true"
+                      className="size-4 text-zinc-300"
+                    />
                   )}
-                  <span className={item.done ? "text-zinc-800" : "text-zinc-500"}>
+                  <span
+                    className={item.done ? "text-zinc-800" : "text-zinc-500"}
+                  >
                     {item.label}
                   </span>
                 </li>
@@ -323,7 +353,9 @@ export function GstInvoiceWorkspace() {
           </section>
           <section className="rounded-2xl border border-zinc-200 bg-white p-4">
             <h2 className="text-sm font-bold">Quick Summary</h2>
-            <p className="mt-1 text-xs text-zinc-500">{supplyLabel(totals.mode)}</p>
+            <p className="mt-1 text-xs text-zinc-500">
+              {supplyLabel(totals.mode)}
+            </p>
             <dl className="mt-3 space-y-2 text-sm">
               <SummaryRow label="Subtotal" value={formatInr(totals.taxable)} />
               {totals.mode === "intra" ? (
@@ -349,11 +381,14 @@ export function GstInvoiceWorkspace() {
         </aside>
       </div>
 
-      {showPreview ? <InvoicePreview invoice={invoice} logoUrl={logo?.url ?? ""} /> : null}
+      {showPreview ? (
+        <InvoicePreview invoice={invoice} logoUrl={logo?.url ?? ""} />
+      ) : null}
 
       <p className="mt-6 text-center text-xs leading-5 text-zinc-500">
-        Totals and the PDF are calculated in this browser. Saving a template stores the form
-        on this device only. This formats an invoice; it does not file GST returns.
+        Totals and the PDF are calculated in this browser. Saving a template
+        stores the form on this device only. This formats an invoice; it does
+        not file GST returns.
       </p>
       <div className="mt-5">
         <PrivacyNotice />
@@ -386,7 +421,11 @@ function SellerFields({
         <span className="mt-2 flex min-h-24 w-28 cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-zinc-300 text-zinc-500">
           {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img alt="" className="max-h-20 max-w-24 object-contain" src={logoUrl} />
+            <img
+              alt=""
+              className="max-h-20 max-w-24 object-contain"
+              src={logoUrl}
+            />
           ) : (
             <>
               <ImagePlus aria-hidden="true" className="size-5" />
@@ -457,7 +496,11 @@ function SellerFields({
         onChange={(address2) => onChange({ address2 })}
         value={seller.address2}
       />
-      <TextField label="City" onChange={(city) => onChange({ city })} value={seller.city} />
+      <TextField
+        label="City"
+        onChange={(city) => onChange({ city })}
+        value={seller.city}
+      />
       <TextField
         label="PIN code"
         onChange={(pincode) => onChange({ pincode })}
@@ -470,7 +513,11 @@ function SellerFields({
         required
         value={seller.stateCode}
       />
-      <TextField label="Phone" onChange={(phone) => onChange({ phone })} value={seller.phone} />
+      <TextField
+        label="Phone"
+        onChange={(phone) => onChange({ phone })}
+        value={seller.phone}
+      />
       <TextField
         className="sm:col-span-2"
         label="Email"
@@ -517,7 +564,11 @@ function BuyerFields({
         onChange={(address2) => onChange({ address2 })}
         value={buyer.address2}
       />
-      <TextField label="City" onChange={(city) => onChange({ city })} value={buyer.city} />
+      <TextField
+        label="City"
+        onChange={(city) => onChange({ city })}
+        value={buyer.city}
+      />
       <TextField
         label="PIN code"
         onChange={(pincode) => onChange({ pincode })}
@@ -529,7 +580,11 @@ function BuyerFields({
         onChange={(stateCode) => onChange({ stateCode })}
         value={buyer.stateCode}
       />
-      <TextField label="Phone" onChange={(phone) => onChange({ phone })} value={buyer.phone} />
+      <TextField
+        label="Phone"
+        onChange={(phone) => onChange({ phone })}
+        value={buyer.phone}
+      />
       <TextField
         className="sm:col-span-2"
         label="Email"
@@ -551,7 +606,10 @@ function InvoiceFields({
 
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      <label className="block text-sm font-semibold text-zinc-900" htmlFor="gst-kind">
+      <label
+        className="block text-sm font-semibold text-zinc-900"
+        htmlFor="gst-kind"
+      >
         Invoice type *
         <select
           className={inputClass}
@@ -561,7 +619,10 @@ function InvoiceFields({
               return;
             }
 
-            onChange({ ...invoice, invoice: { ...details, kind: event.target.value } });
+            onChange({
+              ...invoice,
+              invoice: { ...details, kind: event.target.value },
+            });
           }}
           value={details.kind}
         >
@@ -571,21 +632,27 @@ function InvoiceFields({
       </label>
       <TextField
         label="Invoice number"
-        onChange={(number) => onChange({ ...invoice, invoice: { ...details, number } })}
+        onChange={(number) =>
+          onChange({ ...invoice, invoice: { ...details, number } })
+        }
         required
         testId="gst-invoice-number"
         value={details.number}
       />
       <TextField
         label="Invoice date"
-        onChange={(date) => onChange({ ...invoice, invoice: { ...details, date } })}
+        onChange={(date) =>
+          onChange({ ...invoice, invoice: { ...details, date } })
+        }
         required
         type="date"
         value={details.date}
       />
       <TextField
         label="Due date"
-        onChange={(dueDate) => onChange({ ...invoice, invoice: { ...details, dueDate } })}
+        onChange={(dueDate) =>
+          onChange({ ...invoice, invoice: { ...details, dueDate } })
+        }
         type="date"
         value={details.dueDate}
       />
@@ -658,14 +725,18 @@ function ItemFields({
               <TextField
                 className="sm:col-span-2"
                 label="HSN/SAC"
-                onChange={(hsn) => onChange(item.id, { hsn: hsn.toUpperCase() })}
+                onChange={(hsn) =>
+                  onChange(item.id, { hsn: hsn.toUpperCase() })
+                }
                 value={item.hsn}
               />
               <label className="block text-sm font-semibold text-zinc-900">
                 Unit
                 <select
                   className={inputClass}
-                  onChange={(event) => onChange(item.id, { unit: event.target.value })}
+                  onChange={(event) =>
+                    onChange(item.id, { unit: event.target.value })
+                  }
                   value={item.unit}
                 >
                   {units.map((unit) => (
@@ -677,14 +748,18 @@ function ItemFields({
               </label>
               <TextField
                 label="Qty"
-                onChange={(value) => onChange(item.id, { quantity: numberValue(value) })}
+                onChange={(value) =>
+                  onChange(item.id, { quantity: numberValue(value) })
+                }
                 testId={index === 0 ? "gst-item-qty" : undefined}
                 type="number"
                 value={String(item.quantity)}
               />
               <TextField
                 label="Rate"
-                onChange={(value) => onChange(item.id, { rate: numberValue(value) })}
+                onChange={(value) =>
+                  onChange(item.id, { rate: numberValue(value) })
+                }
                 testId={index === 0 ? "gst-item-rate" : undefined}
                 type="number"
                 value={String(item.rate)}
@@ -708,8 +783,12 @@ function ItemFields({
               </label>
               <div className="flex items-end justify-between gap-3 sm:col-span-2">
                 <p className="text-sm">
-                  <span className="block text-xs font-semibold text-zinc-500">Line total</span>
-                  <span className="font-bold">{formatInr(line?.total ?? 0)}</span>
+                  <span className="block text-xs font-semibold text-zinc-500">
+                    Line total
+                  </span>
+                  <span className="font-bold">
+                    {formatInr(line?.total ?? 0)}
+                  </span>
                 </p>
                 <button
                   aria-label={`Remove item ${index + 1}`}
@@ -725,7 +804,12 @@ function ItemFields({
           );
         })}
       </div>
-      <Button className="mt-4" onClick={onAdd} type="button" variant="secondary">
+      <Button
+        className="mt-4"
+        onClick={onAdd}
+        type="button"
+        variant="secondary"
+      >
         <Plus aria-hidden="true" className="size-4" />
         Add item
       </Button>
@@ -772,8 +856,16 @@ function OtherFields({
         onChange={(upi) => onChange({ upi })}
         value={other.upi}
       />
-      <TextArea label="Notes" onChange={(notes) => onChange({ notes })} value={other.notes} />
-      <TextArea label="Terms" onChange={(terms) => onChange({ terms })} value={other.terms} />
+      <TextArea
+        label="Notes"
+        onChange={(notes) => onChange({ notes })}
+        value={other.notes}
+      />
+      <TextArea
+        label="Terms"
+        onChange={(terms) => onChange({ terms })}
+        value={other.terms}
+      />
       <div className="sm:col-span-2">
         <Button onClick={onForget} type="button" variant="ghost">
           Remove saved template
@@ -783,7 +875,13 @@ function OtherFields({
   );
 }
 
-function InvoicePreview({ invoice, logoUrl }: { invoice: GstInvoice; logoUrl: string }) {
+function InvoicePreview({
+  invoice,
+  logoUrl,
+}: {
+  invoice: GstInvoice;
+  logoUrl: string;
+}) {
   const totals = calculateInvoice(invoice);
   const sellerLines = [
     invoice.seller.legalName,
@@ -810,7 +908,9 @@ function InvoicePreview({ invoice, logoUrl }: { invoice: GstInvoice; logoUrl: st
                 {invoiceKindLabel(invoice.invoice.kind)}
               </p>
               <h2 className="text-xl font-black text-zinc-950">
-                {invoice.seller.tradeName || invoice.seller.legalName || "Supplier"}
+                {invoice.seller.tradeName ||
+                  invoice.seller.legalName ||
+                  "Supplier"}
               </h2>
               {sellerLines.map((line) => (
                 <p className="text-zinc-600" key={line}>
@@ -835,9 +935,15 @@ function InvoicePreview({ invoice, logoUrl }: { invoice: GstInvoice; logoUrl: st
           </dl>
         </div>
         <div className="mt-4">
-          <p className="text-xs font-bold tracking-wide text-zinc-500 uppercase">Bill to</p>
+          <p className="text-xs font-bold tracking-wide text-zinc-500 uppercase">
+            Bill to
+          </p>
           <p className="font-bold">{invoice.buyer.name || "Buyer"}</p>
-          <p>{invoice.buyer.gstin ? `GSTIN ${invoice.buyer.gstin}` : "Unregistered"}</p>
+          <p>
+            {invoice.buyer.gstin
+              ? `GSTIN ${invoice.buyer.gstin}`
+              : "Unregistered"}
+          </p>
           {formatAddress(invoice.buyer).map((line) => (
             <p key={line}>{line}</p>
           ))}
@@ -873,22 +979,34 @@ function InvoicePreview({ invoice, logoUrl }: { invoice: GstInvoice; logoUrl: st
                   {line.quantity} {line.unit}
                 </td>
                 <td className="py-2 pr-2 text-right">{formatInr(line.rate)}</td>
-                <td className="py-2 pr-2 text-right">{formatInr(line.taxable)}</td>
+                <td className="py-2 pr-2 text-right">
+                  {formatInr(line.taxable)}
+                </td>
                 {totals.mode === "intra" ? (
                   <>
-                    <td className="py-2 pr-2 text-right">{formatInr(line.cgst)}</td>
-                    <td className="py-2 pr-2 text-right">{formatInr(line.sgst)}</td>
+                    <td className="py-2 pr-2 text-right">
+                      {formatInr(line.cgst)}
+                    </td>
+                    <td className="py-2 pr-2 text-right">
+                      {formatInr(line.sgst)}
+                    </td>
                   </>
                 ) : null}
                 {totals.mode === "inter" || totals.mode === "unknown" ? (
-                  <td className="py-2 pr-2 text-right">{formatInr(line.tax)}</td>
+                  <td className="py-2 pr-2 text-right">
+                    {formatInr(line.tax)}
+                  </td>
                 ) : null}
-                <td className="py-2 text-right font-semibold">{formatInr(line.total)}</td>
+                <td className="py-2 text-right font-semibold">
+                  {formatInr(line.total)}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <p className="mt-4 text-sm font-semibold">{amountInWords(totals.total)}</p>
+        <p className="mt-4 text-sm font-semibold">
+          {amountInWords(totals.total)}
+        </p>
         <p className="mt-4 text-right text-base font-black">
           Grand total {formatInr(totals.total)}
         </p>
@@ -926,7 +1044,9 @@ function TextField({
   value: string;
 }) {
   return (
-    <label className={cn("block text-sm font-semibold text-zinc-900", className)}>
+    <label
+      className={cn("block text-sm font-semibold text-zinc-900", className)}
+    >
       {label}
       {required ? " *" : ""}
       <input
@@ -938,7 +1058,9 @@ function TextField({
         value={value}
       />
       {hint ? (
-        <span className="mt-1 block text-xs font-normal text-zinc-500">{hint}</span>
+        <span className="mt-1 block text-xs font-normal text-zinc-500">
+          {hint}
+        </span>
       ) : null}
     </label>
   );
