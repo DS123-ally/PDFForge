@@ -3,7 +3,10 @@ import { editPdfBuffer } from "@/lib/pdf/edit-pdf";
 import { flattenPdfBuffer } from "@/lib/pdf/flatten-pdf";
 import { mergePdfBuffers, PdfMergeCancelledError } from "@/lib/pdf/merge-pdf";
 import { protectPdfBuffer } from "@/lib/pdf/password-pdf";
+import { destroyLoadingTask, getPdfJs } from "@/lib/pdf/pdfjs";
 import { sanitizePdfBuffer } from "@/lib/pdf/privacy-sanitize";
+import { scanPrivacyRisk } from "@/lib/pdf/privacy-risk";
+import { percentRectToPdfRegion, redactPdfBuffer } from "@/lib/pdf/redact-pdf";
 import {
   pipelineStepLabels,
   toEditOptions,
@@ -120,6 +123,10 @@ async function runStep(
     };
   }
 
+  if (step.type === "scan-redact-pii") {
+    return scanAndRedactPii(input.bytes, step, sourceName);
+  }
+
   if (step.type === "password-protect-pdf") {
     const protectedPdf = await protectPdfBuffer(
       input.bytes,
@@ -134,6 +141,66 @@ async function runStep(
   }
 
   throw new Error("This step cannot run in a recipe.");
+}
+
+async function scanAndRedactPii(
+  bytes: ArrayBuffer,
+  step: Extract<RecipeStep, { type: "scan-redact-pii" }>,
+  sourceName: string,
+) {
+  const pdfjs = await getPdfJs();
+  const loadingTask = pdfjs.getDocument({
+    data: new Uint8Array(bytes.slice(0)),
+    disableAutoFetch: true,
+    disableStream: true,
+    useWorkerFetch: false,
+  });
+
+  try {
+    const document = await loadingTask.promise;
+    const report = await scanPrivacyRisk(bytes, document);
+    const regions = [];
+
+    if (step.confirmAllMatches) {
+      for (const match of report.matches) {
+        const page = await document.getPage(match.box.pageNumber);
+        const viewport = page.getViewport({ scale: 1 });
+        regions.push(
+          percentRectToPdfRegion(
+            { height: viewport.height, width: viewport.width },
+            match.box.pageNumber,
+            match.box,
+          ),
+        );
+        page.cleanup();
+      }
+    }
+
+    const rasterizePages = step.includeHiddenTextPages
+      ? report.hiddenTextPages
+      : [];
+
+    if (regions.length === 0 && rasterizePages.length === 0) {
+      const totalPages = document.numPages;
+      await document.cleanup();
+      return { bytes, name: sourceName, pages: totalPages };
+    }
+
+    const redacted = await redactPdfBuffer(bytes, {
+      rasterizePages,
+      regions,
+      sourceName,
+    });
+    await document.cleanup();
+
+    return {
+      bytes: redacted.outputBytes,
+      name: sourceName,
+      pages: redacted.totalPages,
+    };
+  } finally {
+    destroyLoadingTask(loadingTask);
+  }
 }
 
 function throwIfCancelled(isCancelled?: () => boolean) {

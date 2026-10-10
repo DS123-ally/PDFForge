@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 
 import {
   createRecipeStep,
+  createSendExternallyPresetSteps,
+  pipelineStepLabels,
   stripRecipeSecrets,
   validateRecipe,
 } from "@/lib/recipes/recipe";
@@ -63,6 +65,27 @@ describe("validateRecipe", () => {
         2,
       ),
     ).toThrow(/last step/i);
+  });
+
+  it("builds the send externally preset in the expected order", () => {
+    const steps = createSendExternallyPresetSteps();
+
+    expect(steps.map((step) => step.type)).toEqual([
+      "remove-metadata",
+      "scan-redact-pii",
+      "flatten-pdf",
+      "add-watermark",
+      "password-protect-pdf",
+    ]);
+    expect(pipelineStepLabels["scan-redact-pii"]).toBe("Scan and redact PII");
+    expect(steps[1]).toMatchObject({
+      confirmAllMatches: true,
+      includeHiddenTextPages: true,
+    });
+    expect(steps[3]).toMatchObject({
+      text: "External copy",
+      type: "add-watermark",
+    });
   });
 });
 

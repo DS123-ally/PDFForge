@@ -165,6 +165,42 @@ export function RecipeStepFields({
     );
   }
 
+  if (step.type === "scan-redact-pii") {
+    return (
+      <div className="mt-3 space-y-2 text-sm leading-6 text-zinc-600">
+        <p>
+          Scans the text layer for identifiers, contact details, payment data,
+          URLs, and date-of-birth patterns, then rasterizes confirmed hits.
+        </p>
+        <label className="flex min-h-11 items-center gap-3 font-bold text-zinc-950">
+          <input
+            checked={step.confirmAllMatches}
+            className="size-4 accent-red-600"
+            onChange={(event) =>
+              onChange({ ...step, confirmAllMatches: event.target.checked })
+            }
+            type="checkbox"
+          />
+          Confirm every scanner hit
+        </label>
+        <label className="flex min-h-11 items-center gap-3 font-bold text-zinc-950">
+          <input
+            checked={step.includeHiddenTextPages}
+            className="size-4 accent-red-600"
+            onChange={(event) =>
+              onChange({
+                ...step,
+                includeHiddenTextPages: event.target.checked,
+              })
+            }
+            type="checkbox"
+          />
+          Rasterize pages with hidden or invisible text
+        </label>
+      </div>
+    );
+  }
+
   if (step.type === "sanitize-pdf") {
     return (
       <ul className="mt-3 space-y-2">

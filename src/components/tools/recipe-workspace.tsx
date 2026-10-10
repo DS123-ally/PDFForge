@@ -18,6 +18,7 @@ import { usePdfWorkerProcessor } from "@/hooks/use-pdf-worker-processor";
 import { createDownload } from "@/lib/files/create-download";
 import {
   createRecipeStep,
+  createSendExternallyPresetSteps,
   pipelineStepLabels,
   pipelineStepTypes,
   validateRecipe,
@@ -71,6 +72,14 @@ export function RecipeWorkspace() {
   function addStep() {
     setSteps((current) => [...current, createRecipeStep(addType)]);
     setLocalError(null);
+  }
+
+  function loadSendExternallyPreset() {
+    setRecipeId(createLocalId());
+    setRecipeName("Send externally");
+    setSteps(createSendExternallyPresetSteps());
+    setLocalError(null);
+    reset();
   }
 
   function moveStep(index: number, direction: -1 | 1) {
@@ -153,6 +162,22 @@ export function RecipeWorkspace() {
           Drop files once, then chain tools that output a PDF. Split, images,
           extract, and redact stay as separate workspaces.
         </p>
+        <div className="mt-4 rounded-xl border border-red-100 bg-red-50 p-4">
+          <h3 className="font-bold text-red-950">Send externally preset</h3>
+          <p className="mt-2 text-sm leading-6 text-red-900">
+            Loads a saved recipe that strips metadata, scans and redacts
+            confirmed PII hits, flattens, watermarks, and password-protects the
+            output. Add the password before running.
+          </p>
+          <Button
+            className="mt-3"
+            onClick={loadSendExternallyPreset}
+            type="button"
+            variant="secondary"
+          >
+            Load preset
+          </Button>
+        </div>
         {files.length > 1 ? (
           <p className="mt-3 text-sm leading-6 text-zinc-700">
             Start with Merge PDFs when more than one file is selected.

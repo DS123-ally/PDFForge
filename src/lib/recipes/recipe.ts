@@ -12,6 +12,7 @@ export const pipelineStepTypes = [
   "add-page-numbers",
   "add-headers-footers",
   "remove-metadata",
+  "scan-redact-pii",
   "flatten-pdf",
   "sanitize-pdf",
   "password-protect-pdf",
@@ -56,6 +57,12 @@ export type RecipeStep =
       type: "sanitize-pdf";
     }
   | {
+      confirmAllMatches: boolean;
+      id: string;
+      includeHiddenTextPages: boolean;
+      type: "scan-redact-pii";
+    }
+  | {
       id: string;
       password?: string;
       type: "password-protect-pdf";
@@ -77,6 +84,7 @@ export const pipelineStepLabels: Record<PipelineStepType, string> = {
   "password-protect-pdf": "Password protect",
   "remove-metadata": "Strip metadata",
   "rotate-pdf": "Rotate pages",
+  "scan-redact-pii": "Scan and redact PII",
   "sanitize-pdf": "Sanitize (privacy)",
 };
 
@@ -113,9 +121,37 @@ export function createRecipeStep(type: PipelineStepType): RecipeStep {
       return { id, type };
     case "sanitize-pdf":
       return { id, sanitize: { ...defaultPrivacySanitizeOptions }, type };
+    case "scan-redact-pii":
+      return {
+        confirmAllMatches: true,
+        id,
+        includeHiddenTextPages: true,
+        type,
+      };
     case "password-protect-pdf":
       return { id, password: "", type };
   }
+}
+
+export function createSendExternallyPresetSteps(): RecipeStep[] {
+  const watermark = createRecipeStep("add-watermark") as Extract<
+    RecipeStep,
+    { type: "add-watermark" }
+  >;
+
+  return [
+    createRecipeStep("remove-metadata"),
+    createRecipeStep("scan-redact-pii"),
+    createRecipeStep("flatten-pdf"),
+    {
+      ...watermark,
+      opacity: 0.18,
+      position: "center",
+      rotation: -35,
+      text: "External copy",
+    },
+    createRecipeStep("password-protect-pdf"),
+  ];
 }
 
 export function validateRecipe(

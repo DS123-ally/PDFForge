@@ -41,6 +41,16 @@ export function percentRectToPdfRegion(
 }
 
 export async function redactPdf(file: File, options: RedactPdfOptions) {
+  return redactPdfBuffer(await file.arrayBuffer(), {
+    ...options,
+    sourceName: options.sourceName ?? file.name,
+  });
+}
+
+export async function redactPdfBuffer(
+  sourceBytes: ArrayBuffer,
+  options: RedactPdfOptions,
+) {
   const regions = options.regions.filter(
     (region) => region.width > 0 && region.height > 0,
   );
@@ -50,7 +60,6 @@ export async function redactPdf(file: File, options: RedactPdfOptions) {
     throw new Error("Draw or add at least one redaction region.");
   }
 
-  const sourceBytes = await file.arrayBuffer();
   const source = await PDFDocument.load(sourceBytes);
   const output = await PDFDocument.create();
   const scale = options.scale ?? 2;
@@ -68,7 +77,7 @@ export async function redactPdf(file: File, options: RedactPdfOptions) {
     }
 
     const pngBytes = await renderRedactedPage(
-      file,
+      sourceBytes,
       pageNumber,
       pageRegions,
       scale,
@@ -86,7 +95,7 @@ export async function redactPdf(file: File, options: RedactPdfOptions) {
 
   return {
     fileCount: 1,
-    filename: createOutputName(options.sourceName ?? file.name, {
+    filename: createOutputName(options.sourceName ?? "document.pdf", {
       suffix: "redacted",
     }),
     outputBytes: toArrayBuffer(await output.save()),
@@ -143,15 +152,14 @@ export async function rasterizeUnlockedPdf(
 }
 
 async function renderRedactedPage(
-  file: File,
+  sourceBytes: ArrayBuffer,
   pageNumber: number,
   regions: readonly RedactionRegion[],
   scale: number,
 ) {
   const pdfjs = await getPdfJs();
-  const buffer = await file.arrayBuffer();
   const loadingTask = pdfjs.getDocument({
-    data: new Uint8Array(buffer),
+    data: new Uint8Array(sourceBytes.slice(0)),
     disableAutoFetch: true,
     disableStream: true,
     useWorkerFetch: false,
@@ -187,25 +195,27 @@ async function renderPdfPageToPng(
   page: PDFPageProxy,
   scale: number,
   afterRender?: (
-    context: CanvasRenderingContext2D,
+    context: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
     viewport: { height: number; width: number },
   ) => void,
 ) {
   const viewport = page.getViewport({ scale });
-  const canvas = globalThis.document.createElement("canvas");
-  const context = canvas.getContext("2d", { alpha: false });
+  const canvas = createRasterCanvas(
+    Math.floor(viewport.width),
+    Math.floor(viewport.height),
+  );
+  const context = canvas.getContext("2d", { alpha: false }) as
+    CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D | null;
 
   if (!context) {
     throw new Error("This browser cannot rasterize PDF pages.");
   }
 
-  canvas.width = Math.floor(viewport.width);
-  canvas.height = Math.floor(viewport.height);
   context.fillStyle = "white";
   context.fillRect(0, 0, canvas.width, canvas.height);
   await page.render({
-    canvas,
-    canvasContext: context,
+    canvas: canvas as HTMLCanvasElement,
+    canvasContext: context as CanvasRenderingContext2D,
     viewport,
   }).promise;
   afterRender?.(context, viewport);
@@ -216,7 +226,28 @@ async function renderPdfPageToPng(
   return bytes;
 }
 
-function canvasToPngBytes(canvas: HTMLCanvasElement) {
+function createRasterCanvas(width: number, height: number) {
+  if (typeof globalThis.document !== "undefined") {
+    const canvas = globalThis.document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    return canvas;
+  }
+
+  if (typeof OffscreenCanvas !== "undefined") {
+    return new OffscreenCanvas(width, height);
+  }
+
+  throw new Error("This browser cannot rasterize PDF pages.");
+}
+
+function canvasToPngBytes(canvas: HTMLCanvasElement | OffscreenCanvas) {
+  if ("convertToBlob" in canvas) {
+    return canvas
+      .convertToBlob({ type: "image/png" })
+      .then(async (blob) => new Uint8Array(await blob.arrayBuffer()));
+  }
+
   return new Promise<Uint8Array>((resolve, reject) => {
     canvas.toBlob((blob) => {
       if (!blob) {
