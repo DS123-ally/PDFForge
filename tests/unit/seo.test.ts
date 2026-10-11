@@ -41,6 +41,9 @@ describe("indexable routes", () => {
     expect(indexablePaths).toContain("/compare/ilovepdf");
     expect(indexablePaths).toContain("/compare/smallpdf");
     expect(indexablePaths).toContain("/compare/adobe");
+    expect(indexablePaths).toContain("/for/ca-firms");
+    expect(indexablePaths).toContain("/for/law-firms");
+    expect(indexablePaths).toContain("/for/hr");
     expect(indexablePaths).not.toContain("/workspace");
     expect(indexablePaths).not.toContain("/offline");
     expect(indexablePaths).not.toContain("/health");

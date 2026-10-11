@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { ToolCard } from "@/components/tools/tool-card";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { absoluteUrl } from "@/config/site";
+import { getToolPrivacy } from "@/config/tool-privacy";
 import type { ToolDefinition } from "@/config/tools";
 import type { ToolSeoContent } from "@/config/tool-seo";
 import { getRelatedTools } from "@/config/tool-seo";
@@ -19,6 +20,7 @@ export function ToolSeoSections({
   tool: ToolDefinition;
 }) {
   const related = getRelatedTools(tool.slug);
+  const privacy = getToolPrivacy(tool.slug);
   const canonical = absoluteUrl(`/tools/${tool.slug}`);
 
   return (
@@ -56,6 +58,32 @@ export function ToolSeoSections({
           ))}
         </ol>
       </GlassPanel>
+
+      {privacy ? (
+        <GlassPanel>
+          <p className="text-sm font-bold tracking-wide text-red-600 uppercase">
+            In this tab
+          </p>
+          <h2 className="mt-3 text-2xl font-bold text-zinc-950">
+            What stays in this browser
+          </h2>
+          <p className="mt-4 max-w-3xl leading-7 text-zinc-600">
+            The file stays in this tab.
+          </p>
+          <dl className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border border-white/70 bg-white/40 p-4">
+              <dt className="font-bold text-zinc-950">What this tool reads</dt>
+              <dd className="mt-2 leading-7 text-zinc-700">{privacy.reads}</dd>
+            </div>
+            <div className="rounded-2xl border border-white/70 bg-white/40 p-4">
+              <dt className="font-bold text-zinc-950">
+                What the download contains
+              </dt>
+              <dd className="mt-2 leading-7 text-zinc-700">{privacy.writes}</dd>
+            </div>
+          </dl>
+        </GlassPanel>
+      ) : null}
 
       <GlassPanel>
         <p className="text-sm font-bold tracking-wide text-red-600 uppercase">

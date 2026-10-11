@@ -1,5 +1,6 @@
 import { comparisons } from "@/config/comparisons";
 import { env } from "@/config/env";
+import { industries } from "@/config/industries";
 import { tools } from "@/config/tools";
 
 export const siteName = "PDFForge";
@@ -23,5 +24,6 @@ export const indexablePaths = [
   "/privacy",
   "/about",
   ...comparisons.map((page) => `/compare/${page.slug}`),
+  ...industries.map((page) => `/for/${page.slug}`),
   ...tools.map((tool) => `/tools/${tool.slug}`),
 ] as const;

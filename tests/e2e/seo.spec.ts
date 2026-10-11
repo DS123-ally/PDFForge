@@ -15,6 +15,9 @@ test("publishes unique SEO for a completed tool page", async ({ page }) => {
     page.getByRole("heading", { name: "How to use Merge PDF" }),
   ).toBeVisible();
   await expect(
+    page.getByRole("heading", { name: "What stays in this browser" }),
+  ).toBeVisible();
+  await expect(
     page.getByRole("heading", { name: "Merge PDF FAQs" }),
   ).toBeVisible();
   await expect(page.getByRole("button", { name: "Merge PDFs" })).toBeVisible();
@@ -41,6 +44,10 @@ test("keeps the hash workspace out of the index", async ({ page }) => {
   const sitemap = await page.goto("/sitemap.xml");
   const sitemapBody = (await sitemap?.text()) ?? "";
   expect(sitemapBody).toContain("/tools/merge-pdf");
+  expect(sitemapBody).toContain("/compare/ilovepdf");
+  expect(sitemapBody).toContain("/for/ca-firms");
+  expect(sitemapBody).toContain("/for/law-firms");
+  expect(sitemapBody).toContain("/for/hr");
   expect(sitemapBody).toContain("/privacy");
   expect(sitemapBody).not.toContain("/workspace");
   expect(sitemapBody).not.toContain("/offline");
