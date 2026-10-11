@@ -406,5 +406,25 @@ function getHelperText(acceptedTypes: readonly AcceptedFileType[]) {
     return "JPG or PNG files";
   }
 
+  if (acceptedTypes.includes("docx")) {
+    return "Word .docx files";
+  }
+
+  if (acceptedTypes.includes("xlsx")) {
+    return "Excel .xlsx files";
+  }
+
+  if (acceptedTypes.includes("pptx")) {
+    return "PowerPoint .pptx files";
+  }
+
+  if (acceptedTypes.includes("markdown")) {
+    return "Markdown .md files";
+  }
+
+  if (acceptedTypes.includes("csv")) {
+    return "CSV files";
+  }
+
   return "PDF files only";
 }

@@ -69,6 +69,35 @@ export const toolPrivacy: readonly ToolPrivacy[] = [
     writes: "An HTML file.",
   },
   {
+    slug: "word-to-pdf",
+    reads:
+      "Paragraphs, headings, lists, and simple tables in the .docx. Pictures in the file are skipped.",
+    writes:
+      "A PDF of that text. Word fonts and page layout are not in the download.",
+  },
+  {
+    slug: "excel-to-pdf",
+    reads:
+      "Sheet names and cell values, including cached formula results stored in the .xlsx.",
+    writes: "A PDF table for each sheet.",
+  },
+  {
+    slug: "powerpoint-to-pdf",
+    reads: "The text on each slide. Pictures and shapes are skipped.",
+    writes: "A PDF with one page of text per slide.",
+  },
+  {
+    slug: "markdown-to-pdf",
+    reads:
+      "Headings, paragraphs, lists, and simple pipe tables. Image links are skipped.",
+    writes: "A PDF of that text.",
+  },
+  {
+    slug: "csv-to-pdf",
+    reads: "The rows and comma-separated columns in the file.",
+    writes: "A PDF table. The first row is the header.",
+  },
+  {
     slug: "rotate-pdf",
     reads: "One PDF and the rotation you set.",
     writes: "One rotated PDF.",

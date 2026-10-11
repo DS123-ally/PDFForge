@@ -5,7 +5,8 @@ import {
 } from "@/lib/pdf/pdf-errors";
 import { loadPdf } from "@/lib/pdf/load-pdf";
 
-export type AcceptedFileType = "pdf" | "image" | "any";
+export type AcceptedFileType =
+  "any" | "csv" | "docx" | "image" | "markdown" | "pdf" | "pptx" | "xlsx";
 
 export type FileValidationOptions = {
   acceptedTypes?: readonly AcceptedFileType[];
@@ -47,6 +48,38 @@ export function getAcceptAttribute(acceptedTypes: readonly AcceptedFileType[]) {
     accepts.add("image/png");
   }
 
+  if (acceptedTypes.includes("docx")) {
+    accepts.add(".docx");
+    accepts.add(
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    );
+  }
+
+  if (acceptedTypes.includes("xlsx")) {
+    accepts.add(".xlsx");
+    accepts.add(
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    );
+  }
+
+  if (acceptedTypes.includes("pptx")) {
+    accepts.add(".pptx");
+    accepts.add(
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    );
+  }
+
+  if (acceptedTypes.includes("markdown")) {
+    accepts.add(".md");
+    accepts.add(".markdown");
+    accepts.add("text/markdown");
+  }
+
+  if (acceptedTypes.includes("csv")) {
+    accepts.add(".csv");
+    accepts.add("text/csv");
+  }
+
   return Array.from(accepts).join(",");
 }
 
@@ -78,6 +111,13 @@ export async function validateFile(
     !isAcceptedFileType(file, acceptedTypes)
   ) {
     throw new FilePipelineError("unsupported_type");
+  }
+
+  if (isOfficeFileType(acceptedTypes) && !(await hasZipHeader(file))) {
+    throw new FilePipelineError(
+      "invalid_document",
+      "This file is not a valid Office document.",
+    );
   }
 
   const pdfDetails =
@@ -127,13 +167,52 @@ function isAcceptedFileType(
   file: File,
   acceptedTypes: readonly AcceptedFileType[],
 ) {
-  return acceptedTypes.some((type) => {
-    if (type === "pdf") {
-      return isPdfFile(file);
-    }
+  return acceptedTypes.some((type) => matchesAcceptedType(file, type));
+}
 
+function matchesAcceptedType(file: File, type: AcceptedFileType) {
+  const name = file.name.toLowerCase();
+
+  if (type === "any") {
+    return true;
+  }
+
+  if (type === "pdf") {
+    return isPdfFile(file);
+  }
+
+  if (type === "image") {
     return isImageFile(file);
-  });
+  }
+
+  if (type === "docx") {
+    return name.endsWith(".docx");
+  }
+
+  if (type === "xlsx") {
+    return name.endsWith(".xlsx");
+  }
+
+  if (type === "pptx") {
+    return name.endsWith(".pptx");
+  }
+
+  if (type === "markdown") {
+    return name.endsWith(".md") || name.endsWith(".markdown");
+  }
+
+  return name.endsWith(".csv");
+}
+
+function isOfficeFileType(acceptedTypes: readonly AcceptedFileType[]) {
+  return acceptedTypes.some(
+    (type) => type === "docx" || type === "xlsx" || type === "pptx",
+  );
+}
+
+async function hasZipHeader(file: File) {
+  const header = new Uint8Array(await file.slice(0, 2).arrayBuffer());
+  return header[0] === 0x50 && header[1] === 0x4b;
 }
 
 function isPdfFile(file: File) {

@@ -15,6 +15,7 @@ import { ImagesToPdfWorkspace } from "@/components/tools/images-to-pdf-workspace
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
 import { ConvertDocumentWorkspace } from "@/components/tools/convert-document-workspace";
+import { SourceToPdfWorkspace } from "@/components/tools/source-to-pdf-workspace";
 import { PdfToImagesWorkspace } from "@/components/tools/pdf-to-images-workspace";
 import { PrivacyInspectorWorkspace } from "@/components/tools/privacy-inspector-workspace";
 import { PrivacyRiskScannerWorkspace } from "@/components/tools/privacy-risk-scanner-workspace";
@@ -68,6 +69,16 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
     tool.slug === "pdf-to-html"
   ) {
     return <ConvertDocumentWorkspace slug={tool.slug} />;
+  }
+
+  if (
+    tool.slug === "word-to-pdf" ||
+    tool.slug === "excel-to-pdf" ||
+    tool.slug === "powerpoint-to-pdf" ||
+    tool.slug === "markdown-to-pdf" ||
+    tool.slug === "csv-to-pdf"
+  ) {
+    return <SourceToPdfWorkspace slug={tool.slug} />;
   }
 
   if (tool.slug === "privacy-risk-scanner") {

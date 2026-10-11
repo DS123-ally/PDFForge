@@ -334,6 +334,162 @@ export const toolSeo: ToolSeoContent[] = [
     relatedSlugs: ["extract-text", "pdf-to-word", "pdf-to-images"],
   },
   {
+    slug: "word-to-pdf",
+    pageTitle: "Convert Word to PDF locally",
+    metaDescription:
+      "Turn a .docx into a PDF in your browser. PDFForge writes paragraphs and simple tables as text. Nothing is uploaded.",
+    intro:
+      "Word to PDF reads the document text on this device and writes a PDF. It is text fidelity: fonts, images, headers, and Word page layout are not reconstructed.",
+    steps: [
+      "Select a .docx file from your device.",
+      "Read the fidelity note before you convert.",
+      "Choose Create PDF and wait for local processing to finish.",
+      "Download the PDF. The original Word file stays unchanged.",
+    ],
+    faqs: [
+      {
+        question: "Does Word to PDF upload the document?",
+        answer:
+          "No. The .docx is unzipped and read in this tab. The PDF is built here and downloaded here.",
+      },
+      {
+        question: "Will the PDF look like the Word file?",
+        answer:
+          "No. This is text fidelity. Paragraphs, headings, lists, and simple tables become PDF text. Fonts, images, text boxes, and page layout are not reconstructed.",
+      },
+      {
+        question: "Which Word files work?",
+        answer:
+          "Use a .docx file. Older .doc files are not Office Open XML and are not accepted.",
+      },
+    ],
+    relatedSlugs: ["pdf-to-word", "markdown-to-pdf", "excel-to-pdf"],
+  },
+  {
+    slug: "excel-to-pdf",
+    pageTitle: "Convert Excel to PDF locally",
+    metaDescription:
+      "Turn an .xlsx workbook into PDF tables in your browser. Formulas use cached values. Nothing is uploaded.",
+    intro:
+      "Excel to PDF writes each sheet as a table of cell text. Charts, styles, and print layout are not reconstructed. Dates may appear as Excel serial numbers when that is how the file stores them.",
+    steps: [
+      "Select an .xlsx file from your device.",
+      "Read the cell-fidelity note.",
+      "Choose Create PDF.",
+      "Download the PDF. The workbook stays on disk unchanged.",
+    ],
+    faqs: [
+      {
+        question: "Are formulas calculated in the browser?",
+        answer:
+          "No. The PDF uses the cached value already stored in the workbook. A formula with no cached value is left blank.",
+      },
+      {
+        question: "Do charts appear in the PDF?",
+        answer:
+          "No. This tool writes cell text. Charts, images, and print titles are not reconstructed.",
+      },
+      {
+        question: "Which Excel files work?",
+        answer: "Use .xlsx. Older .xls workbooks are not accepted.",
+      },
+    ],
+    relatedSlugs: ["csv-to-pdf", "pdf-to-excel", "word-to-pdf"],
+  },
+  {
+    slug: "powerpoint-to-pdf",
+    pageTitle: "Convert PowerPoint to PDF locally",
+    metaDescription:
+      "Turn slide text into a PDF in your browser, one page per slide. Pictures and slide design stay out of the file. Nothing is uploaded.",
+    intro:
+      "PowerPoint to PDF reads the text on each slide and writes one PDF page. Pictures, shapes, animations, and the slide design are not reconstructed.",
+    steps: [
+      "Select a .pptx file from your device.",
+      "Read the slide-text fidelity note.",
+      "Choose Create PDF.",
+      "Download the PDF.",
+    ],
+    faqs: [
+      {
+        question: "Is each slide a picture in the PDF?",
+        answer:
+          "No. Each slide becomes a page of its text. Pictures on the slide are skipped.",
+      },
+      {
+        question: "Does speaker notes text get included?",
+        answer:
+          "Notes stored outside the slide text are not written. The PDF uses the text placed on the slide.",
+      },
+      {
+        question: "Which PowerPoint files work?",
+        answer: "Use .pptx. Older .ppt files are not accepted.",
+      },
+    ],
+    relatedSlugs: ["pdf-to-ppt", "word-to-pdf", "images-to-pdf"],
+  },
+  {
+    slug: "markdown-to-pdf",
+    pageTitle: "Convert Markdown to PDF locally",
+    metaDescription:
+      "Turn a Markdown file into a PDF in your browser. Headings, lists, and simple tables become text. Nothing is uploaded.",
+    intro:
+      "Markdown to PDF writes headings, paragraphs, lists, and simple pipe tables. Images are skipped, and raw HTML is reduced to its text.",
+    steps: [
+      "Select a .md or .markdown file.",
+      "Read the text-fidelity note.",
+      "Choose Create PDF.",
+      "Download the PDF.",
+    ],
+    faqs: [
+      {
+        question: "Are images embedded?",
+        answer:
+          "No. Markdown image links are skipped. The PDF contains the surrounding text.",
+      },
+      {
+        question: "Which table syntax works?",
+        answer:
+          "Pipe tables with a separator row become a PDF table. Other layouts stay as paragraphs.",
+      },
+      {
+        question: "Does this upload the Markdown file?",
+        answer:
+          "No. The file is read in this tab and the PDF is downloaded here.",
+      },
+    ],
+    relatedSlugs: ["word-to-pdf", "pdf-to-html", "extract-text"],
+  },
+  {
+    slug: "csv-to-pdf",
+    pageTitle: "Convert CSV to PDF locally",
+    metaDescription:
+      "Turn a CSV file into a PDF table in your browser. The first row is the header. Nothing is uploaded.",
+    intro:
+      "CSV to PDF reads comma-separated rows on this device and writes them as a table. The first row is the header. Wide tables with more than six columns are written as text lines.",
+    steps: [
+      "Select a .csv file from your device.",
+      "Read the table-fidelity note.",
+      "Choose Create PDF.",
+      "Download the PDF.",
+    ],
+    faqs: [
+      {
+        question: "How are columns split?",
+        answer:
+          "Columns split on commas. Quoted fields can contain commas. Semicolon-separated files stay in one column.",
+      },
+      {
+        question: "Is the first row special?",
+        answer: "Yes. The first non-empty row is drawn as the table header.",
+      },
+      {
+        question: "Does CSV to PDF upload the file?",
+        answer: "No. Parsing and PDF creation stay in this tab.",
+      },
+    ],
+    relatedSlugs: ["excel-to-pdf", "pdf-to-excel", "word-to-pdf"],
+  },
+  {
     slug: "rotate-pdf",
     pageTitle: "Rotate selected PDF pages locally",
     metaDescription:

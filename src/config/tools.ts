@@ -18,7 +18,9 @@ export type ToolDefinition = {
   description: string;
   category: ToolCategory;
   acceptsMultiple: boolean;
-  acceptedFileTypes: Array<"pdf" | "image" | "any">;
+  acceptedFileTypes: Array<
+    "csv" | "docx" | "image" | "markdown" | "pdf" | "pptx" | "xlsx" | "any"
+  >;
 };
 
 export const tools: ToolDefinition[] = [
@@ -131,6 +133,56 @@ export const tools: ToolDefinition[] = [
     category: "Convert",
     acceptsMultiple: false,
     acceptedFileTypes: ["pdf"],
+  },
+  {
+    slug: "word-to-pdf",
+    title: "Word to PDF",
+    shortDescription: "Turn a .docx into PDF text in this browser.",
+    description:
+      "Read paragraphs, headings, lists, and simple tables from a Word file and write them to a PDF. Fonts, images, and Word page layout are not reconstructed.",
+    category: "Convert",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["docx"],
+  },
+  {
+    slug: "excel-to-pdf",
+    title: "Excel to PDF",
+    shortDescription: "Turn workbook cells into a PDF table.",
+    description:
+      "Write each sheet as a table of cell text. Formulas use the cached value in the file. Charts and print layout are not reconstructed.",
+    category: "Convert",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["xlsx"],
+  },
+  {
+    slug: "powerpoint-to-pdf",
+    title: "PowerPoint to PDF",
+    shortDescription: "Turn slide text into one PDF page per slide.",
+    description:
+      "Read the text on each slide and write one PDF page. Pictures, shapes, and the slide design are not reconstructed.",
+    category: "Convert",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pptx"],
+  },
+  {
+    slug: "markdown-to-pdf",
+    title: "Markdown to PDF",
+    shortDescription: "Turn a Markdown file into PDF text.",
+    description:
+      "Write headings, paragraphs, lists, and simple pipe tables to a PDF. Images are skipped.",
+    category: "Convert",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["markdown"],
+  },
+  {
+    slug: "csv-to-pdf",
+    title: "CSV to PDF",
+    shortDescription: "Turn comma-separated rows into a PDF table.",
+    description:
+      "Read a CSV file in this browser and write the rows as a PDF table. The first row is the header.",
+    category: "Convert",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["csv"],
   },
   {
     slug: "rotate-pdf",

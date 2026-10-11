@@ -88,4 +88,27 @@ describe("validateFiles", () => {
     expect(result.errors).toHaveLength(1);
     expect(result.errors[0]?.error.code).toBe("duplicate_file");
   });
+
+  it("accepts a docx zip and a markdown file for their tools", async () => {
+    const docx = new File(
+      [new Uint8Array([0x50, 0x4b, 0x03, 0x04])],
+      "notes.docx",
+    );
+    const markdown = new File(["# Notes"], "notes.md");
+
+    await expect(
+      validateFile(docx, { acceptedTypes: ["docx"] }),
+    ).resolves.toMatchObject({ file: docx });
+    await expect(
+      validateFile(markdown, { acceptedTypes: ["markdown"] }),
+    ).resolves.toMatchObject({ file: markdown });
+  });
+
+  it("rejects a docx that is not a zip", async () => {
+    const file = new File(["not a zip"], "notes.docx");
+
+    await expect(
+      validateFile(file, { acceptedTypes: ["docx"] }),
+    ).rejects.toMatchObject({ code: "invalid_document" });
+  });
 });
