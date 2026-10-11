@@ -43,8 +43,10 @@ export default function AboutPage() {
           Extract Text use the text layer first, then on-device English OCR for
           pages with no selectable text — they are not a desktop publisher. Some
           AES-128 files unlock only as images. Redaction rasterizes pages.
-          Compress PDF rewrites the file or redraws pages as pictures. Accounts
-          and cloud storage are not offered.
+          Compress PDF rewrites the file or redraws pages as pictures. Repair
+          PDF copies readable pages into a new file or redraws them as pictures,
+          and it cannot fix every damaged PDF. Accounts and cloud storage are
+          not offered.
         </p>
       </section>
       <section>

@@ -19,6 +19,7 @@ import {
   ScanLine,
   ScanSearch,
   Scissors,
+  Wrench,
   ShieldAlert,
   ShieldCheck,
 } from "lucide-react";
@@ -31,6 +32,7 @@ import { cn } from "@/lib/utils";
 const icons = {
   "merge-pdf": FileStack,
   "compress-pdf": Shrink,
+  "repair-pdf": Wrench,
   "split-pdf": Scissors,
   "organize-pdf": ListRestart,
   "document-integrity": Fingerprint,

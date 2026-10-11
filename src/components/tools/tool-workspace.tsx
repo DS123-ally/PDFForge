@@ -15,6 +15,7 @@ import { ImagesToPdfWorkspace } from "@/components/tools/images-to-pdf-workspace
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
 import { CompressPdfWorkspace } from "@/components/tools/compress-pdf-workspace";
+import { RepairPdfWorkspace } from "@/components/tools/repair-pdf-workspace";
 import { ConvertDocumentWorkspace } from "@/components/tools/convert-document-workspace";
 import { SourceToPdfWorkspace } from "@/components/tools/source-to-pdf-workspace";
 import { PdfToImagesWorkspace } from "@/components/tools/pdf-to-images-workspace";
@@ -41,6 +42,10 @@ export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
 
   if (tool.slug === "compress-pdf") {
     return <CompressPdfWorkspace />;
+  }
+
+  if (tool.slug === "repair-pdf") {
+    return <RepairPdfWorkspace />;
   }
 
   if (tool.slug === "split-pdf") {

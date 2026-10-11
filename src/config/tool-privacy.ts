@@ -18,6 +18,13 @@ export const toolPrivacy: readonly ToolPrivacy[] = [
       "A PDF. Lossless rewrite keeps selectable text and returns the original file when the rewrite is not smaller. Page pictures are JPEG pages without selectable text.",
   },
   {
+    slug: "repair-pdf",
+    reads:
+      "The PDF you drop. Recover pictures also reads the pixels of each page it can draw.",
+    writes:
+      "A new PDF. Rebuild copies pages it can read and keeps selectable text when that content survives. Recover pictures are JPEG pages without selectable text. Signatures are not kept.",
+  },
+  {
     slug: "private-recipes",
     reads:
       "The PDFs you drop, the steps in the recipe, and any password you type for a protect step. An optional settings save stores the recipe only.",

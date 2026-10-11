@@ -45,6 +45,16 @@ export const tools: ToolDefinition[] = [
     acceptedFileTypes: ["pdf"],
   },
   {
+    slug: "repair-pdf",
+    title: "Repair PDF",
+    shortDescription: "Rebuild a readable PDF, or recover pages as pictures.",
+    description:
+      "Copy readable pages into a new PDF in this browser. When the file structure will not rebuild, redraw the pages that can be drawn.",
+    category: "Organize",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
     slug: "private-recipes",
     title: "Private Recipes",
     shortDescription: "Chain PDF tools in one local workspace.",

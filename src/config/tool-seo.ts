@@ -81,6 +81,38 @@ export const toolSeo: ToolSeoContent[] = [
     relatedSlugs: ["pdf-to-images", "merge-pdf", "flatten-pdf"],
   },
   {
+    slug: "repair-pdf",
+    pageTitle: "Repair a PDF locally in your browser",
+    metaDescription:
+      "Rebuild a damaged PDF on this device. Copy readable pages into a new file, or redraw pages as pictures. Nothing is uploaded.",
+    intro:
+      "Repair PDF runs in this tab. Rebuild pages copies each readable page into a new PDF and keeps selectable text when the page content survives. Recover pictures redraws pages as JPEGs when the file structure will not rebuild.",
+    steps: [
+      "Select one PDF from your device.",
+      "Choose rebuild pages or recover pictures.",
+      "Repair locally and read the page count and any skipped pages.",
+      "Download the new PDF.",
+    ],
+    faqs: [
+      {
+        question: "Does repair upload my PDF?",
+        answer:
+          "No. The file is read in this tab. The download is created here.",
+      },
+      {
+        question: "Will every damaged file open after repair?",
+        answer:
+          "No. Rebuild copies pages this browser can read. Recover pictures draws pages it can render, up to 80. If neither mode can read a page, that file cannot be repaired here.",
+      },
+      {
+        question: "Are signatures and forms kept?",
+        answer:
+          "Digital signatures do not survive. Forms, attachments, outlines, and JavaScript are not kept as working features. Recover pictures also drops selectable text.",
+      },
+    ],
+    relatedSlugs: ["compress-pdf", "unlock-pdf", "flatten-pdf"],
+  },
+  {
     slug: "split-pdf",
     pageTitle: "Split a PDF into pages or ranges",
     metaDescription:
