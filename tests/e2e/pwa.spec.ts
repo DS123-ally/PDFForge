@@ -7,7 +7,9 @@ test("registers a service worker that does not cache PDF responses", async ({
 }) => {
   await page.goto("/");
   await expect(
-    page.getByRole("heading", { name: /edit pdfs directly in your browser/i }),
+    page.getByRole("heading", {
+      name: /clean, redact, and share without uploading/i,
+    }),
   ).toBeVisible();
 
   const scriptUrl = await page.evaluate(async () => {

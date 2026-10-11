@@ -23,7 +23,9 @@ test("shows the responsive PDFForge homepage", async ({ page }) => {
     page.getByRole("heading", { name: "Number a packet" }),
   ).toBeVisible();
   for (const group of ["Organize", "Edit", "Convert", "Privacy", "Security"]) {
-    await expect(page.getByRole("heading", { name: group })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { exact: true, name: group }),
+    ).toBeVisible();
   }
   await expect(
     page.getByText("Your documents never leave your device"),

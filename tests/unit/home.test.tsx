@@ -10,9 +10,11 @@ describe("Home", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: /edit pdfs directly in your browser/i,
+        name: /clean, redact, and share without uploading/i,
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/process documents locally/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/nothing is sent to a server/i),
+    ).toBeInTheDocument();
   });
 });
