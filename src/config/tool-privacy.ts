@@ -11,6 +11,13 @@ export const toolPrivacy: readonly ToolPrivacy[] = [
     writes: "One combined PDF.",
   },
   {
+    slug: "compress-pdf",
+    reads:
+      "The PDF you drop. Page-picture mode also reads the pixels of each rendered page.",
+    writes:
+      "A PDF. Lossless rewrite keeps selectable text and returns the original file when the rewrite is not smaller. Page pictures are JPEG pages without selectable text.",
+  },
+  {
     slug: "private-recipes",
     reads:
       "The PDFs you drop, the steps in the recipe, and any password you type for a protect step. An optional settings save stores the recipe only.",

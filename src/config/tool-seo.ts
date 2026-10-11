@@ -49,6 +49,38 @@ export const toolSeo: ToolSeoContent[] = [
     relatedSlugs: ["split-pdf", "organize-pdf", "private-recipes"],
   },
   {
+    slug: "compress-pdf",
+    pageTitle: "Compress a PDF locally in your browser",
+    metaDescription:
+      "Shrink a PDF on this device. Rewrite it without removing selectable text, or redraw pages as JPEGs. Nothing is uploaded.",
+    intro:
+      "Compress PDF runs in this tab. Lossless rewrite resaves the file and keeps selectable text. Page pictures redraw each page as a JPEG, which shrinks scans and removes selectable text.",
+    steps: [
+      "Select one PDF from your device.",
+      "Choose lossless rewrite or page pictures.",
+      "For page pictures, choose smaller, balanced, or clearer.",
+      "Compress locally and download the PDF.",
+    ],
+    faqs: [
+      {
+        question: "Does compression upload my PDF?",
+        answer:
+          "No. The file is read in this tab. The download is created here.",
+      },
+      {
+        question: "Will the rewrite always be smaller?",
+        answer:
+          "No. A PDF that is already compact can come out the same size. In that case the download is your original file.",
+      },
+      {
+        question: "When should I use page pictures?",
+        answer:
+          "Use page pictures for scans and photo-heavy files. Selectable text, links, and form fields are not kept in that mode.",
+      },
+    ],
+    relatedSlugs: ["pdf-to-images", "merge-pdf", "flatten-pdf"],
+  },
+  {
     slug: "split-pdf",
     pageTitle: "Split a PDF into pages or ranges",
     metaDescription:

@@ -14,6 +14,7 @@ import { FindRedactWorkspace } from "@/components/tools/find-redact-workspace";
 import { ImagesToPdfWorkspace } from "@/components/tools/images-to-pdf-workspace";
 import { MobileActionBar } from "@/components/tools/mobile-action-bar";
 import { OrganizePdfWorkspace } from "@/components/tools/organize-pdf-workspace";
+import { CompressPdfWorkspace } from "@/components/tools/compress-pdf-workspace";
 import { ConvertDocumentWorkspace } from "@/components/tools/convert-document-workspace";
 import { SourceToPdfWorkspace } from "@/components/tools/source-to-pdf-workspace";
 import { PdfToImagesWorkspace } from "@/components/tools/pdf-to-images-workspace";
@@ -34,6 +35,14 @@ import { createDownload } from "@/lib/files/create-download";
 import { createOutputName } from "@/lib/files/create-output-name";
 
 export function ToolWorkspace({ tool }: { tool: ToolDefinition }) {
+  if (tool.slug === "merge-pdf") {
+    return <GenericToolWorkspace tool={tool} />;
+  }
+
+  if (tool.slug === "compress-pdf") {
+    return <CompressPdfWorkspace />;
+  }
+
   if (tool.slug === "split-pdf") {
     return <SplitPdfWorkspace />;
   }

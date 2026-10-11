@@ -11,6 +11,7 @@ import {
   Images,
   Presentation,
   Receipt,
+  Shrink,
   Table,
   ListRestart,
   RotateCw,
@@ -29,6 +30,7 @@ import { cn } from "@/lib/utils";
 
 const icons = {
   "merge-pdf": FileStack,
+  "compress-pdf": Shrink,
   "split-pdf": Scissors,
   "organize-pdf": ListRestart,
   "document-integrity": Fingerprint,

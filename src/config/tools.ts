@@ -35,6 +35,16 @@ export const tools: ToolDefinition[] = [
     acceptedFileTypes: ["pdf"],
   },
   {
+    slug: "compress-pdf",
+    title: "Compress PDF",
+    shortDescription: "Rewrite a PDF, or redraw pages as smaller pictures.",
+    description:
+      "Shrink a PDF in this browser. A lossless rewrite keeps selectable text. Page pictures shrink scans and drop selectable text.",
+    category: "Organize",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
     slug: "private-recipes",
     title: "Private Recipes",
     shortDescription: "Chain PDF tools in one local workspace.",
