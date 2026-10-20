@@ -174,7 +174,7 @@ export const toolSeo: ToolSeoContent[] = [
           "The limit is your device memory. Large files show a warning; only visible thumbnails render at once.",
       },
     ],
-    relatedSlugs: ["rotate-pdf", "split-pdf", "merge-pdf"],
+    relatedSlugs: ["rotate-pdf", "crop-pdf", "split-pdf"],
   },
   {
     slug: "images-to-pdf",
@@ -582,7 +582,39 @@ export const toolSeo: ToolSeoContent[] = [
           "Rotate PDF is for orientation only. Organize PDF also reorders and deletes pages.",
       },
     ],
-    relatedSlugs: ["organize-pdf", "add-watermark", "merge-pdf"],
+    relatedSlugs: ["organize-pdf", "crop-pdf", "add-watermark"],
+  },
+  {
+    slug: "crop-pdf",
+    pageTitle: "Crop PDF pages locally in your browser",
+    metaDescription:
+      "Trim PDF pages to a box on this device. Keep selectable text with page boxes, or redraw the box as a JPEG. Nothing is uploaded.",
+    intro:
+      "Crop PDF runs in this tab. Draw one box, then apply it to all pages or a range. Page boxes resize the page and keep selectable text, but content outside the box can remain in the file. Page pictures keep only the cropped JPEG.",
+    steps: [
+      "Select one PDF from your device.",
+      "Draw a crop box on the preview, or type percents.",
+      "Choose page boxes or page pictures, and which pages to crop.",
+      "Crop locally and download the PDF.",
+    ],
+    faqs: [
+      {
+        question: "Does cropping upload my PDF?",
+        answer:
+          "No. The file, the box, and the download stay in this browser tab.",
+      },
+      {
+        question: "Does page boxes remove the cut-off content?",
+        answer:
+          "No. Page boxes change the visible page size. Content outside the box can still be in the file. Use page pictures when you need that content gone.",
+      },
+      {
+        question: "Can I crop only some pages?",
+        answer:
+          "Yes. Choose custom pages and enter a list such as 1-3, 5. Unselected pages keep their original size.",
+      },
+    ],
+    relatedSlugs: ["rotate-pdf", "organize-pdf", "redact-pdf"],
   },
   {
     slug: "add-watermark",

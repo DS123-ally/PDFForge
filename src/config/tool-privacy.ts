@@ -117,6 +117,12 @@ export const toolPrivacy: readonly ToolPrivacy[] = [
     writes: "One rotated PDF.",
   },
   {
+    slug: "crop-pdf",
+    reads: "One PDF, the crop box, and the pages you choose.",
+    writes:
+      "A cropped PDF. Page boxes keep selectable text and can leave content outside the box in the file. Page pictures keep only the JPEG of the box.",
+  },
+  {
     slug: "add-watermark",
     reads:
       "One PDF and the watermark text, opacity, position, and rotation you set.",

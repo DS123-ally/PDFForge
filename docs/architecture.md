@@ -433,6 +433,7 @@ Shipped after the original Merge-first plan, still in-browser only:
 - Privacy Inspector and Privacy Risk Scanner (including India-centric identifiers and optional raster redaction).
 - Local PDF → Word / Excel / PowerPoint / HTML, with OCR on empty text pages.
 - Scan Document, Private Recipes, Document Integrity.
+- Crop PDF: page boxes or JPEG pictures of the selected box.
 - Production serving: Docker/nginx asset cache, `/health`, Vercel (`standalone` skipped on Vercel).
 
 Planned enhancements that preserve the privacy boundary: better OOXML layout fidelity, more OCR languages, less rasterization on redact/unlock, first-visit offline tool chunks, tighter CSP `style-src`. Do not add upload APIs or third-party processing CDNs. Product-facing summary: [`README.md`](../README.md#feature-enhancements).

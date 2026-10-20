@@ -85,7 +85,7 @@ Defined in [`src/config/tools.ts`](src/config/tools.ts).
 | -------- | -------------------------------------------------------------------------------------------- |
 | Organize | Merge, Split, Organize, Private Recipes                                                      |
 | Convert  | Scan Document, Images to PDF, PDF to Images, PDF to Word / Excel / PPT / HTML                |
-| Edit     | Rotate, Watermark, Page numbers, Headers/footers, Extract text                               |
+| Edit     | Rotate, Crop, Watermark, Page numbers, Headers/footers, Extract text                         |
 | Privacy  | Privacy Risk Scanner, Privacy Inspector, Remove/view metadata, Find & redact PII, Redact PDF |
 | Security | Password protect, Unlock, Flatten, Document Integrity                                        |
 
@@ -101,6 +101,7 @@ Shipped on top of the original Merge-first roadmap. All of these still run **in 
 | Convert  | PDF → Word, Excel, PowerPoint, HTML via OOXML/JSZip; OCR on pages with no selectable text (same engine as Scan Document)                     |
 | Capture  | Scan Document: camera/photos, perspective flatten, searchable PDF                                                                            |
 | Workflow | Private Recipes: chain steps (merge, numbers, watermark, strip metadata, protect) in one local session                                       |
+| Edit     | Crop PDF: page boxes keep selectable text; page pictures keep only the cropped JPEG                                                          |
 | Trust    | Document Integrity: SHA-256/512 fingerprint, compare two files, verify a known hash                                                          |
 | Hosting  | Docker + nginx (cache static/OCR, `no-store` on `/sw.js`), `/health`, Vercel without `standalone`                                            |
 

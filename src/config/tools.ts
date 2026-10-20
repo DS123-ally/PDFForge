@@ -215,6 +215,16 @@ export const tools: ToolDefinition[] = [
     acceptedFileTypes: ["pdf"],
   },
   {
+    slug: "crop-pdf",
+    title: "Crop PDF",
+    shortDescription: "Trim pages to a box, or redraw the box as a picture.",
+    description:
+      "Draw a crop box in this browser. Page boxes keep selectable text. Page pictures remove content outside the box.",
+    category: "Edit",
+    acceptsMultiple: false,
+    acceptedFileTypes: ["pdf"],
+  },
+  {
     slug: "add-watermark",
     title: "Add Watermark",
     shortDescription: "Place custom text across PDF pages.",
