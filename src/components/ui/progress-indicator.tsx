@@ -16,21 +16,23 @@ export function ProgressIndicator({
 
   return (
     <div className={cn("space-y-2", className)}>
-      <div className="flex items-center justify-between gap-4 text-xs font-semibold">
-        <span>{label}</span>
-        {normalized !== undefined ? <span>{normalized}%</span> : null}
+      <div className="flex items-center justify-between gap-4 text-xs font-semibold text-zinc-700">
+        <span className="truncate">{label}</span>
+        {normalized !== undefined ? (
+          <span className="font-mono text-zinc-900">{normalized}%</span>
+        ) : null}
       </div>
       <div
-        className="h-2 overflow-hidden rounded-full bg-zinc-200"
-        role="progressbar"
         aria-label={label}
-        aria-valuemin={0}
         aria-valuemax={100}
+        aria-valuemin={0}
         aria-valuenow={normalized}
+        className="h-2 w-full overflow-hidden rounded-full bg-zinc-100 ring-1 ring-black/5"
+        role="progressbar"
       >
         <div
           className={cn(
-            "h-full rounded-full bg-red-600",
+            "h-full rounded-full bg-primary transition-all duration-300 ease-out",
             normalized === undefined && "w-1/3 animate-pulse",
           )}
           style={

@@ -7,6 +7,8 @@ import { PrivacyCleanupProvider } from "@/components/privacy/privacy-cleanup-pro
 import { PwaProvider } from "@/components/pwa/pwa-provider";
 import { env } from "@/config/env";
 
+import { cn } from "@/lib/utils";
+
 import { sans } from "./fonts";
 import "./globals.css";
 
@@ -59,7 +61,7 @@ export default async function RootLayout({
 
   return (
     <html
-      className={`${sans.variable} h-full antialiased`}
+      className={cn(sans.variable, "h-full font-sans antialiased")}
       lang="en"
       suppressHydrationWarning
     >

@@ -6,7 +6,6 @@ import { notFound } from "next/navigation";
 import { PageShell } from "@/components/layout/page-shell";
 import { ToolSeoSections } from "@/components/tools/tool-seo-sections";
 import { ToolWorkspace } from "@/components/tools/tool-workspace";
-import { GlassPanel } from "@/components/ui/glass-panel";
 import { absoluteUrl, noIndex } from "@/config/site";
 import { getTool, tools } from "@/config/tools";
 import { getToolSeo } from "@/config/tool-seo";
@@ -64,26 +63,24 @@ export default async function ToolPage({ params }: ToolPageProps) {
   return (
     <PageShell>
       <main
-        className="relative overflow-hidden px-5 py-10 sm:px-8 sm:py-14"
+        className="relative overflow-hidden px-5 py-8 sm:px-8 sm:py-12"
         id="main-content"
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10"
-        >
-          <div className="absolute -top-28 left-[-6rem] size-[28rem] rounded-full bg-red-400/30 blur-3xl" />
-          <div className="absolute top-24 right-[-8rem] size-[26rem] rounded-full bg-rose-200/70 blur-3xl" />
-          <div className="absolute bottom-0 left-1/3 size-[22rem] rounded-full bg-zinc-300/50 blur-3xl" />
-        </div>
+          className="pointer-events-none absolute inset-0 -z-10 reframe-grid-bg opacity-40 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_10%,#000_60%,transparent_100%)]"
+        />
+
         <div className="mx-auto max-w-5xl">
+          {/* Breadcrumb pill */}
           <nav
             aria-label="Breadcrumb"
-            className="glass-panel inline-flex rounded-full px-4 py-1 text-sm text-zinc-500"
+            className="inline-flex items-center rounded-full border border-border/80 bg-white/90 px-3.5 py-1 text-xs text-zinc-500 shadow-2xs backdrop-blur-xs"
           >
-            <ol className="flex flex-wrap items-center gap-2">
+            <ol className="flex flex-wrap items-center gap-1.5">
               <li>
                 <Link
-                  className="min-h-11 content-center hover:text-red-600"
+                  className="hover:text-primary transition-colors"
                   href="/"
                 >
                   Home
@@ -92,7 +89,7 @@ export default async function ToolPage({ params }: ToolPageProps) {
               <li aria-hidden="true">/</li>
               <li>
                 <Link
-                  className="min-h-11 content-center hover:text-red-600"
+                  className="hover:text-primary transition-colors"
                   href="/tools"
                 >
                   {tool.category}
@@ -104,18 +101,30 @@ export default async function ToolPage({ params }: ToolPageProps) {
               </li>
             </ol>
           </nav>
-          <p className="mt-8 text-sm font-bold tracking-wide text-red-600 uppercase">
-            Local {tool.category} tool
-          </p>
-          <h1 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
-            {tool.title}
-          </h1>
-          <p className="mt-3 max-w-3xl text-base leading-7 text-zinc-600 sm:text-lg">
-            {seo.intro}
-          </p>
-          <GlassPanel className="mt-8 p-4 sm:p-6">
+
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-zinc-100 px-2.5 py-0.5 text-[11px] font-semibold text-zinc-700">
+                Local {tool.category} Tool
+              </span>
+              <h1 className="mt-3 text-3xl font-bold tracking-tight text-zinc-950 sm:text-4xl">
+                {tool.title}
+              </h1>
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-zinc-600 sm:text-base">
+                {seo.intro}
+              </p>
+            </div>
+
+            <div className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800">
+              <span className="size-1.5 rounded-full bg-emerald-600 animate-pulse" />
+              <span>In-Memory Sandbox</span>
+            </div>
+          </div>
+
+          <div className="mt-8 rounded-3xl border border-border/90 bg-white p-5 shadow-xs sm:p-8">
             <ToolWorkspace tool={tool} />
-          </GlassPanel>
+          </div>
+
           <ToolSeoSections nonce={nonce} seo={seo} tool={tool} />
         </div>
       </main>

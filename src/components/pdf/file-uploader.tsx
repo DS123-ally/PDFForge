@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, ShieldCheck } from "lucide-react";
+import { FileText, ShieldCheck, UploadCloud, X } from "lucide-react";
 import {
   type DragEvent,
   useEffect,
@@ -33,6 +33,7 @@ type FileUploaderProps = {
   maxFileSizeBytes?: number;
   multiple?: boolean;
   onFilesChange?: (files: LocalUploadedFile[]) => void;
+  tone?: "default" | "soft";
 };
 
 export type LocalUploadedFile = {
@@ -58,6 +59,7 @@ export function FileUploader({
   maxFileSizeBytes = defaultMaxFileSizeBytes,
   multiple = false,
   onFilesChange,
+  tone = "default",
 }: FileUploaderProps) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -245,15 +247,25 @@ export function FileUploader({
   }
 
   return (
-    <div>
+    <div className="w-full">
       <section
         aria-busy={isChecking}
         aria-describedby={`${inputId}-helper ${inputId}-privacy`}
         aria-labelledby={`${inputId}-title`}
         className={cn(
-          "rounded-2xl border-2 border-dashed px-6 py-8 text-center transition-colors sm:py-9",
-          dragActive ? "border-red-600 bg-red-50" : "border-red-500 bg-white",
+          "group relative cursor-pointer text-center transition-all duration-200",
+          "rounded-2xl border-2 border-dashed p-6 sm:p-8",
+          dragActive
+            ? "border-primary bg-red-50/50 ring-4 ring-primary/10"
+            : "border-border/90 bg-zinc-50/50 hover:border-zinc-400 hover:bg-zinc-50/80",
+          tone === "soft" && "border-zinc-200/90 bg-white hover:bg-zinc-50/40",
         )}
+        onClick={(e) => {
+          // If not clicking button directly
+          if ((e.target as HTMLElement).tagName !== "BUTTON") {
+            inputRef.current?.click();
+          }
+        }}
         onDragLeave={handleDragLeave}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
@@ -271,51 +283,68 @@ export function FileUploader({
           }}
           type="file"
         />
-        <span className="mx-auto grid size-12 place-items-center rounded-xl bg-red-50 text-red-600">
-          <FileText aria-hidden="true" className="size-5" />
-        </span>
-        <h2 id={`${inputId}-title`} className="mt-3 text-base font-bold">
-          {multiple ? "Drop your files here" : "Drop your file here"}
-        </h2>
-        <Button
-          className="mt-3"
-          disabled={isChecking}
-          onClick={() => inputRef.current?.click()}
-          type="button"
-        >
-          {isChecking
-            ? "Checking..."
-            : multiple
-              ? "Select Files"
-              : "Select a File"}
-        </Button>
-        <p className="mt-2 text-xs text-zinc-500" id={`${inputId}-helper`}>
-          {getHelperText(acceptedTypes)} up to{" "}
-          {formatFileSize(maxFileSizeBytes)}
-        </p>
-        <p
-          className="mx-auto mt-3 flex max-w-max items-center gap-2 text-xs font-semibold text-emerald-700"
-          id={`${inputId}-privacy`}
-        >
-          <ShieldCheck aria-hidden="true" className="size-4" />
-          Files stay local on this device
-        </p>
+
+        <div className="flex flex-col items-center">
+          <span className="grid size-12 place-items-center rounded-2xl border border-zinc-200 bg-white text-zinc-900 shadow-2xs transition-transform group-hover:scale-105">
+            <UploadCloud aria-hidden="true" className="size-6 text-zinc-700 group-hover:text-primary transition-colors" />
+          </span>
+
+          <h2 id={`${inputId}-title`} className="mt-4 text-base font-semibold tracking-tight text-zinc-950">
+            {multiple ? "Drop PDF files here, or browse" : "Drop your PDF file here, or browse"}
+          </h2>
+
+          <p className="mt-1 text-xs text-zinc-500" id={`${inputId}-helper`}>
+            {getHelperText(acceptedTypes)} • Up to {formatFileSize(maxFileSizeBytes)}
+          </p>
+
+          <div className="mt-4 flex items-center gap-2">
+            <Button
+              className="text-xs px-4"
+              disabled={isChecking}
+              onClick={(e) => {
+                e.stopPropagation();
+                inputRef.current?.click();
+              }}
+              size="sm"
+              type="button"
+            >
+              {isChecking
+                ? "Analyzing..."
+                : multiple
+                  ? "Select Files"
+                  : "Choose File"}
+            </Button>
+          </div>
+
+          <div
+            className="mt-4 flex items-center gap-1.5 text-[11px] font-medium text-emerald-700"
+            id={`${inputId}-privacy`}
+          >
+            <ShieldCheck aria-hidden="true" className="size-3.5 text-emerald-600" />
+            <span>Files stay 100% local on this device</span>
+          </div>
+        </div>
       </section>
 
       <div aria-live="polite" className="mt-5">
         {selectedCount > 0 ? (
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-3 px-1">
             <p className="text-sm font-bold text-zinc-950">
               {selectedCount} {selectedCount === 1 ? "file" : "files"} ready
             </p>
-            <Button onClick={clearFiles} type="button" variant="ghost">
+            <Button
+              className="text-xs h-7 px-2.5 text-zinc-500 hover:text-zinc-950"
+              onClick={clearFiles}
+              type="button"
+              variant="ghost"
+            >
               Clear all
             </Button>
           </div>
         ) : null}
 
         {files.length > 0 ? (
-          <ul className="mt-3 space-y-3">
+          <ul className="mt-3 space-y-2.5">
             {files.map((file) => (
               <FileListItem
                 key={file.id}
@@ -350,7 +379,7 @@ export function FileUploader({
 
         {memoryWarning ? (
           <p
-            className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-900"
+            className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3.5 text-xs leading-5 text-amber-900"
             role="status"
           >
             {memoryWarning}
@@ -359,10 +388,10 @@ export function FileUploader({
 
         {rejectedFiles.length > 0 ? (
           <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4">
-            <p className="text-sm font-bold text-red-900">
+            <p className="text-xs font-semibold text-red-900">
               Some files could not be added
             </p>
-            <ul className="mt-2 space-y-1 text-sm text-red-800">
+            <ul className="mt-2 space-y-1 text-xs text-red-800">
               {rejectedFiles.map((file) => (
                 <li className="min-w-0" key={file.id}>
                   <span className="font-semibold">{file.name}:</span>{" "}
@@ -377,54 +406,24 @@ export function FileUploader({
   );
 }
 
-function reorderFiles<T>(files: T[], fromIndex: number, toIndex: number) {
-  const nextFiles = [...files];
-  const [movedFile] = nextFiles.splice(fromIndex, 1);
-
-  if (!movedFile) {
-    return files;
-  }
-
-  nextFiles.splice(toIndex, 0, movedFile);
-  return nextFiles;
+function createLocalFileId(file: File) {
+  return `${createFileFingerprint(file)}::${Math.random().toString(36).slice(2, 9)}`;
 }
 
-function createLocalFileId(file: File) {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID();
+function reorderFiles<T>(list: T[], from: number, to: number): T[] {
+  const result = [...list];
+  const [removed] = result.splice(from, 1);
+  if (removed !== undefined) {
+    result.splice(to, 0, removed);
   }
-
-  return `${createFileFingerprint(file)}::${Date.now()}`;
+  return result;
 }
 
 function getHelperText(acceptedTypes: readonly AcceptedFileType[]) {
-  if (acceptedTypes.includes("pdf") && acceptedTypes.includes("image")) {
-    return "PDF, JPG, or PNG files";
+  if (acceptedTypes.length === 1 && acceptedTypes[0] === "pdf") {
+    return "Supports standard PDF documents";
   }
 
-  if (acceptedTypes.includes("image")) {
-    return "JPG or PNG files";
-  }
-
-  if (acceptedTypes.includes("docx")) {
-    return "Word .docx files";
-  }
-
-  if (acceptedTypes.includes("xlsx")) {
-    return "Excel .xlsx files";
-  }
-
-  if (acceptedTypes.includes("pptx")) {
-    return "PowerPoint .pptx files";
-  }
-
-  if (acceptedTypes.includes("markdown")) {
-    return "Markdown .md files";
-  }
-
-  if (acceptedTypes.includes("csv")) {
-    return "CSV files";
-  }
-
-  return "PDF files only";
+  const uppercase = acceptedTypes.map((type) => type.toUpperCase());
+  return `Supports ${uppercase.join(", ")}`;
 }

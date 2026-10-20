@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import Link from "next/link";
 
 import { PageShell } from "@/components/layout/page-shell";
 import { WorkspaceApp } from "@/components/tools/workspace-app";
@@ -8,9 +7,9 @@ import { noIndex } from "@/config/site";
 import { workspaceHashCaptureScript } from "@/lib/privacy/tool-location";
 
 export const metadata: Metadata = {
-  title: "Local workspace",
+  title: "Local Workspace — PDFForge Studio",
   description:
-    "Run PDFForge tools locally. The selected tool stays in the URL hash and is not sent to the host.",
+    "Run PDFForge tools locally in your browser memory. Selected tools remain in the URL hash and are never transmitted across the network.",
   robots: noIndex,
 };
 
@@ -23,34 +22,13 @@ export default async function WorkspacePage() {
         dangerouslySetInnerHTML={{ __html: workspaceHashCaptureScript }}
         nonce={nonce}
       />
-      <main className="px-5 py-10 sm:px-8 sm:py-14" id="main-content">
+      <main className="relative min-h-[calc(100vh-140px)] px-5 py-8 sm:px-8 sm:py-12" id="main-content">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 reframe-grid-bg opacity-40 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_10%,#000_60%,transparent_100%)]"
+        />
         <div className="mx-auto max-w-5xl">
-          <nav aria-label="Breadcrumb" className="text-sm text-zinc-500">
-            <ol className="flex flex-wrap items-center gap-2">
-              <li>
-                <Link
-                  className="min-h-11 content-center hover:text-red-600"
-                  href="/"
-                >
-                  Home
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li>
-                <Link
-                  className="min-h-11 content-center hover:text-red-600"
-                  href="/tools"
-                >
-                  All tools
-                </Link>
-              </li>
-              <li aria-hidden="true">/</li>
-              <li aria-current="page">Local workspace</li>
-            </ol>
-          </nav>
-          <div className="mt-4">
-            <WorkspaceApp />
-          </div>
+          <WorkspaceApp />
         </div>
       </main>
     </PageShell>

@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleAlert, LoaderCircle } from "lucide-react";
+import { CheckCircle2, CircleAlert, LoaderCircle, RotateCcw, XCircle } from "lucide-react";
 
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { Button } from "@/components/ui/button";
@@ -24,73 +24,98 @@ export function ProcessingCard({
   return (
     <section
       aria-live="polite"
-      className="rounded-2xl border border-zinc-200 bg-white p-6 text-center shadow-sm sm:p-10"
+      className="rounded-3xl border border-border/80 bg-white p-6 text-center shadow-lg sm:p-10"
     >
-      <span className="mx-auto grid size-16 place-items-center rounded-full bg-red-50 text-red-600">
+      <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-zinc-50 text-zinc-900 ring-1 ring-zinc-200">
         {isSuccess ? (
           <CheckCircle2
             aria-hidden="true"
-            className="size-8 text-emerald-700"
+            className="size-8 text-emerald-600"
           />
         ) : isError ? (
-          <CircleAlert aria-hidden="true" className="size-8 text-red-700" />
+          <CircleAlert aria-hidden="true" className="size-8 text-red-600" />
         ) : (
           <LoaderCircle
             aria-hidden="true"
-            className={isProcessing ? "size-8 animate-spin" : "size-8"}
+            className={isProcessing ? "size-8 animate-spin text-primary" : "size-8 text-zinc-400"}
           />
         )}
-      </span>
-      <h2 className="mt-6 text-2xl font-bold">
+      </div>
+
+      <h2 className="mt-5 text-2xl font-bold tracking-tight text-zinc-950">
         {isSuccess
           ? state.result?.outputBytes
-            ? "Output is ready"
-            : "Files are ready"
+            ? "Processing Complete"
+            : "Documents Ready"
           : isError
-            ? "Processing stopped"
-            : "Preparing files locally"}
+            ? "Processing Interrupted"
+            : "Executing WebAssembly Pipeline"}
       </h2>
-      <p className="mt-3 text-sm text-zinc-600">{state.message}</p>
+      <p className="mt-2 text-sm text-zinc-600">{state.message}</p>
+
       {state.status === "processing" ? (
-        <ProgressIndicator
-          className="my-6 text-left"
-          label={state.message}
-          value={state.progress}
-        />
+        <div className="mx-auto my-6 max-w-md">
+          <ProgressIndicator
+            className="text-left"
+            label={state.message}
+            value={state.progress}
+          />
+        </div>
       ) : null}
+
       {state.result ? (
-        <dl className="my-6 grid gap-3 rounded-xl bg-zinc-50 p-4 text-left text-sm sm:grid-cols-3">
+        <dl className="mx-auto my-6 grid max-w-md gap-3 rounded-2xl border border-border/70 bg-zinc-50/80 p-4 text-left text-xs sm:grid-cols-3">
           <div>
-            <dt className="text-zinc-500">Files</dt>
-            <dd className="mt-1 font-bold">{state.result.fileCount}</dd>
+            <dt className="text-zinc-500 font-medium">Input Files</dt>
+            <dd className="mt-1 text-sm font-bold text-zinc-900">{state.result.fileCount}</dd>
           </div>
           <div>
-            <dt className="text-zinc-500">Pages</dt>
-            <dd className="mt-1 font-bold">{state.result.totalPages}</dd>
+            <dt className="text-zinc-500 font-medium">Total Pages</dt>
+            <dd className="mt-1 text-sm font-bold text-zinc-900">{state.result.totalPages}</dd>
           </div>
           <div>
-            <dt className="text-zinc-500">Memory</dt>
-            <dd className="mt-1 font-bold">
-              {formatFileSize(state.result.totalBytes)}
+            <dt className="text-zinc-500 font-medium">Output Size</dt>
+            <dd className="mt-1 text-sm font-bold text-zinc-900 font-mono">
+              {state.result.outputBytes
+                ? formatFileSize(state.result.outputBytes.byteLength)
+                : "N/A"}
             </dd>
           </div>
         </dl>
       ) : null}
-      <div className="my-6 flex flex-wrap justify-center gap-3">
-        {isProcessing ? (
-          <Button onClick={onCancel} type="button" variant="secondary">
-            Cancel
+
+      {isProcessing && onCancel ? (
+        <div className="mt-6">
+          <Button
+            className="text-xs"
+            onClick={onCancel}
+            size="sm"
+            type="button"
+            variant="ghost"
+          >
+            <XCircle className="size-3.5" />
+            <span>Cancel Processing</span>
           </Button>
-        ) : null}
-        {state.status === "success" ||
-        state.status === "error" ||
-        state.status === "cancelled" ? (
-          <Button onClick={onReset} type="button" variant="secondary">
-            Reset status
+        </div>
+      ) : null}
+
+      {isError && onReset ? (
+        <div className="mt-6">
+          <Button
+            onClick={onReset}
+            size="sm"
+            type="button"
+            variant="secondary"
+          >
+            <RotateCcw className="size-3.5" />
+            <span>Try Again</span>
           </Button>
-        ) : null}
+        </div>
+      ) : null}
+
+      <div className="mt-8 border-t border-zinc-100 pt-5">
+        <PrivacyNotice />
       </div>
-      <PrivacyNotice />
     </section>
   );
 }

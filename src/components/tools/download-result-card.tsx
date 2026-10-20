@@ -1,4 +1,4 @@
-import { CheckCircle2, Download } from "lucide-react";
+import { CheckCircle2, Download, RefreshCw, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -15,8 +15,8 @@ type DownloadResultCardProps = {
 
 export function DownloadResultCard({
   children,
-  title = "Your PDF is ready",
-  description = "3 files merged into one document.",
+  title = "Your document is ready",
+  description = "Files were processed locally in your browser RAM.",
   downloadLabel = "Download PDF",
   onDownload,
   onProcessAnother,
@@ -24,37 +24,54 @@ export function DownloadResultCard({
   return (
     <section
       aria-live="polite"
-      className="rounded-2xl border border-zinc-200 bg-white p-6 text-center shadow-sm sm:p-10"
+      className="rounded-3xl border border-border/80 bg-white p-6 text-center shadow-lg sm:p-10"
     >
-      <span className="mx-auto grid size-16 place-items-center rounded-full bg-emerald-50 text-emerald-600">
+      <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200">
         <CheckCircle2 aria-hidden="true" className="size-8" />
-      </span>
-      <h2 className="mt-6 text-2xl font-bold">{title}</h2>
-      <p className="mt-3 text-sm text-zinc-600">{description}</p>
-      {children}
-      <Button
-        className="mt-6 w-full"
-        disabled={!onDownload}
-        onClick={onDownload}
-        type="button"
-      >
-        <Download aria-hidden="true" className="size-4" />
-        {downloadLabel}
-      </Button>
-      <Button
-        className="mt-3 w-full"
-        disabled={!onProcessAnother}
-        onClick={onProcessAnother}
-        type="button"
-        variant="secondary"
-      >
-        Process another
-      </Button>
-      <p className="my-6 text-xs leading-5 text-zinc-500">
-        Temporary file data clears when you process another group or leave this
-        page.
+      </div>
+
+      <h2 className="mt-5 text-2xl font-bold tracking-tight text-zinc-950">
+        {title}
+      </h2>
+      <p className="mt-2 text-sm text-zinc-600">
+        {description}
       </p>
-      <PrivacyNotice />
+
+      {children}
+
+      <div className="mx-auto mt-7 max-w-sm space-y-2.5">
+        <Button
+          className="w-full shadow-sm"
+          disabled={!onDownload}
+          onClick={onDownload}
+          size="lg"
+          type="button"
+        >
+          <Download aria-hidden="true" className="size-4" />
+          {downloadLabel}
+        </Button>
+
+        <Button
+          className="w-full text-xs"
+          disabled={!onProcessAnother}
+          onClick={onProcessAnother}
+          size="sm"
+          type="button"
+          variant="secondary"
+        >
+          <RefreshCw aria-hidden="true" className="size-3" />
+          Process Another File
+        </Button>
+      </div>
+
+      <div className="mt-6 border-t border-zinc-100 pt-5">
+        <p className="text-[11px] leading-5 text-zinc-400">
+          Temporary file buffers in memory are automatically cleared when you leave or process another group.
+        </p>
+        <div className="mt-4">
+          <PrivacyNotice />
+        </div>
+      </div>
     </section>
   );
 }
