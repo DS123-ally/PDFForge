@@ -68,21 +68,18 @@ export default async function ToolPage({ params }: ToolPageProps) {
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 reframe-grid-bg opacity-40 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_10%,#000_60%,transparent_100%)]"
+          className="reframe-grid-bg pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_10%,#000_60%,transparent_100%)] opacity-40"
         />
 
         <div className="mx-auto max-w-5xl">
           {/* Breadcrumb pill */}
           <nav
             aria-label="Breadcrumb"
-            className="inline-flex items-center rounded-full border border-border/80 bg-white/90 px-3.5 py-1 text-xs text-zinc-500 shadow-2xs backdrop-blur-xs"
+            className="border-border/80 inline-flex items-center rounded-full border bg-white/90 px-3.5 py-1 text-xs text-zinc-500 shadow-2xs backdrop-blur-xs"
           >
             <ol className="flex flex-wrap items-center gap-1.5">
               <li>
-                <Link
-                  className="hover:text-primary transition-colors"
-                  href="/"
-                >
+                <Link className="hover:text-primary transition-colors" href="/">
                   Home
                 </Link>
               </li>
@@ -115,13 +112,13 @@ export default async function ToolPage({ params }: ToolPageProps) {
               </p>
             </div>
 
-            <div className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800">
-              <span className="size-1.5 rounded-full bg-emerald-600 animate-pulse" />
+            <div className="hidden items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800 sm:inline-flex">
+              <span className="size-1.5 animate-pulse rounded-full bg-emerald-600" />
               <span>In-Memory Sandbox</span>
             </div>
           </div>
 
-          <div className="mt-8 rounded-3xl border border-border/90 bg-white p-5 shadow-xs sm:p-8">
+          <div className="border-border/90 mt-8 rounded-3xl border bg-white p-5 shadow-xs sm:p-8">
             <ToolWorkspace tool={tool} />
           </div>
 

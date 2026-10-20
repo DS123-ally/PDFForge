@@ -31,7 +31,8 @@ export function FormatLogo({
   className?: string;
   name: FormatName;
 }) {
-  const format = formatLogos.find((item) => item.name === name) ?? formatLogos[0];
+  const format =
+    formatLogos.find((item) => item.name === name) ?? formatLogos[0];
   const mark = marks[format.name];
 
   return (
@@ -64,7 +65,10 @@ function PdfGlyph() {
         d="M8 5.5h10.2L24 11.2V25a1.5 1.5 0 0 1-1.5 1.5h-14A1.5 1.5 0 0 1 7 25V7A1.5 1.5 0 0 1 8.5 5.5H8Z"
         fill="white"
       />
-      <path d="M18.2 5.5 24 11.2h-4.3A1.5 1.5 0 0 1 18.2 9.7V5.5Z" fill="#fecaca" />
+      <path
+        d="M18.2 5.5 24 11.2h-4.3A1.5 1.5 0 0 1 18.2 9.7V5.5Z"
+        fill="#fecaca"
+      />
       <path
         d="M10.2 18.2h2.1c1.15 0 1.85.62 1.85 1.52 0 .92-.7 1.54-1.85 1.54h-1.2V22.8h-1.1v-4.6Zm1.1.86v1.34h.9c.55 0 .86-.24.86-.67s-.31-.67-.86-.67h-.9Zm3.55-.86h1.15c1.55 0 2.55.9 2.55 2.3 0 1.42-1 2.32-2.55 2.32h-1.15v-4.62Zm1.1.86v2.9h.12c.9 0 1.42-.52 1.42-1.45 0-.94-.52-1.45-1.42-1.45h-.12Zm4.15-.86h3.35v.86h-2.25v1.05h2.05v.84h-2.05v1.87h-1.1v-4.62Z"
         fill="#ef2f2f"

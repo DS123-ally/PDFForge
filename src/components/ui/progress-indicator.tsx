@@ -32,7 +32,7 @@ export function ProgressIndicator({
       >
         <div
           className={cn(
-            "h-full rounded-full bg-primary transition-all duration-300 ease-out",
+            "bg-primary h-full rounded-full transition-all duration-300 ease-out",
             normalized === undefined && "w-1/3 animate-pulse",
           )}
           style={

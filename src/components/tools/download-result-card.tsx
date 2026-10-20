@@ -1,4 +1,4 @@
-import { CheckCircle2, Download, RefreshCw, ShieldCheck } from "lucide-react";
+import { CheckCircle2, Download, RefreshCw } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,7 @@ export function DownloadResultCard({
   return (
     <section
       aria-live="polite"
-      className="rounded-3xl border border-border/80 bg-white p-6 text-center shadow-lg sm:p-10"
+      className="border-border/80 rounded-3xl border bg-white p-6 text-center shadow-lg sm:p-10"
     >
       <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-emerald-50 text-emerald-600 ring-1 ring-emerald-200">
         <CheckCircle2 aria-hidden="true" className="size-8" />
@@ -33,9 +33,7 @@ export function DownloadResultCard({
       <h2 className="mt-5 text-2xl font-bold tracking-tight text-zinc-950">
         {title}
       </h2>
-      <p className="mt-2 text-sm text-zinc-600">
-        {description}
-      </p>
+      <p className="mt-2 text-sm text-zinc-600">{description}</p>
 
       {children}
 
@@ -66,7 +64,8 @@ export function DownloadResultCard({
 
       <div className="mt-6 border-t border-zinc-100 pt-5">
         <p className="text-[11px] leading-5 text-zinc-400">
-          Temporary file buffers in memory are automatically cleared when you leave or process another group.
+          Temporary file buffers in memory are automatically cleared when you
+          leave or process another group.
         </p>
         <div className="mt-4">
           <PrivacyNotice />

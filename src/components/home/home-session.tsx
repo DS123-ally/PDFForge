@@ -48,13 +48,13 @@ export function HomeSession() {
           <ol className="mt-8 grid gap-3 sm:grid-cols-2">
             {steps.map((step, index) => (
               <li key={step.title}>
-                <Card className="h-full bg-card" size="sm">
+                <Card className="bg-card h-full" size="sm">
                   <CardContent>
-                    <p className="text-sm font-semibold text-primary">
+                    <p className="text-primary text-sm font-semibold">
                       {index + 1}
                     </p>
                     <h3 className="mt-2 font-semibold">{step.title}</h3>
-                    <p className="mt-1 leading-6 text-muted-foreground">
+                    <p className="text-muted-foreground mt-1 leading-6">
                       {step.body}
                     </p>
                   </CardContent>

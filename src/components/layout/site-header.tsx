@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Layers, Menu, ShieldCheck, Sparkles, X } from "lucide-react";
+import { ArrowRight, Layers, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -20,7 +20,7 @@ const navItems = [
 export function Brand() {
   return (
     <Link
-      className="inline-flex items-center gap-2.5 rounded-full font-semibold tracking-tight transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-primary"
+      className="focus-visible:outline-primary inline-flex items-center gap-2.5 rounded-full font-semibold tracking-tight transition-opacity hover:opacity-90 focus-visible:outline-2"
       href="/"
     >
       <BrandMark className="size-8" />
@@ -38,11 +38,11 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full px-4 py-3 sm:px-6">
-      <div className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-border/80 bg-white/85 px-4 py-2 shadow-xs backdrop-blur-md">
+      <div className="border-border/80 mx-auto flex max-w-6xl items-center justify-between rounded-full border bg-white/85 px-4 py-2 shadow-xs backdrop-blur-md">
         <div className="flex items-center gap-3">
           <Brand />
           <span className="hidden items-center gap-1.5 rounded-full border border-emerald-200/80 bg-emerald-50/80 px-2.5 py-0.5 text-[11px] font-medium text-emerald-800 xl:inline-flex">
-            <span className="size-1.5 rounded-full bg-emerald-600 animate-pulse" />
+            <span className="size-1.5 animate-pulse rounded-full bg-emerald-600" />
             Local Sandbox
           </span>
         </div>
@@ -53,7 +53,7 @@ export function SiteHeader() {
         >
           {navItems.map((item) => (
             <Link
-              className="inline-flex h-8 items-center rounded-full px-3 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-primary"
+              className="focus-visible:outline-primary inline-flex h-8 items-center rounded-full px-3 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-2"
               href={item.href}
               key={item.href}
             >
@@ -61,7 +61,7 @@ export function SiteHeader() {
             </Link>
           ))}
           <Link
-            className="inline-flex h-8 items-center rounded-full px-3 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-2 focus-visible:outline-primary"
+            className="focus-visible:outline-primary inline-flex h-8 items-center rounded-full px-3 text-xs font-medium text-zinc-600 transition-colors hover:bg-zinc-100 hover:text-zinc-950 focus-visible:outline-2"
             href="/tools"
           >
             All tools
@@ -72,7 +72,7 @@ export function SiteHeader() {
           <Link
             className={cn(
               buttonStyles("secondary", "sm"),
-              "hidden sm:inline-flex text-xs",
+              "hidden text-xs sm:inline-flex",
             )}
             href="/tools"
           >
@@ -82,7 +82,7 @@ export function SiteHeader() {
           <Link
             className={cn(
               buttonStyles("primary", "sm"),
-              "text-xs px-3.5 shadow-xs",
+              "px-3.5 text-xs shadow-xs",
             )}
             href="/workspace"
           >
@@ -94,7 +94,7 @@ export function SiteHeader() {
             aria-controls="mobile-navigation"
             aria-expanded={open}
             aria-label="Toggle navigation"
-            className="inline-flex size-9 items-center justify-center rounded-full border border-border bg-white text-zinc-700 hover:bg-zinc-50 lg:hidden focus-visible:outline-2 focus-visible:outline-primary"
+            className="border-border focus-visible:outline-primary inline-flex size-9 items-center justify-center rounded-full border bg-white text-zinc-700 hover:bg-zinc-50 focus-visible:outline-2 lg:hidden"
             onClick={() => setOpen((prev) => !prev)}
             type="button"
           >
@@ -105,13 +105,13 @@ export function SiteHeader() {
 
       {open ? (
         <div
-          className="mx-auto mt-2 max-w-6xl rounded-2xl border border-border/80 bg-white/95 p-4 shadow-lg backdrop-blur-md lg:hidden animate-in fade-in slide-in-from-top-2 duration-150"
+          className="border-border/80 animate-in fade-in slide-in-from-top-2 mx-auto mt-2 max-w-6xl rounded-2xl border bg-white/95 p-4 shadow-lg backdrop-blur-md duration-150 lg:hidden"
           id="mobile-navigation"
         >
-          <div className="flex items-center justify-between pb-3 border-b border-border text-xs text-zinc-500">
+          <div className="border-border flex items-center justify-between border-b pb-3 text-xs text-zinc-500">
             <span>Navigation</span>
             <span className="inline-flex items-center gap-1.5 font-medium text-emerald-700">
-              <span className="size-1.5 rounded-full bg-emerald-600 animate-pulse" />
+              <span className="size-1.5 animate-pulse rounded-full bg-emerald-600" />
               100% Client-side
             </span>
           </div>
@@ -134,7 +134,7 @@ export function SiteHeader() {
               All tools (25+)
             </Link>
             <Link
-              className="flex items-center rounded-lg px-3 py-2 text-sm font-medium text-primary hover:bg-red-50"
+              className="text-primary flex items-center rounded-lg px-3 py-2 text-sm font-medium hover:bg-red-50"
               href="/workspace"
               onClick={() => setOpen(false)}
             >

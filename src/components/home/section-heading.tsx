@@ -17,16 +17,18 @@ export function SectionHeading({
 
   return (
     <div className={centered ? "mx-auto max-w-2xl text-center" : "max-w-2xl"}>
-      <span className="inline-flex items-center rounded-full border border-border/80 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wider text-zinc-700 shadow-2xs">
+      <span className="border-border/80 inline-flex items-center rounded-full border bg-white px-3 py-1 text-xs font-semibold tracking-wider text-zinc-700 uppercase shadow-2xs">
         {eyebrow}
       </span>
       <h2
-        className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-balance text-zinc-950 sm:text-4xl md:text-5xl sm:leading-tight"
+        className="mt-4 text-3xl font-semibold tracking-[-0.03em] text-balance text-zinc-950 sm:text-4xl sm:leading-tight md:text-5xl"
         id={id}
       >
         {title}
       </h2>
-      <p className="mt-3 text-sm leading-6 text-zinc-600 sm:text-base">{children}</p>
+      <p className="mt-3 text-sm leading-6 text-zinc-600 sm:text-base">
+        {children}
+      </p>
     </div>
   );
 }

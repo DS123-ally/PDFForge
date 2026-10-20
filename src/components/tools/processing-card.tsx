@@ -1,4 +1,10 @@
-import { CheckCircle2, CircleAlert, LoaderCircle, RotateCcw, XCircle } from "lucide-react";
+import {
+  CheckCircle2,
+  CircleAlert,
+  LoaderCircle,
+  RotateCcw,
+  XCircle,
+} from "lucide-react";
 
 import { PrivacyNotice } from "@/components/pdf/privacy-notice";
 import { Button } from "@/components/ui/button";
@@ -24,7 +30,7 @@ export function ProcessingCard({
   return (
     <section
       aria-live="polite"
-      className="rounded-3xl border border-border/80 bg-white p-6 text-center shadow-lg sm:p-10"
+      className="border-border/80 rounded-3xl border bg-white p-6 text-center shadow-lg sm:p-10"
     >
       <div className="mx-auto grid size-16 place-items-center rounded-2xl bg-zinc-50 text-zinc-900 ring-1 ring-zinc-200">
         {isSuccess ? (
@@ -37,7 +43,11 @@ export function ProcessingCard({
         ) : (
           <LoaderCircle
             aria-hidden="true"
-            className={isProcessing ? "size-8 animate-spin text-primary" : "size-8 text-zinc-400"}
+            className={
+              isProcessing
+                ? "text-primary size-8 animate-spin"
+                : "size-8 text-zinc-400"
+            }
           />
         )}
       </div>
@@ -64,18 +74,22 @@ export function ProcessingCard({
       ) : null}
 
       {state.result ? (
-        <dl className="mx-auto my-6 grid max-w-md gap-3 rounded-2xl border border-border/70 bg-zinc-50/80 p-4 text-left text-xs sm:grid-cols-3">
+        <dl className="border-border/70 mx-auto my-6 grid max-w-md gap-3 rounded-2xl border bg-zinc-50/80 p-4 text-left text-xs sm:grid-cols-3">
           <div>
-            <dt className="text-zinc-500 font-medium">Input Files</dt>
-            <dd className="mt-1 text-sm font-bold text-zinc-900">{state.result.fileCount}</dd>
+            <dt className="font-medium text-zinc-500">Input Files</dt>
+            <dd className="mt-1 text-sm font-bold text-zinc-900">
+              {state.result.fileCount}
+            </dd>
           </div>
           <div>
-            <dt className="text-zinc-500 font-medium">Total Pages</dt>
-            <dd className="mt-1 text-sm font-bold text-zinc-900">{state.result.totalPages}</dd>
+            <dt className="font-medium text-zinc-500">Total Pages</dt>
+            <dd className="mt-1 text-sm font-bold text-zinc-900">
+              {state.result.totalPages}
+            </dd>
           </div>
           <div>
-            <dt className="text-zinc-500 font-medium">Output Size</dt>
-            <dd className="mt-1 text-sm font-bold text-zinc-900 font-mono">
+            <dt className="font-medium text-zinc-500">Output Size</dt>
+            <dd className="mt-1 font-mono text-sm font-bold text-zinc-900">
               {state.result.outputBytes
                 ? formatFileSize(state.result.outputBytes.byteLength)
                 : "N/A"}
@@ -101,12 +115,7 @@ export function ProcessingCard({
 
       {isError && onReset ? (
         <div className="mt-6">
-          <Button
-            onClick={onReset}
-            size="sm"
-            type="button"
-            variant="secondary"
-          >
+          <Button onClick={onReset} size="sm" type="button" variant="secondary">
             <RotateCcw className="size-3.5" />
             <span>Try Again</span>
           </Button>

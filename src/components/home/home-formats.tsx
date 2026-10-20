@@ -21,7 +21,7 @@ export function HomeFormats() {
             <li className="text-center" key={format.name}>
               <FormatLogo className="mx-auto" name={format.name} />
               <p className="mt-3 text-sm font-medium">{format.name}</p>
-              <p className="mt-1 text-xs leading-5 text-muted-foreground">
+              <p className="text-muted-foreground mt-1 text-xs leading-5">
                 {format.detail}
               </p>
             </li>

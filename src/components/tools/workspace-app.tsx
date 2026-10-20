@@ -1,20 +1,11 @@
 "use client";
 
-import {
-  ArrowLeft,
-  ChevronDown,
-  Layers,
-  Search,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { ArrowLeft, ChevronDown, Layers, Search } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
-import { ToolCard } from "@/components/tools/tool-card";
 import { ToolWorkspace } from "@/components/tools/tool-workspace";
-import { Button } from "@/components/ui/button";
-import { directoryGroups, getTool, tools, type ToolCategory } from "@/config/tools";
+import { directoryGroups, getTool, tools } from "@/config/tools";
 import { captureWorkspaceToolSlug } from "@/lib/privacy/tool-location";
 import { cn } from "@/lib/utils";
 
@@ -60,6 +51,10 @@ export function WorkspaceApp() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showToolSelector, setShowToolSelector] = useState(false);
 
+  useEffect(() => {
+    captureWorkspaceToolSlug();
+  }, []);
+
   const filteredTools = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
     return tools.filter((t) => {
@@ -74,22 +69,13 @@ export function WorkspaceApp() {
     });
   }, [activeCategory, searchQuery]);
 
-  function selectTool(toolSlug: string) {
-    window.location.hash = toolSlug;
-    setShowToolSelector(false);
-  }
-
-  function clearActiveTool() {
-    window.location.hash = "";
-  }
-
   // If no tool is selected, render the Workspace Launcher Hub
   if (!tool) {
     return (
-      <div className="space-y-8 animate-in fade-in duration-200">
+      <div className="animate-in fade-in space-y-8 duration-200">
         <div className="flex flex-col gap-2">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-3 py-1 text-xs font-medium text-zinc-800 shadow-2xs w-fit">
-            <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="border-border inline-flex w-fit items-center gap-2 rounded-full border bg-white px-3 py-1 text-xs font-medium text-zinc-800 shadow-2xs">
+            <span className="size-2 animate-pulse rounded-full bg-emerald-500" />
             <span>Private Hash Mode Active</span>
             <span className="text-zinc-300">•</span>
             <span className="text-zinc-500">Host only sees /workspace</span>
@@ -99,17 +85,19 @@ export function WorkspaceApp() {
             Local Workspace Hub
           </h1>
           <p className="max-w-2xl text-sm leading-6 text-zinc-600 sm:text-base">
-            Select any tool to load it directly into this isolated tab. All file processing, rendering, and cryptographic hashing happens entirely in your local browser memory.
+            Select any tool to load it directly into this isolated tab. All file
+            processing, rendering, and cryptographic hashing happens entirely in
+            your local browser memory.
           </p>
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="flex flex-col gap-4 rounded-2xl border border-border/80 bg-white p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
+        <div className="border-border/80 flex flex-col gap-4 rounded-2xl border bg-white p-4 shadow-2xs sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
             {["All", ...directoryGroups].map((cat) => (
               <button
                 className={cn(
-                  "inline-flex h-8 items-center rounded-full px-3 text-xs font-medium transition-colors cursor-pointer",
+                  "inline-flex h-8 cursor-pointer items-center rounded-full px-3 text-xs font-medium transition-colors",
                   activeCategory === cat
                     ? "bg-zinc-900 text-white"
                     : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900",
@@ -124,9 +112,9 @@ export function WorkspaceApp() {
           </div>
 
           <div className="relative min-w-[240px]">
-            <Search className="pointer-events-none absolute left-3 top-2.5 size-4 text-zinc-400" />
+            <Search className="pointer-events-none absolute top-2.5 left-3 size-4 text-zinc-400" />
             <input
-              className="h-9 w-full rounded-full border border-border bg-zinc-50/60 pl-9 pr-4 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white focus:outline-none"
+              className="border-border h-9 w-full rounded-full border bg-zinc-50/60 pr-4 pl-9 text-xs text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-400 focus:bg-white focus:outline-none"
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter workspace tools..."
               type="search"
@@ -138,27 +126,26 @@ export function WorkspaceApp() {
         {/* Tool Grid */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredTools.map((t) => (
-            <button
-              className="group flex flex-col text-left rounded-2xl border border-border bg-white p-5 shadow-2xs transition-all hover:border-zinc-300 hover:shadow-xs cursor-pointer focus-visible:outline-2 focus-visible:outline-primary"
+            <Link
+              className="group border-border focus-visible:outline-primary flex flex-col rounded-2xl border bg-white p-5 text-left shadow-2xs transition-all hover:border-zinc-300 hover:shadow-xs focus-visible:outline-2"
+              href={`/workspace#${t.slug}`}
               key={t.slug}
-              onClick={() => selectTool(t.slug)}
-              type="button"
             >
               <div className="flex items-center justify-between">
                 <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-[10px] font-semibold text-zinc-600">
                   {t.category}
                 </span>
-                <span className="text-[11px] font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="text-primary text-[11px] font-medium opacity-0 transition-opacity group-hover:opacity-100">
                   Launch →
                 </span>
               </div>
-              <h3 className="mt-3 text-sm font-bold text-zinc-950 group-hover:text-primary transition-colors">
+              <h3 className="group-hover:text-primary mt-3 text-sm font-bold text-zinc-950 transition-colors">
                 {t.title}
               </h3>
               <p className="mt-1 text-xs leading-5 text-zinc-500">
                 {t.shortDescription}
               </p>
-            </button>
+            </Link>
           ))}
         </div>
       </div>
@@ -167,19 +154,18 @@ export function WorkspaceApp() {
 
   // When a tool IS selected, render the Active Tool Studio
   return (
-    <div className="space-y-6 animate-in fade-in duration-200">
+    <div className="animate-in fade-in space-y-6 duration-200">
       {/* Studio Header Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/80 pb-5">
+      <div className="border-border/80 flex flex-wrap items-center justify-between gap-4 border-b pb-5">
         <div>
           <div className="flex items-center gap-2 text-xs text-zinc-500">
-            <button
-              className="inline-flex items-center gap-1 font-medium text-zinc-600 hover:text-zinc-950 cursor-pointer"
-              onClick={clearActiveTool}
-              type="button"
+            <Link
+              className="inline-flex items-center gap-1 font-medium text-zinc-600 hover:text-zinc-950"
+              href="/workspace"
             >
               <ArrowLeft className="size-3" />
               <span>Workspace Hub</span>
-            </button>
+            </Link>
             <span>/</span>
             <span className="font-medium text-zinc-700">{tool.category}</span>
             <span>/</span>
@@ -195,13 +181,13 @@ export function WorkspaceApp() {
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800">
-            <span className="size-1.5 rounded-full bg-emerald-600 animate-pulse" />
+          <div className="hidden items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800 sm:inline-flex">
+            <span className="size-1.5 animate-pulse rounded-full bg-emerald-600" />
             <span>Local RAM Sandbox</span>
           </div>
 
           <button
-            className="inline-flex h-9 items-center gap-1.5 rounded-full border border-border bg-white px-3.5 text-xs font-semibold text-zinc-800 shadow-2xs hover:bg-zinc-50 cursor-pointer"
+            className="border-border inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full border bg-white px-3.5 text-xs font-semibold text-zinc-800 shadow-2xs hover:bg-zinc-50"
             onClick={() => setShowToolSelector(!showToolSelector)}
             type="button"
           >
@@ -214,11 +200,13 @@ export function WorkspaceApp() {
 
       {/* Dropdown tool switcher modal / bar */}
       {showToolSelector ? (
-        <div className="rounded-2xl border border-border bg-white p-4 shadow-lg animate-in fade-in duration-150">
-          <div className="flex items-center justify-between pb-3 border-b border-border text-xs text-zinc-500">
-            <span className="font-semibold text-zinc-900">Switch active workspace tool</span>
+        <div className="border-border animate-in fade-in rounded-2xl border bg-white p-4 shadow-lg duration-150">
+          <div className="border-border flex items-center justify-between border-b pb-3 text-xs text-zinc-500">
+            <span className="font-semibold text-zinc-900">
+              Switch active workspace tool
+            </span>
             <button
-              className="text-zinc-400 hover:text-zinc-600 cursor-pointer text-xs"
+              className="cursor-pointer text-xs text-zinc-400 hover:text-zinc-600"
               onClick={() => setShowToolSelector(false)}
               type="button"
             >
@@ -227,27 +215,29 @@ export function WorkspaceApp() {
           </div>
           <div className="mt-3 grid max-h-60 gap-1.5 overflow-y-auto sm:grid-cols-2 lg:grid-cols-3">
             {tools.map((t) => (
-              <button
+              <Link
                 className={cn(
-                  "flex items-center justify-between rounded-xl px-3 py-2 text-left text-xs transition-colors cursor-pointer",
+                  "flex items-center justify-between rounded-xl px-3 py-2 text-left text-xs transition-colors",
                   t.slug === tool.slug
-                    ? "bg-zinc-900 text-white font-medium"
-                    : "hover:bg-zinc-100 text-zinc-700",
+                    ? "bg-zinc-900 font-medium text-white"
+                    : "text-zinc-700 hover:bg-zinc-100",
                 )}
+                href={`/workspace#${t.slug}`}
                 key={t.slug}
-                onClick={() => selectTool(t.slug)}
-                type="button"
+                onClick={() => setShowToolSelector(false)}
               >
                 <span className="truncate">{t.title}</span>
-                <span className="text-[10px] opacity-70 ml-2">{t.category}</span>
-              </button>
+                <span className="ml-2 text-[10px] opacity-70">
+                  {t.category}
+                </span>
+              </Link>
             ))}
           </div>
         </div>
       ) : null}
 
       {/* Main Tool Execution Canvas */}
-      <div className="rounded-3xl border border-border/90 bg-white p-5 shadow-xs sm:p-8">
+      <div className="border-border/90 rounded-3xl border bg-white p-5 shadow-xs sm:p-8">
         <ToolWorkspace tool={tool} />
       </div>
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, ShieldCheck, UploadCloud, X } from "lucide-react";
+import { ShieldCheck, UploadCloud } from "lucide-react";
 import {
   type DragEvent,
   useEffect,
@@ -256,7 +256,7 @@ export function FileUploader({
           "group relative cursor-pointer text-center transition-all duration-200",
           "rounded-2xl border-2 border-dashed p-6 sm:p-8",
           dragActive
-            ? "border-primary bg-red-50/50 ring-4 ring-primary/10"
+            ? "border-primary ring-primary/10 bg-red-50/50 ring-4"
             : "border-border/90 bg-zinc-50/50 hover:border-zinc-400 hover:bg-zinc-50/80",
           tone === "soft" && "border-zinc-200/90 bg-white hover:bg-zinc-50/40",
         )}
@@ -286,20 +286,29 @@ export function FileUploader({
 
         <div className="flex flex-col items-center">
           <span className="grid size-12 place-items-center rounded-2xl border border-zinc-200 bg-white text-zinc-900 shadow-2xs transition-transform group-hover:scale-105">
-            <UploadCloud aria-hidden="true" className="size-6 text-zinc-700 group-hover:text-primary transition-colors" />
+            <UploadCloud
+              aria-hidden="true"
+              className="group-hover:text-primary size-6 text-zinc-700 transition-colors"
+            />
           </span>
 
-          <h2 id={`${inputId}-title`} className="mt-4 text-base font-semibold tracking-tight text-zinc-950">
-            {multiple ? "Drop PDF files here, or browse" : "Drop your PDF file here, or browse"}
+          <h2
+            id={`${inputId}-title`}
+            className="mt-4 text-base font-semibold tracking-tight text-zinc-950"
+          >
+            {multiple
+              ? "Drop PDF files here, or browse"
+              : "Drop your PDF file here, or browse"}
           </h2>
 
           <p className="mt-1 text-xs text-zinc-500" id={`${inputId}-helper`}>
-            {getHelperText(acceptedTypes)} • Up to {formatFileSize(maxFileSizeBytes)}
+            {getHelperText(acceptedTypes)} • Up to{" "}
+            {formatFileSize(maxFileSizeBytes)}
           </p>
 
           <div className="mt-4 flex items-center gap-2">
             <Button
-              className="text-xs px-4"
+              className="px-4 text-xs"
               disabled={isChecking}
               onClick={(e) => {
                 e.stopPropagation();
@@ -320,7 +329,10 @@ export function FileUploader({
             className="mt-4 flex items-center gap-1.5 text-[11px] font-medium text-emerald-700"
             id={`${inputId}-privacy`}
           >
-            <ShieldCheck aria-hidden="true" className="size-3.5 text-emerald-600" />
+            <ShieldCheck
+              aria-hidden="true"
+              className="size-3.5 text-emerald-600"
+            />
             <span>Files stay 100% local on this device</span>
           </div>
         </div>
@@ -333,7 +345,7 @@ export function FileUploader({
               {selectedCount} {selectedCount === 1 ? "file" : "files"} ready
             </p>
             <Button
-              className="text-xs h-7 px-2.5 text-zinc-500 hover:text-zinc-950"
+              className="h-7 px-2.5 text-xs text-zinc-500 hover:text-zinc-950"
               onClick={clearFiles}
               type="button"
               variant="ghost"

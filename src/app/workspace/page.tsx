@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
+import Script from "next/script";
 
 import { PageShell } from "@/components/layout/page-shell";
 import { WorkspaceApp } from "@/components/tools/workspace-app";
@@ -18,14 +19,19 @@ export default async function WorkspacePage() {
 
   return (
     <PageShell>
-      <script
+      <Script
         dangerouslySetInnerHTML={{ __html: workspaceHashCaptureScript }}
+        id="workspace-hash-capture"
         nonce={nonce}
+        strategy="afterInteractive"
       />
-      <main className="relative min-h-[calc(100vh-140px)] px-5 py-8 sm:px-8 sm:py-12" id="main-content">
+      <main
+        className="relative min-h-[calc(100vh-140px)] px-5 py-8 sm:px-8 sm:py-12"
+        id="main-content"
+      >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 reframe-grid-bg opacity-40 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_10%,#000_60%,transparent_100%)]"
+          className="reframe-grid-bg pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_80%_60%_at_50%_10%,#000_60%,transparent_100%)] opacity-40"
         />
         <div className="mx-auto max-w-5xl">
           <WorkspaceApp />

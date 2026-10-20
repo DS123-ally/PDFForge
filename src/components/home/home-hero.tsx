@@ -3,12 +3,9 @@
 import {
   ArrowRight,
   Cpu,
-  FileStack,
   HardDriveDownload,
   LockKeyhole,
-  ShieldAlert,
   ShieldCheck,
-  Sparkles,
   WifiOff,
 } from "lucide-react";
 import Link from "next/link";
@@ -75,38 +72,41 @@ export function HomeHero() {
   const [activeTab, setActiveTab] = useState("merge-pdf");
 
   return (
-    <section className="relative overflow-hidden bg-background px-5 pt-12 pb-20 sm:px-8 sm:pt-16">
+    <section className="bg-background relative overflow-hidden px-5 pt-12 pb-20 sm:px-8 sm:pt-16">
       {/* Background Reframe subtle grid pattern */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 reframe-grid-bg opacity-70 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_20%,#000_70%,transparent_100%)]"
+        className="reframe-grid-bg pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_20%,#000_70%,transparent_100%)] opacity-70"
       />
 
       <div className="relative mx-auto max-w-6xl">
         {/* Eyebrow badge */}
         <div className="flex justify-center">
           <Link
-            className="group inline-flex items-center gap-2 rounded-full border border-border/80 bg-white px-3.5 py-1 text-xs font-medium text-zinc-800 shadow-2xs transition-all hover:border-zinc-300 hover:shadow-xs"
+            className="group border-border/80 inline-flex items-center gap-2 rounded-full border bg-white px-3.5 py-1 text-xs font-medium text-zinc-800 shadow-2xs transition-all hover:border-zinc-300 hover:shadow-xs"
             href="/workspace"
           >
-            <span className="flex size-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="flex size-2 animate-pulse rounded-full bg-emerald-500" />
             <span className="text-zinc-600">Private Studio</span>
             <span className="text-zinc-300">•</span>
-            <span className="text-zinc-950 font-semibold">Zero Network Uploads</span>
+            <span className="font-semibold text-zinc-950">
+              Zero Network Uploads
+            </span>
             <ArrowRight className="size-3 text-zinc-400 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
 
         {/* Hero Title */}
         <div className="mx-auto mt-6 max-w-3xl text-center">
-          <h1 className="text-4xl font-semibold tracking-[-0.035em] text-balance text-zinc-950 sm:text-6xl md:text-7xl sm:leading-[1.05]">
+          <h1 className="text-4xl font-semibold tracking-[-0.035em] text-balance text-zinc-950 sm:text-6xl sm:leading-[1.05] md:text-7xl">
             Clean, redact, and share{" "}
             <span className="block font-normal text-zinc-400 sm:mt-1">
               without uploading.
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-zinc-600 sm:text-lg">
-            Merge, edit, convert, and lock PDFs on this device. Nothing is sent to a server.
+            Merge, edit, convert, and lock PDFs on this device. Nothing is sent
+            to a server.
           </p>
 
           {/* Action buttons */}
@@ -118,19 +118,16 @@ export function HomeHero() {
               <span>Open Workspace</span>
               <ArrowRight className="size-4" />
             </Link>
-            <Link
-              className={buttonStyles("secondary", "lg")}
-              href="/tools"
-            >
+            <Link className={buttonStyles("secondary", "lg")} href="/tools">
               <span>Explore 25+ Tools</span>
             </Link>
           </div>
         </div>
 
         {/* Reframe Studio Canvas / Interactive Dropzone Box */}
-        <div className="relative mx-auto mt-14 max-w-4xl rounded-3xl border border-border/90 bg-white p-3 shadow-lg ring-1 ring-black/[0.03] sm:p-5">
+        <div className="border-border/90 relative mx-auto mt-14 max-w-4xl rounded-3xl border bg-white p-3 shadow-lg ring-1 ring-black/[0.03] sm:p-5">
           {/* Top Canvas Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 pb-3">
+          <div className="border-border/70 flex flex-wrap items-center justify-between gap-3 border-b pb-3">
             <div className="flex items-center gap-2 overflow-x-auto py-1">
               {quickTools.map((tool) => (
                 <Link
@@ -150,21 +147,18 @@ export function HomeHero() {
             </div>
 
             <div className="hidden items-center gap-2 text-xs font-medium text-emerald-700 sm:flex">
-              <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="size-2 animate-pulse rounded-full bg-emerald-500" />
               <span>Engine Status: Ready (0 KB transferred)</span>
             </div>
           </div>
 
           {/* Center Dropzone */}
           <div className="mt-4" id="drop-files">
-            <FileUploader
-              multiple
-              tone="soft"
-            />
+            <FileUploader multiple tone="soft" />
           </div>
 
           {/* Canvas Footer Telemetry Strip */}
-          <div className="mt-4 grid grid-cols-2 gap-3 border-t border-border/70 pt-4 text-xs text-zinc-500 sm:grid-cols-4">
+          <div className="border-border/70 mt-4 grid grid-cols-2 gap-3 border-t pt-4 text-xs text-zinc-500 sm:grid-cols-4">
             <div className="flex items-center gap-2">
               <ShieldCheck className="size-4 text-emerald-600" />
               <span>Local Sandbox</span>
@@ -190,7 +184,7 @@ export function HomeHero() {
             const Icon = pillar.icon;
             return (
               <div
-                className="flex items-start gap-3.5 rounded-2xl border border-border/80 bg-white/70 p-4 shadow-2xs backdrop-blur-xs transition-colors hover:border-zinc-300"
+                className="border-border/80 flex items-start gap-3.5 rounded-2xl border bg-white/70 p-4 shadow-2xs backdrop-blur-xs transition-colors hover:border-zinc-300"
                 key={pillar.label}
               >
                 <div className="grid size-9 shrink-0 place-items-center rounded-xl bg-zinc-100 text-zinc-900">
@@ -217,7 +211,7 @@ export function HomeHero() {
           <ul className="mt-5 flex flex-wrap items-center justify-center gap-3">
             {formatLogos.map((format) => (
               <li
-                className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-2xs"
+                className="border-border/80 inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-2xs"
                 key={format.name}
               >
                 <FormatLogo className="size-5 rounded-md" name={format.name} />

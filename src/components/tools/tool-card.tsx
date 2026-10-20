@@ -71,14 +71,14 @@ export function ToolCard({
   return (
     <Link
       className={cn(
-        "group relative flex min-h-44 flex-col justify-between rounded-2xl border border-border bg-white p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-xs focus-visible:outline-2 focus-visible:outline-primary",
+        "group border-border focus-visible:outline-primary relative flex min-h-44 flex-col justify-between rounded-2xl border bg-white p-5 shadow-2xs transition-all duration-200 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-xs focus-visible:outline-2",
         className,
       )}
       href={getToolHref(tool.slug)}
     >
       <div>
         <div className="flex items-center justify-between">
-          <span className="grid size-9 place-items-center rounded-xl bg-zinc-100 text-zinc-900 ring-1 ring-zinc-200/80 transition-colors group-hover:bg-primary group-hover:text-white">
+          <span className="group-hover:bg-primary grid size-9 place-items-center rounded-xl bg-zinc-100 text-zinc-900 ring-1 ring-zinc-200/80 transition-colors group-hover:text-white">
             <Icon aria-hidden="true" className="size-4" />
           </span>
           <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-[10px] font-semibold text-zinc-600">
@@ -86,15 +86,15 @@ export function ToolCard({
           </span>
         </div>
 
-        <h3 className="mt-4 text-sm font-bold tracking-tight text-zinc-950 group-hover:text-primary transition-colors">
+        <h3 className="group-hover:text-primary mt-4 text-sm font-bold tracking-tight text-zinc-950 transition-colors">
           {tool.title}
         </h3>
-        <p className="mt-1 text-xs leading-5 text-zinc-500 line-clamp-2">
+        <p className="mt-1 line-clamp-2 text-xs leading-5 text-zinc-500">
           {tool.shortDescription}
         </p>
       </div>
 
-      <div className="mt-4 flex items-center justify-between pt-3 border-t border-zinc-100 text-[11px] font-semibold text-primary">
+      <div className="text-primary mt-4 flex items-center justify-between border-t border-zinc-100 pt-3 text-[11px] font-semibold">
         <span>Launch tool</span>
         <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
       </div>

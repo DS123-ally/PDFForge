@@ -44,7 +44,7 @@ export function FileListItem({
         status === "error"
           ? "border-red-200 bg-red-50/20"
           : "border-border/80 hover:border-zinc-300",
-        isDragging && "opacity-40 scale-[0.99]",
+        isDragging && "scale-[0.99] opacity-40",
       )}
       draggable={Boolean(onDragStart)}
       onDragEnd={onDragEnd}
@@ -65,14 +65,14 @@ export function FileListItem({
       {onDragStart ? (
         <button
           aria-label="Drag to reorder"
-          className="cursor-grab text-zinc-400 hover:text-zinc-600 active:cursor-grabbing focus-visible:outline-2 focus-visible:outline-primary"
+          className="focus-visible:outline-primary cursor-grab text-zinc-400 hover:text-zinc-600 focus-visible:outline-2 active:cursor-grabbing"
           type="button"
         >
           <GripVertical aria-hidden="true" className="size-4 shrink-0" />
         </button>
       ) : null}
 
-      <div className="size-10 shrink-0 overflow-hidden rounded-lg border border-border/80 bg-zinc-50">
+      <div className="border-border/80 size-10 shrink-0 overflow-hidden rounded-lg border bg-zinc-50">
         <PdfThumbnail className="size-full object-cover" />
       </div>
 
@@ -80,7 +80,7 @@ export function FileListItem({
         <div className="flex items-center gap-2">
           {previewUrl ? (
             <a
-              className="truncate text-xs font-semibold text-zinc-900 hover:text-primary transition-colors focus-visible:outline-2 focus-visible:outline-primary"
+              className="hover:text-primary focus-visible:outline-primary truncate text-xs font-semibold text-zinc-900 transition-colors focus-visible:outline-2"
               href={previewUrl}
               rel="noopener"
               target="_blank"
@@ -89,13 +89,16 @@ export function FileListItem({
               {name}
             </a>
           ) : (
-            <p className="truncate text-xs font-semibold text-zinc-900" title={name}>
+            <p
+              className="truncate text-xs font-semibold text-zinc-900"
+              title={name}
+            >
               {name}
             </p>
           )}
 
           {note ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-700 border border-amber-200">
+            <span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-700">
               <Lock className="size-2.5" />
               {note}
             </span>
@@ -107,7 +110,9 @@ export function FileListItem({
           {pageCount ? (
             <>
               <span>•</span>
-              <span>{pageCount} {pageCount === 1 ? "page" : "pages"}</span>
+              <span>
+                {pageCount} {pageCount === 1 ? "page" : "pages"}
+              </span>
             </>
           ) : null}
         </div>
@@ -122,7 +127,7 @@ export function FileListItem({
           <div className="flex items-center gap-0.5">
             <Button
               aria-label={`Move ${name} up`}
-              className="size-7 p-0 rounded-md text-zinc-500 hover:text-zinc-950"
+              className="size-7 rounded-md p-0 text-zinc-500 hover:text-zinc-950"
               disabled={!onMoveUp}
               onClick={onMoveUp}
               size="sm"
@@ -133,7 +138,7 @@ export function FileListItem({
             </Button>
             <Button
               aria-label={`Move ${name} down`}
-              className="size-7 p-0 rounded-md text-zinc-500 hover:text-zinc-950"
+              className="size-7 rounded-md p-0 text-zinc-500 hover:text-zinc-950"
               disabled={!onMoveDown}
               onClick={onMoveDown}
               size="sm"
@@ -148,7 +153,7 @@ export function FileListItem({
         {onRemove ? (
           <Button
             aria-label={`Remove ${name}`}
-            className="size-7 p-0 rounded-md text-zinc-400 hover:bg-red-50 hover:text-red-600"
+            className="size-7 rounded-md p-0 text-zinc-400 hover:bg-red-50 hover:text-red-600"
             onClick={onRemove}
             size="sm"
             type="button"
