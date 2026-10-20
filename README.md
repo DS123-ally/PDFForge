@@ -1,6 +1,6 @@
 # PDFForge
 
-PDFForge is a privacy-first PDF utility suite. The Next.js app is only a shell: **every document operation runs in the visitor’s browser**. Files, extracted text, metadata, and passwords are not uploaded, stored on a server, or sent to a third-party processing API.
+PDFForge is a privacy-first PDF studio. The Next.js app is only a shell: **every document operation runs in the visitor’s browser**. Files, extracted text, metadata, and passwords are not uploaded, stored on a server, or sent to a third-party processing API.
 
 The public product name is **PDFForge**. Older Figma frames may still show the placeholder brand “PDFLocal.”
 
@@ -31,7 +31,7 @@ Extra users cost the host **bandwidth for JS/OCR assets**, not CPU for their PDF
 | **Edge / Node**                 | Serve pages, hashed `/_next/static` files, `/ocr` WASM/lang data, `/sw.js`. `GET /health` for probes. No PDF I/O. |
 | **Next.js App Router**          | Marketing routes, SEO, CSP nonces in [`src/proxy.ts`](src/proxy.ts), tool pages at `/tools/[slug]`.               |
 | **React workspaces**            | UI only. They never mutate PDF bytes themselves.                                                                  |
-| **`src/lib/*`**                 | Validation, PDF.js rendering/text, pdf-lib edits, OCR, OOXML/HTML convert, recipes.                               |
+| **`src/lib/*`**                 | Validation, PDF.js rendering/text, pdf-lib edits, OCR, OOXML/HTML convert, recipes, GST invoices.                 |
 | **`src/workers/pdf.worker.ts`** | Isolated thread for merge/split/organize and other mutations.                                                     |
 | **Browser**                     | File API, memory, downloads. Optional PWA shell cache (never document bytes).                                     |
 
@@ -47,19 +47,21 @@ Security headers and a nonce-based Content-Security-Policy apply on HTML. PDF.js
 ```text
 pdfforge/
 ├── src/
-│   ├── app/                 # Routes: /, /tools, /tools/[tool], /workspace, /privacy, /about, /offline, /health
+│   ├── app/                 # /, /tools, /tools/[tool], /workspace, /compare, /for, /privacy, /about, /offline, /health
 │   ├── proxy.ts             # CSP nonce + security headers
 │   ├── components/
+│   │   ├── home/            # Landing: hero, solutions, tools, recipes, pricing
 │   │   ├── layout/          # Header, footer, page shell
 │   │   ├── pdf/             # Uploader, thumbnails (no byte mutation)
 │   │   ├── tools/           # Per-tool workspaces
 │   │   ├── privacy/         # Cleanup, hash-URL, extension guard
 │   │   └── pwa/
-│   ├── config/              # tools.ts, SEO, site URL, security headers
+│   ├── config/              # tools.ts, SEO, comparisons, industries, site URL
 │   ├── hooks/               # Worker orchestration
 │   ├── lib/
 │   │   ├── pdf/             # pdf-lib / PDF.js operations
-│   │   ├── convert/         # PDF → Word / Excel / PPT / HTML (client)
+│   │   ├── convert/         # Office, Markdown, CSV, HTML ↔ PDF (client)
+│   │   ├── gst/             # GST invoice PDF
 │   │   ├── scan/            # Camera flatten + on-device OCR
 │   │   ├── recipes/         # Private Recipes pipeline
 │   │   ├── privacy/         # Persistence rules, cleanup
@@ -79,31 +81,36 @@ UI components call libraries; libraries may post work to the PDF worker. That ke
 
 ### Tools (by category)
 
-Defined in [`src/config/tools.ts`](src/config/tools.ts).
+Defined in [`src/config/tools.ts`](src/config/tools.ts). Each tool has a page at `/tools/[slug]` and can also open in the noindex workspace.
 
-| Category | Tools                                                                                        |
-| -------- | -------------------------------------------------------------------------------------------- |
-| Organize | Merge, Split, Organize, Private Recipes                                                      |
-| Convert  | Scan Document, Images to PDF, PDF to Images, PDF to Word / Excel / PPT / HTML                |
-| Edit     | Rotate, Crop, Watermark, Page numbers, Headers/footers, Extract text                         |
-| Privacy  | Privacy Risk Scanner, Privacy Inspector, Remove/view metadata, Find & redact PII, Redact PDF |
-| Security | Password protect, Unlock, Flatten, Document Integrity                                        |
+| Category | Tools                                                                                                                                   |
+| -------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Organize | Merge PDF, Compress PDF, Repair PDF, Private Recipes, Split PDF, Organize PDF                                                           |
+| Convert  | Scan Document, Images to PDF, PDF to Images, PDF to Word / Excel / PowerPoint / HTML, Word / Excel / PowerPoint / Markdown / CSV to PDF |
+| Edit     | Rotate PDF, Crop PDF, Add Watermark, Add Page Numbers, Add Headers and Footers                                                          |
+| Privacy  | Privacy Risk Scanner, Privacy Inspector, Remove Metadata, View Metadata, Extract Text                                                   |
+| Security | Password Protect PDF, Unlock PDF, Find and Redact PII, Redact PDF, Flatten PDF, Document Integrity                                      |
+| Business | GST Invoice                                                                                                                             |
 
-Conversion and OCR use the in-tab text layer and optional on-device English Tesseract. They are not desktop-publisher reconstructions of layout.
+Conversion and OCR use the in-tab text layer and optional on-device English Tesseract. They are not desktop-publisher reconstructions of layout. Compress PDF can rewrite the file (selectable text stays) or redraw pages as pictures. Crop PDF can resize page boxes or keep only the cropped JPEG. Repair PDF rebuilds readable pages, or recovers pages that can be drawn as pictures.
 
-## Feature enhancements
+## What the product includes
 
-Shipped on top of the original Merge-first roadmap. All of these still run **in the tab**.
+All of this still runs **in the tab**.
 
-| Area     | What was added                                                                                                                               |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Privacy  | Privacy Inspector (metadata, JS, hidden text, EXIF); Privacy Risk Scanner (Aadhaar, PAN, cards, emails, IFSC) with optional raster redaction |
-| Convert  | PDF → Word, Excel, PowerPoint, HTML via OOXML/JSZip; OCR on pages with no selectable text (same engine as Scan Document)                     |
-| Capture  | Scan Document: camera/photos, perspective flatten, searchable PDF                                                                            |
-| Workflow | Private Recipes: chain steps (merge, numbers, watermark, strip metadata, protect) in one local session                                       |
-| Edit     | Crop PDF: page boxes keep selectable text; page pictures keep only the cropped JPEG                                                          |
-| Trust    | Document Integrity: SHA-256/512 fingerprint, compare two files, verify a known hash                                                          |
-| Hosting  | Docker + nginx (cache static/OCR, `no-store` on `/sw.js`), `/health`, Vercel without `standalone`                                            |
+| Area     | Behavior                                                                                                                                        |
+| -------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Home     | Private studio landing: drop zone, tool groups, recipes (Send externally, Clean a copy, Redact a copy, Number a packet), and local-only pricing |
+| Privacy  | Privacy Inspector (metadata, JS, hidden text, EXIF); Privacy Risk Scanner (Aadhaar, PAN, cards, emails, IFSC) with optional raster redaction    |
+| Convert  | PDF ↔ Word, Excel, PowerPoint; Markdown, CSV, and HTML; OCR on pages with no selectable text                                                    |
+| Capture  | Scan Document: camera/photos, perspective flatten, searchable PDF                                                                               |
+| Workflow | Private Recipes: chain steps (merge, numbers, watermark, strip metadata, protect) in one local session                                          |
+| Edit     | Crop PDF: page boxes keep selectable text; page pictures keep only the cropped JPEG                                                             |
+| Organize | Compress (lossless rewrite or page pictures) and Repair (rebuild pages or recover pictures)                                                     |
+| Business | GST Invoice PDF built in the browser                                                                                                            |
+| Trust    | Document Integrity: SHA-256/512 fingerprint, compare two files, verify a known hash                                                             |
+| Pages    | Comparisons (`/compare/ilovepdf`, `/compare/smallpdf`, `/compare/adobe`) and audiences (`/for/ca-firms`, `/for/law-firms`, `/for/hr`)           |
+| Hosting  | Docker + nginx (cache static/OCR, `no-store` on `/sw.js`), `/health`, Vercel without `standalone`                                               |
 
 ### Next enhancements (keep local-first)
 
@@ -130,15 +137,18 @@ Do **not** “enhance” by adding file-upload APIs, PDF queues, or a third-part
 
 ## Routes
 
-| Path                             | Role                                          |
-| -------------------------------- | --------------------------------------------- |
-| `/`                              | Landing                                       |
-| `/tools`                         | Directory (category in the URL hash)          |
-| `/tools/[slug]`                  | Indexed tool page + workspace                 |
-| `/workspace#slug`                | Noindex workspace (tool name not in the path) |
-| `/privacy`, `/about`, `/offline` | Policy, product, PWA fallback                 |
-| `/health`                        | Liveness JSON, `noindex`                      |
-| `/sitemap.xml`, `/robots.txt`    | Public routes only                            |
+| Path                             | Role                                                    |
+| -------------------------------- | ------------------------------------------------------- |
+| `/`                              | Landing: studio, solutions, tools, recipes, pricing     |
+| `/tools`                         | Directory (category in the URL hash)                    |
+| `/tools/[slug]`                  | Indexed tool page + workspace                           |
+| `/workspace#slug`                | Noindex workspace (tool name not in the path)           |
+| `/compare/[product]`             | Comparisons: `ilovepdf`, `smallpdf`, `adobe`            |
+| `/for/[audience]`                | Audience pages: `ca-firms`, `law-firms`, `hr`           |
+| `/privacy`, `/about`, `/offline` | Policy, product, PWA fallback                           |
+| `/health`                        | Liveness JSON, `noindex`                                |
+| `/tools/merge-pdf/states`        | Noindex UI reference for processing and download states |
+| `/sitemap.xml`, `/robots.txt`    | Public routes only                                      |
 
 ## Privacy invariants
 
@@ -166,18 +176,21 @@ Open [http://localhost:3000](http://localhost:3000). Copy `.env.example` if you 
 
 ### Quality
 
+CI runs these on every push to `main` and on pull requests. `format:check` is required; a class-order or whitespace mismatch fails the quality job before tests.
+
 ```bash
+npm run audit
+npm run release:check
+npm run format:check
 npm run lint
 npm run typecheck
 npm run test:unit
-npm run audit
-npm run release:check
 npm run build
 npx playwright install chromium firefox webkit   # once
 npm run test:e2e
 ```
 
-E2E serves the production build on port **3100**. Run `npm run build` first if that output is stale.
+`npm run format` rewrites files to satisfy `format:check`. E2E serves the production build on port **3100** and covers Chromium, Firefox, and WebKit. Run `npm run build` first if that output is stale.
 
 ## Run in Docker (this machine)
 
@@ -211,4 +224,5 @@ Set `NEXT_PUBLIC_SITE_URL` to the public origin before a production build (Verce
 - [`docs/architecture.md`](docs/architecture.md) — phase history and constraints
 - [`docs/privacy-audit.md`](docs/privacy-audit.md) — threat model
 - [`docs/release.md`](docs/release.md) — Docker, nginx, Vercel, rollback
+- [`docs/acceptance.md`](docs/acceptance.md) — browser and release checks
 - [Figma prototype](https://www.figma.com/proto/eSdbWCDJ0EqKUPESoR66nx/PDFLocal-%E2%80%94-Privacy-First-PDF-Tools?node-id=0-1) (PDFLocal placeholder branding)
