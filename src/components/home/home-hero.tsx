@@ -203,22 +203,40 @@ export function HomeHero() {
           })}
         </div>
 
-        {/* Supported Formats Row */}
-        <div className="mx-auto mt-16 max-w-4xl text-center">
-          <p className="text-xs font-semibold tracking-wider text-zinc-400 uppercase">
+        {/* Supported formats, one continuous line */}
+        <div className="mt-16">
+          <p className="text-center text-xs font-semibold tracking-wider text-zinc-400 uppercase">
             Supported Local File Formats
           </p>
-          <ul className="mt-5 flex flex-wrap items-center justify-center gap-3">
-            {formatLogos.map((format) => (
-              <li
-                className="border-border/80 inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1.5 text-xs font-medium text-zinc-700 shadow-2xs"
-                key={format.name}
-              >
-                <FormatLogo className="size-5 rounded-md" name={format.name} />
-                <span>{format.name}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="relative mt-5 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
+            <div className="format-flow flex w-max motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center">
+              {[0, 1].map((copy) => (
+                <ul
+                  aria-hidden={copy === 1}
+                  className={cn(
+                    "flex shrink-0 items-center gap-3 pr-3",
+                    copy === 0 &&
+                      "motion-reduce:w-full motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:pr-0",
+                    copy === 1 && "motion-reduce:hidden",
+                  )}
+                  key={copy}
+                >
+                  {formatLogos.map((format) => (
+                    <li
+                      className="border-border/80 inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1.5 text-xs font-medium whitespace-nowrap text-zinc-700 shadow-2xs"
+                      key={format.name}
+                    >
+                      <FormatLogo
+                        className="size-5 rounded-md"
+                        name={format.name}
+                      />
+                      <span>{format.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
