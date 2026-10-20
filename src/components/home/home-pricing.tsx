@@ -21,7 +21,7 @@ export function HomePricing() {
       aria-labelledby="pricing-title"
       className="border-border/80 border-t bg-zinc-50/50 px-5 py-20 sm:px-8 sm:py-24"
     >
-      <div className="mx-auto grid min-w-0 max-w-6xl gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+      <div className="mx-auto grid max-w-6xl min-w-0 gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
         <div className="min-w-0">
           <div className="border-border inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-xs font-medium text-zinc-700 shadow-2xs">
             <ShieldCheck className="size-3.5 text-emerald-600" />
