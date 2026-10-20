@@ -21,8 +21,8 @@ export function HomePricing() {
       aria-labelledby="pricing-title"
       className="border-border/80 border-t bg-zinc-50/50 px-5 py-20 sm:px-8 sm:py-24"
     >
-      <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-        <div>
+      <div className="mx-auto grid min-w-0 max-w-6xl gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+        <div className="min-w-0">
           <div className="border-border inline-flex items-center gap-2 rounded-full border bg-white px-3 py-1 text-xs font-medium text-zinc-700 shadow-2xs">
             <ShieldCheck className="size-3.5 text-emerald-600" />
             <span>Open & Transparent</span>
@@ -42,7 +42,7 @@ export function HomePricing() {
             there is no subscription cost to pass on to you.
           </p>
 
-          <div className="mt-8 flex items-center gap-4">
+          <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               className={cn(buttonStyles("primary", "lg"), "shadow-sm")}
               href="/workspace"
@@ -92,7 +92,7 @@ export function HomePricing() {
             ))}
           </ul>
 
-          <div className="border-border/80 mt-8 flex items-center justify-between border-t pt-6 text-xs text-zinc-500">
+          <div className="border-border/80 mt-8 flex flex-wrap items-center justify-between gap-2 border-t pt-6 text-xs text-zinc-500">
             <span>Client RAM based</span>
             <span className="font-mono text-[11px] text-zinc-400">
               WASM + AES-256 + PDF-LIB

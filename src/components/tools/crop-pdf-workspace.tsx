@@ -208,6 +208,11 @@ export function CropPdfWorkspace() {
           })}
         </div>
       </fieldset>
+      <div className="mt-5 hidden justify-end md:flex">
+        <Button disabled={!canCrop} onClick={() => void crop()} type="button">
+          Crop PDF
+        </Button>
+      </div>
 
       {selectedFile && document ? (
         <section className="mt-6 rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
@@ -295,15 +300,6 @@ export function CropPdfWorkspace() {
                 value={rect.height}
               />
             </div>
-          </div>
-          <div className="mt-5 hidden justify-end md:flex">
-            <Button
-              disabled={!canCrop}
-              onClick={() => void crop()}
-              type="button"
-            >
-              Crop PDF
-            </Button>
           </div>
         </section>
       ) : null}

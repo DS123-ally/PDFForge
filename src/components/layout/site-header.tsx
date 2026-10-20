@@ -38,7 +38,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-50 w-full px-4 py-3 sm:px-6">
-      <div className="border-border/80 mx-auto flex max-w-6xl items-center justify-between rounded-full border bg-white/85 px-4 py-2 shadow-xs backdrop-blur-md">
+      <div className="border-border/80 mx-auto flex max-w-6xl min-w-0 items-center justify-between gap-2 rounded-full border bg-white/85 px-4 py-2 shadow-xs backdrop-blur-md">
         <div className="flex items-center gap-3">
           <Brand />
           <span className="hidden items-center gap-1.5 rounded-full border border-emerald-200/80 bg-emerald-50/80 px-2.5 py-0.5 text-[11px] font-medium text-emerald-800 xl:inline-flex">
@@ -93,8 +93,8 @@ export function SiteHeader() {
           <button
             aria-controls="mobile-navigation"
             aria-expanded={open}
-            aria-label="Toggle navigation"
-            className="border-border focus-visible:outline-primary inline-flex size-9 items-center justify-center rounded-full border bg-white text-zinc-700 hover:bg-zinc-50 focus-visible:outline-2 lg:hidden"
+            aria-label={open ? "Close navigation" : "Open navigation"}
+            className="border-border focus-visible:outline-primary inline-flex size-9 shrink-0 items-center justify-center rounded-full border bg-white text-zinc-700 hover:bg-zinc-50 focus-visible:outline-2 lg:hidden"
             onClick={() => setOpen((prev) => !prev)}
             type="button"
           >
@@ -104,7 +104,8 @@ export function SiteHeader() {
       </div>
 
       {open ? (
-        <div
+        <nav
+          aria-label="Mobile navigation"
           className="border-border/80 animate-in fade-in slide-in-from-top-2 mx-auto mt-2 max-w-6xl rounded-2xl border bg-white/95 p-4 shadow-lg backdrop-blur-md duration-150 lg:hidden"
           id="mobile-navigation"
         >
@@ -141,7 +142,7 @@ export function SiteHeader() {
               Open Workspace →
             </Link>
           </div>
-        </div>
+        </nav>
       ) : null}
     </header>
   );

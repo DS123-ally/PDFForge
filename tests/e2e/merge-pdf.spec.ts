@@ -32,8 +32,8 @@ test("merges local PDFs in order and does not upload document bytes", async ({
   await expect(page.getByText("2 files ready")).toBeVisible({
     timeout: 15_000,
   });
-  await expect(page.getByText(/- 1 page$/)).toBeVisible();
-  await expect(page.getByText(/- 2 pages$/)).toBeVisible();
+  await expect(page.getByText("1 page", { exact: true })).toBeVisible();
+  await expect(page.getByText("2 pages", { exact: true })).toBeVisible();
 
   await page.getByRole("button", { name: "Merge PDFs" }).click();
   await expect(

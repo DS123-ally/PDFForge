@@ -49,7 +49,7 @@ const trustPillars = [
   {
     icon: ShieldCheck,
     label: "Zero Server Uploads",
-    desc: "Files never leave your device memory",
+    desc: "Your documents never leave your device",
   },
   {
     icon: Cpu,
@@ -128,7 +128,7 @@ export function HomeHero() {
         <div className="border-border/90 relative mx-auto mt-14 max-w-4xl rounded-3xl border bg-white p-3 shadow-lg ring-1 ring-black/[0.03] sm:p-5">
           {/* Top Canvas Bar */}
           <div className="border-border/70 flex flex-wrap items-center justify-between gap-3 border-b pb-3">
-            <div className="flex items-center gap-2 overflow-x-auto py-1">
+            <div className="flex w-full min-w-0 items-center gap-2 overflow-x-auto py-1">
               {quickTools.map((tool) => (
                 <Link
                   className={cn(
