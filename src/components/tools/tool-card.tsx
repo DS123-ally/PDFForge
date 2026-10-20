@@ -70,7 +70,7 @@ export function ToolCard({
   return (
     <Link
       className={cn(
-        "group flex min-h-40 flex-col rounded-2xl border border-transparent p-5 transition hover:border-zinc-200 hover:bg-white hover:shadow-sm focus-visible:outline-2 focus-visible:outline-red-600",
+        "group flex min-h-40 flex-col rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm transition hover:border-red-200 hover:shadow-md focus-visible:outline-2 focus-visible:outline-red-600",
         className,
       )}
       href={getToolHref(tool.slug)}

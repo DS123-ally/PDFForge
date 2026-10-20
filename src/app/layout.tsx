@@ -7,6 +7,7 @@ import { PrivacyCleanupProvider } from "@/components/privacy/privacy-cleanup-pro
 import { PwaProvider } from "@/components/pwa/pwa-provider";
 import { env } from "@/config/env";
 
+import { sans } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -57,8 +58,12 @@ export default async function RootLayout({
   await headers();
 
   return (
-    <html className="h-full antialiased" lang="en" suppressHydrationWarning>
-      <body className="min-h-full" suppressHydrationWarning>
+    <html
+      className={`${sans.variable} h-full antialiased`}
+      lang="en"
+      suppressHydrationWarning
+    >
+      <body className="min-h-full font-sans" suppressHydrationWarning>
         {children}
         <ExtensionGuard />
         <PrivacyCleanupProvider />

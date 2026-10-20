@@ -10,7 +10,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-brand: var(--brand);
-  --font-sans: Arial, Helvetica, sans-serif;
+  --font-sans: var(--font-sans-family), "Segoe UI", Arial, Helvetica, sans-serif;
   --font-mono: "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
 }
 
@@ -26,7 +26,9 @@ body {
   margin: 0;
   background: #f7f4f1;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
 }
 
 button,
@@ -34,6 +36,7 @@ a,
 input,
 select,
 textarea {
+  font-family: inherit;
   outline-offset: 3px;
 }
 

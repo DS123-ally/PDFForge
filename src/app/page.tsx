@@ -52,7 +52,7 @@ export default function Home() {
         <HomeRecipes />
 
         <section
-          className="bg-zinc-50 px-5 py-14 sm:px-8"
+          className="px-5 py-14 sm:px-8"
           aria-labelledby="tools-title"
         >
           <div className="mx-auto max-w-7xl">

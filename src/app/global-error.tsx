@@ -1,5 +1,7 @@
 "use client";
 
+import { sans } from "./fonts";
+
 type GlobalErrorProps = {
   error: Error & { digest?: string };
   reset: () => void;
@@ -7,13 +9,12 @@ type GlobalErrorProps = {
 
 export default function GlobalError({ reset }: GlobalErrorProps) {
   return (
-    <html lang="en">
-      <body>
+    <html className={sans.variable} lang="en">
+      <body className={sans.className}>
         <main
           style={{
             alignItems: "center",
             display: "flex",
-            fontFamily: "Arial, Helvetica, sans-serif",
             justifyContent: "center",
             minHeight: "100vh",
             padding: "1.5rem",
