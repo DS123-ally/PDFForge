@@ -37,7 +37,6 @@ const layoutStyle = `
 }
 .docx-layout-host section.docx-page {
   overflow: visible !important;
-  outline: 1px solid #111111;
 }
 .docx-layout-host section.docx-page > header,
 .docx-layout-host section.docx-page > footer {
@@ -97,11 +96,13 @@ export async function renderDocxLayoutToPdf(
     await document.fonts.ready;
     await wait(700);
     await decodeImages(host);
-    const banner = await headerBannerUrl(bytes);
 
-    const pages = [...body.querySelectorAll("section.docx-page")]
-      .filter((node): node is HTMLElement => node instanceof HTMLElement)
-      .filter(pageHasContent);
+    const drawnPages = [...body.querySelectorAll("section.docx-page")].filter(
+      (node): node is HTMLElement => node instanceof HTMLElement,
+    );
+
+    await pinFloatingImages(drawnPages);
+    const pages = drawnPages.filter(pageHasContent);
 
     if (pages.length === 0) {
       throw new SourceDocumentError("This Word file has no pages to draw.");
@@ -120,9 +121,6 @@ export async function renderDocxLayoutToPdf(
 
     for (const [index, page] of pages.entries()) {
       onProgress?.(`Drawing page ${index + 1} of ${pages.length}`);
-      if (banner) {
-        await placeHeaderBanner(page, banner);
-      }
       await revealPageContent(page);
       const canvas = await capturePage(page, fontEmbedCSS, toCanvas, warnings);
       const jpeg = await canvasToJpeg(canvas);
@@ -310,7 +308,7 @@ function replaceGroupedDrawings(xml: string) {
       }
 
       const fallback = /<mc:Fallback>([\s\S]*?)<\/mc:Fallback>/.exec(block);
-      return fallback?.[1] ?? "";
+      return fallback?.[1]?.trim() ? fallback[1] : block;
     },
   );
 }
@@ -323,54 +321,94 @@ function pageHasContent(section: HTMLElement) {
     return true;
   }
 
-  return root.innerText.replace(/\s+/g, " ").trim().length > 30;
+  return root.innerText.replace(/\s+/g, "").length > 0;
 }
 
-async function headerBannerUrl(bytes: Uint8Array) {
-  const zip = await JSZip.loadAsync(bytes);
-  const rels = await zip.file("word/_rels/header1.xml.rels")?.async("string");
-  const target = rels?.match(/Target="(media\/[^"]+\.(?:jpe?g|png))"/i)?.[1];
+async function pinFloatingImages(pages: readonly HTMLElement[]) {
+  await new Promise((resolve) => {
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => resolve(undefined)),
+    );
+  });
 
-  if (!target) {
-    return null;
+  for (const [index, section] of pages.entries()) {
+    section.style.position = "relative";
+    const images = [...section.querySelectorAll("img")];
+
+    for (const image of images) {
+      const parent = image.parentElement;
+
+      if (!parent || parent === section) {
+        continue;
+      }
+
+      const parentWidth = Number.parseFloat(parent.style.width);
+      const parentHeight = Number.parseFloat(parent.style.height);
+
+      if (parentWidth !== 0 && parentHeight !== 0) {
+        continue;
+      }
+
+      const width = cssPixels(image.style.width) || image.offsetWidth;
+      const height = cssPixels(image.style.height) || image.offsetHeight;
+
+      if (width < 8 || height < 8) {
+        continue;
+      }
+
+      const anchor = parent.getBoundingClientRect();
+      const sectionRect = section.getBoundingClientRect();
+      let left =
+        anchor.left - sectionRect.left + cssPixels(image.style.left);
+      let top = anchor.top - sectionRect.top + cssPixels(image.style.top);
+      let targetIndex = index;
+
+      while (top < -8 && targetIndex > 0) {
+        top += pages[targetIndex - 1]?.offsetHeight ?? 0;
+        targetIndex -= 1;
+      }
+
+      const target = pages[targetIndex] ?? section;
+      image.style.position = "absolute";
+      image.style.left = `${Math.max(0, left)}px`;
+      image.style.top = `${Math.max(0, top)}px`;
+      image.style.width = `${width}px`;
+      image.style.height = `${height}px`;
+      image.style.maxWidth = "none";
+      image.style.margin = "0";
+      image.style.zIndex = "3";
+      target.append(image);
+
+      if (parent.childElementCount === 0) {
+        parent.remove();
+      }
+    }
   }
-
-  const file = zip.file(`word/${target.replace(/^\//, "")}`);
-
-  if (!file) {
-    return null;
-  }
-
-  const data = await file.async("base64");
-  const type = target.toLowerCase().endsWith(".png") ? "png" : "jpeg";
-  return `data:image/${type};base64,${data}`;
 }
 
-function placeHeaderBanner(section: HTMLElement, src: string) {
-  const shown = [...section.querySelectorAll("img")].some(
-    (image) => image.offsetWidth > 280 && image.offsetHeight < 180,
-  );
+function cssPixels(value: string) {
+  const match = /^(-?[\d.]+)(px|pt|in|cm|mm)$/i.exec(value.trim());
 
-  if (shown) {
-    return Promise.resolve();
+  if (!match?.[1] || !match[2]) {
+    return 0;
   }
 
-  const banner = document.createElement("img");
-  banner.alt = "";
-  banner.src = src;
-  banner.style.display = "block";
-  banner.style.height = "auto";
-  banner.style.margin = "0 0 16pt";
-  banner.style.width = "100%";
-  const header = section.querySelector(":scope > header");
+  const amount = Number(match[1]);
 
-  if (header) {
-    header.prepend(banner);
-  } else {
-    section.prepend(banner);
+  switch (match[2].toLowerCase()) {
+    case "px":
+      return amount;
+    case "pt":
+      return (amount * 96) / 72;
+    case "in":
+      return amount * 96;
+    case "cm":
+      return (amount * 96) / 2.54;
+    case "mm":
+      return (amount * 96) / 25.4;
+    default:
+      return 0;
   }
-
-  return banner.decode().catch(() => undefined);
 }
 
 async function revealPageContent(section: HTMLElement) {
@@ -378,10 +416,14 @@ async function revealPageContent(section: HTMLElement) {
   const header = section.querySelector(":scope > header");
 
   if (header instanceof HTMLElement) {
-    header.style.height = "auto";
-    header.style.marginTop = "0px";
-    header.style.minHeight = "auto";
     header.style.overflow = "visible";
+    const contentTallerThanBox =
+      header.scrollHeight > header.clientHeight + 4;
+
+    if (contentTallerThanBox) {
+      header.style.height = "auto";
+      header.style.minHeight = "auto";
+    }
   }
 
   section.querySelectorAll("img").forEach((image) => {
