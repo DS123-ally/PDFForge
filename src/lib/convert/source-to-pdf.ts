@@ -23,7 +23,7 @@ export const sourceFidelity: Record<
   docx: {
     label: "Page fidelity",
     detail:
-      "Each Word page is drawn in this browser, including pictures, headers, footers, tables, and the page size. The words stay selectable. Calibri, Cambria, Arial, Times New Roman, Courier New, and Aptos are included, and a font embedded in the Word file is used.",
+      "Each Word page is drawn in this browser, including pictures, headers, footers, tables, and the page size. The words stay selectable. Office fonts and a Noto fallback are included, and a font embedded in the Word file is used.",
   },
   markdown: {
     label: "Text fidelity",

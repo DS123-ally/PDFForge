@@ -13,6 +13,7 @@ import { SourceDocumentError } from "@/lib/convert/read-source";
 import { savePdf } from "@/lib/pdf/save-pdf";
 
 import "./docx-fonts.css";
+import { bundledWordFamilies } from "@/lib/convert/docx-font-names";
 
 const maxDocxPages = 120;
 const jpegQuality = 0.92;
@@ -34,8 +35,16 @@ const layoutStyle = `
   background: #ffffff !important;
   padding: 0 !important;
 }
+.docx-layout-host section.docx-page {
+  overflow: visible !important;
+  outline: 1px solid #111111;
+}
+.docx-layout-host section.docx-page > header,
+.docx-layout-host section.docx-page > footer {
+  overflow: visible !important;
+}
 .docx-layout-host img {
-  max-width: 100%;
+  max-width: none !important;
 }
 `;
 
@@ -66,9 +75,11 @@ export async function renderDocxLayoutToPdf(
 
   try {
     onProgress?.("Drawing the Word pages in this tab");
-    const bundledFonts = await bundledFontNames(bytes);
-    await loadBundledWordFonts(bundledFonts);
-    await renderAsync(copyBytes(bytes), body, body, {
+    const fontNames = await bundledFontNames(bytes);
+    installFallbackFaces(fontNames);
+    await loadBundledWordFonts(fontNames);
+    const source = await preferGroupedDrawingFallbacks(bytes);
+    await renderAsync(copyBytes(source), body, body, {
       breakPages: true,
       className: "docx-page",
       experimental: true,
@@ -79,16 +90,18 @@ export async function renderDocxLayoutToPdf(
       renderEndnotes: true,
       renderFooters: true,
       renderFootnotes: true,
+      ignoreLastRenderedPageBreak: false,
       renderHeaders: true,
       useBase64URL: true,
     });
     await document.fonts.ready;
     await wait(700);
     await decodeImages(host);
+    const banner = await headerBannerUrl(bytes);
 
-    const pages = [...body.querySelectorAll("section.docx-page")].filter(
-      (node): node is HTMLElement => node instanceof HTMLElement,
-    );
+    const pages = [...body.querySelectorAll("section.docx-page")]
+      .filter((node): node is HTMLElement => node instanceof HTMLElement)
+      .filter(pageHasContent);
 
     if (pages.length === 0) {
       throw new SourceDocumentError("This Word file has no pages to draw.");
@@ -100,13 +113,17 @@ export async function renderDocxLayoutToPdf(
       );
     }
 
-    const fontEmbedCSS = fontFaceCss(bundledFonts) || undefined;
+    const fontEmbedCSS = fontFaceCss(fontNames) || undefined;
 
     const pdf = await PDFDocument.create();
     const textFont = await pdf.embedFont(StandardFonts.Helvetica);
 
     for (const [index, page] of pages.entries()) {
       onProgress?.(`Drawing page ${index + 1} of ${pages.length}`);
+      if (banner) {
+        await placeHeaderBanner(page, banner);
+      }
+      await revealPageContent(page);
       const canvas = await capturePage(page, fontEmbedCSS, toCanvas, warnings);
       const jpeg = await canvasToJpeg(canvas);
       const image = await pdf.embedJpg(jpeg);
@@ -141,21 +158,6 @@ export async function renderDocxLayoutToPdf(
   }
 }
 
-const bundledWordFamilies = [
-  "Aptos",
-  "Aptos Display",
-  "Aptos Narrow",
-  "Arial",
-  "Calibri",
-  "Calibri Light",
-  "Cambria",
-  "Courier",
-  "Courier New",
-  "Helvetica",
-  "Times",
-  "Times New Roman",
-];
-
 async function bundledFontNames(bytes: Uint8Array) {
   const zip = await JSZip.loadAsync(bytes);
   const xml = (await zip.file("word/fontTable.xml")?.async("string")) ?? "";
@@ -164,7 +166,7 @@ async function bundledFontNames(bytes: Uint8Array) {
   for (const match of xml.matchAll(/\bw:name="([^"]+)"/g)) {
     const name = match[1];
 
-    if (name && bundledWordFamilies.includes(name)) {
+    if (name && !/wingdings|webdings|^symbol$|mt extra/i.test(name)) {
       names.add(name);
     }
   }
@@ -174,6 +176,65 @@ async function bundledFontNames(bytes: Uint8Array) {
   }
 
   return [...names];
+}
+
+function installFallbackFaces(names: readonly string[]) {
+  const known = new Set<string>(bundledWordFamilies);
+  const sans = fontFaceCss(["Noto Sans"]);
+  const serif = fontFaceCss(["Noto Serif"]);
+  const devanagari = fontFaceCss(["Noto Sans Devanagari"]);
+  const rules: string[] = [];
+
+  for (const name of names) {
+    if (known.has(name)) {
+      continue;
+    }
+
+    const source = /mangal|nirmala|kokila|devanagari|hindi/i.test(name)
+      ? devanagari || sans
+      : /serif|times|garamond|georgia|cambria|palatino|baskerville|caslon|constantia|antiqua|bookman/i.test(
+            name,
+          )
+        ? serif || sans
+        : sans;
+
+    if (!source) {
+      continue;
+    }
+
+    const family = name.replaceAll("\\", "\\\\").replaceAll('"', '\\"');
+    rules.push(
+      source
+        .replaceAll(
+          'font-family: "Noto Sans Devanagari"',
+          `font-family: "${family}"`,
+        )
+        .replaceAll('font-family: "Noto Serif"', `font-family: "${family}"`)
+        .replaceAll('font-family: "Noto Sans"', `font-family: "${family}"`)
+        .replaceAll(
+          "font-family: Noto Sans Devanagari",
+          `font-family: "${family}"`,
+        )
+        .replaceAll("font-family: Noto Serif", `font-family: "${family}"`)
+        .replaceAll("font-family: Noto Sans", `font-family: "${family}"`),
+    );
+  }
+
+  if (rules.length === 0) {
+    return;
+  }
+
+  const existing = document.getElementById("docx-font-aliases");
+  const style =
+    existing instanceof HTMLStyleElement
+      ? existing
+      : document.createElement("style");
+  style.id = "docx-font-aliases";
+  style.textContent = rules.join("\n");
+
+  if (!existing) {
+    document.head.append(style);
+  }
 }
 
 function fontFaceCss(families: readonly string[]) {
@@ -219,6 +280,135 @@ async function loadBundledWordFonts(families: readonly string[]) {
       ].map((pending) => pending.catch(() => undefined)),
     ),
   );
+}
+
+async function preferGroupedDrawingFallbacks(bytes: Uint8Array) {
+  const zip = await JSZip.loadAsync(bytes);
+  const parts = Object.keys(zip.files).filter((name) =>
+    /^word\/(document|header\d+|footer\d+)\.xml$/i.test(name),
+  );
+
+  for (const name of parts) {
+    const xml = await zip.file(name)?.async("string");
+
+    if (!xml?.includes("<mc:AlternateContent")) {
+      continue;
+    }
+
+    zip.file(name, replaceGroupedDrawings(xml));
+  }
+
+  return zip.generateAsync({ type: "uint8array" });
+}
+
+function replaceGroupedDrawings(xml: string) {
+  return xml.replace(
+    /<mc:AlternateContent\b[^>]*>[\s\S]*?<\/mc:AlternateContent>/g,
+    (block) => {
+      if (!block.includes("<wpg:") && !block.includes("<wps:")) {
+        return block;
+      }
+
+      const fallback = /<mc:Fallback>([\s\S]*?)<\/mc:Fallback>/.exec(block);
+      return fallback?.[1] ?? "";
+    },
+  );
+}
+
+function pageHasContent(section: HTMLElement) {
+  const article = section.querySelector(":scope > article");
+  const root = article instanceof HTMLElement ? article : section;
+
+  if (root.querySelector("img, svg")) {
+    return true;
+  }
+
+  return root.innerText.replace(/\s+/g, " ").trim().length > 30;
+}
+
+async function headerBannerUrl(bytes: Uint8Array) {
+  const zip = await JSZip.loadAsync(bytes);
+  const rels = await zip.file("word/_rels/header1.xml.rels")?.async("string");
+  const target = rels?.match(/Target="(media\/[^"]+\.(?:jpe?g|png))"/i)?.[1];
+
+  if (!target) {
+    return null;
+  }
+
+  const file = zip.file(`word/${target.replace(/^\//, "")}`);
+
+  if (!file) {
+    return null;
+  }
+
+  const data = await file.async("base64");
+  const type = target.toLowerCase().endsWith(".png") ? "png" : "jpeg";
+  return `data:image/${type};base64,${data}`;
+}
+
+function placeHeaderBanner(section: HTMLElement, src: string) {
+  const shown = [...section.querySelectorAll("img")].some(
+    (image) => image.offsetWidth > 280 && image.offsetHeight < 180,
+  );
+
+  if (shown) {
+    return Promise.resolve();
+  }
+
+  const banner = document.createElement("img");
+  banner.alt = "";
+  banner.src = src;
+  banner.style.display = "block";
+  banner.style.height = "auto";
+  banner.style.margin = "0 0 16pt";
+  banner.style.width = "100%";
+  const header = section.querySelector(":scope > header");
+
+  if (header) {
+    header.prepend(banner);
+  } else {
+    section.prepend(banner);
+  }
+
+  return banner.decode().catch(() => undefined);
+}
+
+async function revealPageContent(section: HTMLElement) {
+  section.style.overflow = "visible";
+  const header = section.querySelector(":scope > header");
+
+  if (header instanceof HTMLElement) {
+    header.style.height = "auto";
+    header.style.marginTop = "0px";
+    header.style.minHeight = "auto";
+    header.style.overflow = "visible";
+  }
+
+  section.querySelectorAll("img").forEach((image) => {
+    image.style.maxWidth = "none";
+    let node = image.parentElement;
+
+    while (node && node !== section) {
+      const width = Number.parseFloat(node.style.width);
+      const height = Number.parseFloat(node.style.height);
+
+      if (width === 0 || height === 0) {
+        node.style.overflow = "visible";
+      }
+
+      node = node.parentElement;
+    }
+  });
+
+  await new Promise((resolve) => {
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => resolve(undefined)),
+    );
+  });
+
+  if (section.scrollHeight > section.offsetHeight + 1) {
+    section.style.minHeight = `${section.scrollHeight}px`;
+  }
 }
 
 async function capturePage(

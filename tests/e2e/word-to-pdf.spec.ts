@@ -100,13 +100,14 @@ async function downloadPdf(page: Page) {
 }
 
 async function pdfText(bytes: Buffer) {
-  const document = await getDocument({
+  const task = getDocument({
     data: new Uint8Array(bytes),
     disableWorker: true,
     isEvalSupported: false,
     standardFontDataUrl: `${pathToFileURL(path.join(process.cwd(), "node_modules/pdfjs-dist/standard_fonts")).href}/`,
     useSystemFonts: false,
-  }).promise;
+  } as Parameters<typeof getDocument>[0]);
+  const document = await task.promise;
   const pdfPage = await document.getPage(1);
   const content = await pdfPage.getTextContent();
 

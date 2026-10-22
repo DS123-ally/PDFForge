@@ -419,7 +419,7 @@ export const toolSeo: ToolSeoContent[] = [
       {
         question: "Will the PDF look like the Word file?",
         answer:
-          "Yes. Pictures, headers, and page layout are drawn from the Word file, and the words stay selectable. Calibri, Cambria, Arial, Times New Roman, Courier New, and Aptos are included. A font embedded in the Word file is used.",
+          "Yes. Pictures, headers, and page layout are drawn from the Word file, and the words stay selectable. Office fonts are included, and any other font name uses Noto. A font embedded in the Word file is used.",
       },
       {
         question: "Which Word files work?",
