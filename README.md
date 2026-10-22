@@ -1,6 +1,6 @@
 # PDFForge
 
-PDFForge is a privacy-first PDF studio.  The Next.js app is only a shell: **every document operation runs in the visitor’s browser**. Files, extracted text, metadata, and passwords are not uploaded, stored on a server, or sent to a third-party processing API.
+PDFForge is a privacy-first PDF studio. The Next.js app is only a shell: **every document operation runs in the visitor’s browser**. Files, extracted text, metadata, and passwords are not uploaded, stored on a server, or sent to a third-party processing API.
 
 The public product name is **PDFForge**. Older Figma frames may still show the placeholder brand “PDFLocal.”
 

@@ -358,8 +358,7 @@ async function pinFloatingImages(pages: readonly HTMLElement[]) {
 
       const anchor = parent.getBoundingClientRect();
       const sectionRect = section.getBoundingClientRect();
-      let left =
-        anchor.left - sectionRect.left + cssPixels(image.style.left);
+      const left = anchor.left - sectionRect.left + cssPixels(image.style.left);
       let top = anchor.top - sectionRect.top + cssPixels(image.style.top);
       let targetIndex = index;
 
@@ -417,8 +416,7 @@ async function revealPageContent(section: HTMLElement) {
 
   if (header instanceof HTMLElement) {
     header.style.overflow = "visible";
-    const contentTallerThanBox =
-      header.scrollHeight > header.clientHeight + 4;
+    const contentTallerThanBox = header.scrollHeight > header.clientHeight + 4;
 
     if (contentTallerThanBox) {
       header.style.height = "auto";

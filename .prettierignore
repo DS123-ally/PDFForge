@@ -9,3 +9,4 @@ deploy/nginx/**/*.conf
 .env.example
 /health.json
 /health-https.json
+src/lib/convert/docx-fonts.css

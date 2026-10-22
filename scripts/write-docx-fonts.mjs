@@ -1,17 +1,14 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 const ranges = {
-  cyrillic:
-    "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116",
+  cyrillic: "U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116",
   "cyrillic-ext":
     "U+0460-052F,U+1C80-1C8A,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F",
   devanagari:
     "U+0900-097F,U+1CD0-1CF9,U+200C-200D,U+20A8,U+20B9,U+20F0,U+25CC,U+A830-A839,U+A8E0-A8FF",
-  greek:
-    "U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF",
+  greek: "U+0370-0377,U+037A-037F,U+0384-038A,U+038C,U+038E-03A1,U+03A3-03FF",
   "greek-ext": "U+1F00-1FFF",
-  hebrew:
-    "U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F",
+  hebrew: "U+0307-0308,U+0590-05FF,U+200C-2010,U+20AA,U+25CC,U+FB1D-FB4F",
   latin:
     "U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD",
   "latin-ext":
@@ -22,13 +19,27 @@ const ranges = {
 };
 
 const packs = [
-  ["carlito", ["Calibri", "Calibri Light", "Aptos", "Aptos Display", "Aptos Narrow", "Candara", "Corbel"]],
+  [
+    "carlito",
+    [
+      "Calibri",
+      "Calibri Light",
+      "Aptos",
+      "Aptos Display",
+      "Aptos Narrow",
+      "Candara",
+      "Corbel",
+    ],
+  ],
   ["caladea", ["Cambria", "Constantia"]],
   ["arimo", ["Arial", "Arial Narrow", "Helvetica"]],
   ["tinos", ["Times New Roman", "Times"]],
   ["cousine", ["Courier New", "Courier"]],
   ["gelasio", ["Georgia"]],
-  ["eb-garamond", ["Garamond", "Palatino Linotype", "Book Antiqua", "Palatino"]],
+  [
+    "eb-garamond",
+    ["Garamond", "Palatino Linotype", "Book Antiqua", "Palatino"],
+  ],
   ["comic-neue", ["Comic Sans MS", "Comic Sans"]],
   ["libre-franklin", ["Franklin Gothic", "Franklin Gothic Medium"]],
   ["source-code-pro", ["Consolas"]],
@@ -48,14 +59,22 @@ const packs = [
   ["libre-caslon-text", ["Libre Caslon", "Caslon"]],
   ["noto-sans", ["Noto Sans"]],
   ["noto-serif", ["Noto Serif"]],
-  ["noto-sans-devanagari", ["Noto Sans Devanagari", "Mangal", "Nirmala UI", "Nirmala", "Kokila"]],
+  [
+    "noto-sans-devanagari",
+    ["Noto Sans Devanagari", "Mangal", "Nirmala UI", "Nirmala", "Kokila"],
+  ],
 ];
 
 const rules = [];
 const names = new Set();
 
 for (const [pack, aliases] of packs) {
-  for (const sheet of ["400.css", "400-italic.css", "700.css", "700-italic.css"]) {
+  for (const sheet of [
+    "400.css",
+    "400-italic.css",
+    "700.css",
+    "700-italic.css",
+  ]) {
     const cssPath = `node_modules/@fontsource/${pack}/${sheet}`;
     if (!existsSync(cssPath)) {
       continue;
@@ -74,8 +93,7 @@ for (const [pack, aliases] of packs) {
         .replace(`${pack}-`, "")
         .replace(`-${weight}-${style}.woff2`, "");
       const range =
-        block.match(/unicode-range:\s*([^;]+)/)?.[1]?.trim() ??
-        ranges[subset];
+        block.match(/unicode-range:\s*([^;]+)/)?.[1]?.trim() ?? ranges[subset];
       if (!range) {
         continue;
       }

@@ -111,7 +111,5 @@ async function pdfText(bytes: Buffer) {
   const pdfPage = await document.getPage(1);
   const content = await pdfPage.getTextContent();
 
-  return content.items
-    .map((item) => ("str" in item ? item.str : ""))
-    .join(" ");
+  return content.items.map((item) => ("str" in item ? item.str : "")).join(" ");
 }
