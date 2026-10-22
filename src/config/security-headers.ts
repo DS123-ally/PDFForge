@@ -37,7 +37,7 @@ export function buildContentSecurityPolicy({
     `script-src ${scriptSrc.join(" ")}`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' blob: data:",
-    "font-src 'self'",
+    "font-src 'self' data: blob:",
     `connect-src ${connectSrc.join(" ")}`,
     "worker-src 'self' blob:",
     "child-src 'self' blob:",

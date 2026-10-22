@@ -52,12 +52,21 @@ export function SourceToPdfWorkspace({ slug }: { slug: string }) {
     }
 
     setStatus("processing");
-    setMessage("Reading the file in this tab");
+    setMessage(
+      kind === "docx"
+        ? "Drawing the Word pages in this tab"
+        : "Reading the file in this tab",
+    );
     setOutput(null);
 
     try {
       const bytes = new Uint8Array(await selectedFile.file.arrayBuffer());
-      const result = await convertSourceToPdf(bytes, kind);
+      const result =
+        kind === "docx"
+          ? await (
+              await import("@/lib/convert/docx-layout-pdf")
+            ).renderDocxLayoutToPdf(bytes, setMessage)
+          : await convertSourceToPdf(bytes, kind);
       setOutput({
         bytes: result.bytes,
         filename: createOutputName(selectedFile.file.name, {

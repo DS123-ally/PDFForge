@@ -401,9 +401,9 @@ export const toolSeo: ToolSeoContent[] = [
     slug: "word-to-pdf",
     pageTitle: "Convert Word to PDF locally",
     metaDescription:
-      "Turn a .docx into a PDF in your browser. PDFForge writes paragraphs and simple tables as text. Nothing is uploaded.",
+      "Turn a .docx into a PDF in your browser. Pictures, headers, and page layout are drawn on this device. Nothing is uploaded.",
     intro:
-      "Word to PDF reads the document text on this device and writes a PDF. It is text fidelity: fonts, images, headers, and Word page layout are not reconstructed.",
+      "Word to PDF draws the Word pages in this browser, including pictures, headers, footers, and page size, then saves that drawing as a PDF. Nothing is uploaded.",
     steps: [
       "Select a .docx file from your device.",
       "Read the fidelity note before you convert.",
@@ -419,7 +419,7 @@ export const toolSeo: ToolSeoContent[] = [
       {
         question: "Will the PDF look like the Word file?",
         answer:
-          "No. This is text fidelity. Paragraphs, headings, lists, and simple tables become PDF text. Fonts, images, text boxes, and page layout are not reconstructed.",
+          "Yes. Pictures, headers, and page layout are drawn from the Word file, and the words stay selectable. Calibri, Cambria, Arial, Times New Roman, Courier New, and Aptos are included. A font embedded in the Word file is used.",
       },
       {
         question: "Which Word files work?",

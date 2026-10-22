@@ -21,9 +21,9 @@ export const sourceFidelity: Record<
       "Rows and columns become a PDF table. The first row is the header. Columns split on commas. A CSV file has no fonts, charts, or formulas.",
   },
   docx: {
-    label: "Text fidelity",
+    label: "Page fidelity",
     detail:
-      "Paragraphs, headings, lists, and simple tables are written as PDF text. Fonts, images, headers, footnotes, text boxes, and Word page layout are not reconstructed.",
+      "Each Word page is drawn in this browser, including pictures, headers, footers, tables, and the page size. The words stay selectable. Calibri, Cambria, Arial, Times New Roman, Courier New, and Aptos are included, and a font embedded in the Word file is used.",
   },
   markdown: {
     label: "Text fidelity",

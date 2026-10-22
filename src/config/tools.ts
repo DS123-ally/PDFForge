@@ -157,9 +157,9 @@ export const tools: ToolDefinition[] = [
   {
     slug: "word-to-pdf",
     title: "Word to PDF",
-    shortDescription: "Turn a .docx into PDF text in this browser.",
+    shortDescription: "Turn a .docx into a PDF that keeps the page layout.",
     description:
-      "Read paragraphs, headings, lists, and simple tables from a Word file and write them to a PDF. Fonts, images, and Word page layout are not reconstructed.",
+      "Draw each Word page in this browser, including pictures, headers, and page size, then save that drawing as a PDF.",
     category: "Convert",
     acceptsMultiple: false,
     acceptedFileTypes: ["docx"],

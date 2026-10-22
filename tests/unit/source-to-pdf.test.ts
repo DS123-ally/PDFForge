@@ -33,7 +33,8 @@ describe("source to pdf", () => {
     expect(sourceKindForTool("powerpoint-to-pdf")).toBe("pptx");
     expect(sourceKindForTool("markdown-to-pdf")).toBe("markdown");
     expect(sourceKindForTool("csv-to-pdf")).toBe("csv");
-    expect(sourceFidelity.docx.label).toBe("Text fidelity");
+    expect(sourceFidelity.docx.label).toBe("Page fidelity");
+    expect(sourceFidelity.docx.detail).toContain("pictures");
     expect(sourceFidelity.xlsx.label).toBe("Cell fidelity");
     expect(sourceFidelity.pptx.label).toBe("Slide-text fidelity");
     expect(sourceFidelity.markdown.detail).toContain("Images are skipped");

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const pages = [
-  ["/tools/word-to-pdf", "Text fidelity"],
+  ["/tools/word-to-pdf", "Page fidelity"],
   ["/tools/excel-to-pdf", "Cell fidelity"],
   ["/tools/powerpoint-to-pdf", "Slide-text fidelity"],
   ["/tools/markdown-to-pdf", "Text fidelity"],

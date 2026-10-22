@@ -85,9 +85,9 @@ export const toolPrivacy: readonly ToolPrivacy[] = [
   {
     slug: "word-to-pdf",
     reads:
-      "Paragraphs, headings, lists, and simple tables in the .docx. Pictures in the file are skipped.",
+      "The .docx file, including its text, pictures, headers, footers, and page setup.",
     writes:
-      "A PDF of that text. Word fonts and page layout are not in the download.",
+      "A PDF of those Word pages. The page picture keeps the layout, and the words stay selectable.",
   },
   {
     slug: "excel-to-pdf",
