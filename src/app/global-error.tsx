@@ -1,6 +1,6 @@
 "use client";
 
-import { sans } from "./fonts";
+import "@fontsource/inter/400.css";
 
 type GlobalErrorProps = {
   error: Error & { digest?: string };
@@ -9,8 +9,8 @@ type GlobalErrorProps = {
 
 export default function GlobalError({ reset }: GlobalErrorProps) {
   return (
-    <html className={sans.variable} lang="en">
-      <body className={sans.className}>
+    <html lang="en">
+      <body style={{ fontFamily: "Inter, Segoe UI, Arial, sans-serif" }}>
         <main
           style={{
             alignItems: "center",

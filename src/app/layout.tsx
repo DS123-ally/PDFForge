@@ -1,15 +1,18 @@
 import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import type { ReactNode } from "react";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/500.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
+import "@fontsource/inter/800.css";
+import "@fontsource/inter/900.css";
 
 import { ExtensionGuard } from "@/components/privacy/extension-guard";
 import { PrivacyCleanupProvider } from "@/components/privacy/privacy-cleanup-provider";
 import { PwaProvider } from "@/components/pwa/pwa-provider";
 import { env } from "@/config/env";
 
-import { cn } from "@/lib/utils";
-
-import { sans } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -61,7 +64,7 @@ export default async function RootLayout({
 
   return (
     <html
-      className={cn(sans.variable, "h-full font-sans antialiased")}
+      className="h-full font-sans antialiased"
       lang="en"
       suppressHydrationWarning
     >
